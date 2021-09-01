@@ -1,0 +1,6 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/" Path="C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\wwwroot\" />
+  <ContentRoot BasePath="/" Path="C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\blazor\" />
+  <ContentRoot BasePath="/" Path="C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\scopedcss\bundle\" />
+  <ContentRoot BasePath="/" Path="C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\scopedcss\projectbundle\" />
+</StaticWebAssets>

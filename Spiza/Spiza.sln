@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontends", "Frontends", "{D041FBEC-5A0D-48D4-8357-D68F4C6B37DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{55A5F8A7-19EC-48AE-84F1-3CD0574CAFC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spiza.Web.Admin", "Frontends\Spiza.Web.Admin\Spiza.Web.Admin.csproj", "{87D595D2-0981-4F9D-A87C-725A7DA6F6C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87D595D2-0981-4F9D-A87C-725A7DA6F6C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87D595D2-0981-4F9D-A87C-725A7DA6F6C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87D595D2-0981-4F9D-A87C-725A7DA6F6C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87D595D2-0981-4F9D-A87C-725A7DA6F6C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{87D595D2-0981-4F9D-A87C-725A7DA6F6C7} = {D041FBEC-5A0D-48D4-8357-D68F4C6B37DF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7052A35-8022-4501-B194-E4BD07BDD45C}
+	EndGlobalSection
+EndGlobal
