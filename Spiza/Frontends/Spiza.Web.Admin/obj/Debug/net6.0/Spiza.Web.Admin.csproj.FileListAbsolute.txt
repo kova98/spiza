@@ -401,7 +401,6 @@ C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\Spiza.Web.Admin.staticwebassets.runtime.json
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\Spiza.Web.Admin.StaticWebAssets.xml
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\Spiza.Web.Admin.dll
-C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\ref\Spiza.Web.Admin.dll
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\Spiza.Web.Admin.pdb
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\Microsoft.AspNetCore.Components.dll
@@ -811,7 +810,11 @@ C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\scopedcss\Shared\NavMenu.razor.rz.scp.css
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\scopedcss\bundle\Spiza.Web.Admin.styles.css
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\scopedcss\projectbundle\Spiza.Web.Admin.bundle.scp.css
-C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\Spiza.Web.Admin.csproj.CopyComplete
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\Spiza.Web.Admin.dll
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\ref\Spiza.Web.Admin.dll
 C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\Spiza.Web.Admin.pdb
+C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\refint\Spiza.Web.Admin.dll
+C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\wwwroot\_framework\MudBlazor.dll
+C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\wwwroot\_framework\MudBlazor.dll.gz
+C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\bin\Debug\net6.0\MudBlazor.dll
+C:\Users\Roko\source\repos\spiza\Spiza\Frontends\Spiza.Web.Admin\obj\Debug\net6.0\build-gz\ANrSp9KJ.gz

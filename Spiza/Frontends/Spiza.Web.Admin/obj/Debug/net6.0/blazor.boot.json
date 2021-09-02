@@ -29,6 +29,7 @@
       "Microsoft.Extensions.Primitives.dll": "sha256-a9JVU1ziFgVlm7op03j91YvX7N+DyRmsK\/DINFw8eF4=",
       "Microsoft.JSInterop.dll": "sha256-IQPl81vzJB147bBSa6l\/OBZmhhzWqdMalWZXBXGcOpI=",
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-ozx5CrmQPgmih1Iob7hiyptxahu47vshlrfIFURU0Z8=",
+      "MudBlazor.dll": "sha256-CoZdNobibj1ifRr\/kzK565\/RZngOzz7Rfdky+H\/K9FU=",
       "System.IO.Pipelines.dll": "sha256-XcAeuRNzDCWoemkFs\/RGHWeKeg8zh0BovbCeY1MuTW4=",
       "Microsoft.CSharp.dll": "sha256-DvDQuj1k3UzNQSR99wysniCtO33ahjiVi62E6ESHeWc=",
       "Microsoft.VisualBasic.Core.dll": "sha256-I7Bf9vvjXXQ3FA8nUm1TAQtEN+80JQltVXJL\/AKhYNM=",
@@ -196,11 +197,11 @@
       "mscorlib.dll": "sha256-Z6oqOCuWJGYEbH1fyrpqRcUR9Fy0O95J7MyFb4\/KFHw=",
       "netstandard.dll": "sha256-8UMPf4oZhyt+AuDrH\/53sUlm5K6ZZOhqAl4vL7274Wo=",
       "System.Private.CoreLib.dll": "sha256-mOn91RMNvgen2jUt6KVmsYX1Ug7+\/iJt2YRdgyca6JE=",
-      "Spiza.Web.Admin.dll": "sha256-PseNwL2owonrJS8lkMfhPNxw0JnZEyv162\/81uyl2\/8="
+      "Spiza.Web.Admin.dll": "sha256-xu1O+M\/UB1IfgordfvMOQtjJiorAnWV2pKC1tBsyH+4="
     },
     "lazyAssembly": null,
     "pdb": {
-      "Spiza.Web.Admin.pdb": "sha256-ApPQQEn5z9YCSKaE1uy766w0Uorr8brK+x0eOHpF2L8="
+      "Spiza.Web.Admin.pdb": "sha256-l1GrSPpcjruB4GHZ1hvS6XwM06u7megmEeBHoD3o0QM="
     },
     "runtime": {
       "dotnet.6.0.0-preview.7.21377.19.js": "sha256-\/s2IdQOMP7gqUEj0pvdS8VIo9\/2YGcZ00OHMsE1QUfQ=",

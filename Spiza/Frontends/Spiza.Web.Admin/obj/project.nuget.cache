@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "SOuxywSIR/eRTfmE8hxcGwdfFLzlnKzHhApyqBP7Nfg5+h56hbj/JKe1UVfbWxhnyOSw/EaTIV6r6d0uMLzYdg==",
+  "dgSpecHash": "dKZRcfeJruDB3jNp/1WeFfmYiEYWsE7iL8ui96ELhuW6vSxcGHvPBNcbvfN52Tzde9KunKOEydaMaGs4z8BJxA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Roko\\source\\repos\\spiza\\Spiza\\Frontends\\Spiza.Web.Admin\\Spiza.Web.Admin.csproj",
   "expectedPackageFiles": [
@@ -28,6 +28,7 @@
     "C:\\Users\\Roko\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0-preview.7.21377.19\\microsoft.extensions.primitives.6.0.0-preview.7.21377.19.nupkg.sha512",
     "C:\\Users\\Roko\\.nuget\\packages\\microsoft.jsinterop\\6.0.0-preview.7.21378.6\\microsoft.jsinterop.6.0.0-preview.7.21378.6.nupkg.sha512",
     "C:\\Users\\Roko\\.nuget\\packages\\microsoft.jsinterop.webassembly\\6.0.0-preview.7.21378.6\\microsoft.jsinterop.webassembly.6.0.0-preview.7.21378.6.nupkg.sha512",
+    "C:\\Users\\Roko\\.nuget\\packages\\mudblazor\\5.1.2\\mudblazor.5.1.2.nupkg.sha512",
     "C:\\Users\\Roko\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Roko\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.0-preview.7.21377.19\\system.diagnostics.diagnosticsource.6.0.0-preview.7.21377.19.nupkg.sha512",
     "C:\\Users\\Roko\\.nuget\\packages\\system.io.pipelines\\6.0.0-preview.7.21377.19\\system.io.pipelines.6.0.0-preview.7.21377.19.nupkg.sha512",
