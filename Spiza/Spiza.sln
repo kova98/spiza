@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontends", "Frontends", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{55A5F8A7-19EC-48AE-84F1-3CD0574CAFC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spiza.Web.Admin", "Frontends\Spiza.Web.Admin\Spiza.Web.Admin.csproj", "{87D595D2-0981-4F9D-A87C-725A7DA6F6C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spiza.Web.Admin", "Frontends\Spiza.Web.Admin\Spiza.Web.Admin.csproj", "{87D595D2-0981-4F9D-A87C-725A7DA6F6C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
