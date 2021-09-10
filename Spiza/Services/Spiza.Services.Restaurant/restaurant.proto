@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Spiza.Services.Restaurant";
+
+message RestaurantParameters {}
+
+message RestaurantResponse {
+	string id = 1;
+	string name = 2;
+}
+
+message RestaurantsResponse {
+	repeated RestaurantResponse data = 1;
+}
+
+service Restaurant {
+	rpc GetRestaurants(RestaurantParameters) returns (RestaurantsResponse);
+}
+
