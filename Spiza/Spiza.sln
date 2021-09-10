@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spiza.Web.Admin", "Frontend
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateways", "Gateways", "{DD9BFB21-4BF8-451A-A0BF-45B59236E7BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spiza.Gateways.Web", "Gateways\Spiza.Gateways.Web\Spiza.Gateways.Web.csproj", "{1B24A1DF-FEAB-4FFB-A580-CE5FAF9EC596}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spiza.Gateways.Web", "Gateways\Spiza.Gateways.Web\Spiza.Gateways.Web.csproj", "{1B24A1DF-FEAB-4FFB-A580-CE5FAF9EC596}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spiza.Services.Restaurant", "Services\Spiza.Services.Restaurant\Spiza.Services.Restaurant.csproj", "{330F6823-DAAC-435B-924D-2C3628A634B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{1B24A1DF-FEAB-4FFB-A580-CE5FAF9EC596}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B24A1DF-FEAB-4FFB-A580-CE5FAF9EC596}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B24A1DF-FEAB-4FFB-A580-CE5FAF9EC596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{330F6823-DAAC-435B-924D-2C3628A634B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{330F6823-DAAC-435B-924D-2C3628A634B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{330F6823-DAAC-435B-924D-2C3628A634B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{330F6823-DAAC-435B-924D-2C3628A634B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,6 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{87D595D2-0981-4F9D-A87C-725A7DA6F6C7} = {D041FBEC-5A0D-48D4-8357-D68F4C6B37DF}
 		{1B24A1DF-FEAB-4FFB-A580-CE5FAF9EC596} = {DD9BFB21-4BF8-451A-A0BF-45B59236E7BA}
+		{330F6823-DAAC-435B-924D-2C3628A634B6} = {55A5F8A7-19EC-48AE-84F1-3CD0574CAFC9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7052A35-8022-4501-B194-E4BD07BDD45C}
