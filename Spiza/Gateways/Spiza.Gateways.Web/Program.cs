@@ -1,9 +1,18 @@
 
+using Spiza.Gateways.Web.Services;
+using Spiza.Services.Restaurant;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddGrpcClient<Restaurant.RestaurantClient>((services, options) => 
+{
+    options.Address = new Uri("http://localhost:5201");
+});
 
 var app = builder.Build();
 
