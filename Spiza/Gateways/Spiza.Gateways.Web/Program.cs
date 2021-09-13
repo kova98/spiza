@@ -1,6 +1,6 @@
 
 using Spiza.Gateways.Web.Services;
-using Spiza.Services.Restaurant;
+using GrpcServices.Restaurant;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -4,6 +4,6 @@ namespace Spiza.Gateways.Web.Services
 {
     public interface IRestaurantService
     {
-        Task<IEnumerable<Restaurant>> GetRestaurants();
+        IEnumerable<Restaurant> GetRestaurants();
     }
 }

@@ -1,8 +1,10 @@
 ﻿
 using Grpc.Core;
 using Spiza.Services.Restaurant.Repositories;
+using GrpcServices.Restaurant;
 
-namespace Spiza.Services.Restaurant;
+namespace GrpcServices.Restaurant;
+
 public class RestaurantService : Restaurant.RestaurantBase
 {
     private readonly IRestaurantsRepository restaurantsRepo;
@@ -12,8 +14,16 @@ public class RestaurantService : Restaurant.RestaurantBase
         this.restaurantsRepo = restaurantsRepo;
     }
 
-    public override Task<RestaurantsResponse> GetRestaurants(RestaurantParameters request, ServerCallContext context)
+    public override async Task<RestaurantsResponse> GetRestaurants(RestaurantParameters request, ServerCallContext context)
     {
-        return base.GetRestaurants(request, context);
+        var restaurants = restaurantsRepo.GetRestaurants();
+        var response = new RestaurantsResponse();
+        restaurants.ForEach(x => response.Data.Add(new RestaurantResponse
+        {
+            Id = x.Id.ToString(),
+            Name = x.Name
+        }));
+
+        return response;
     }
 }

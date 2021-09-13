@@ -1,6 +1,8 @@
 ﻿@page "/restaurants"
 @using System.Net.Http.Json
 
+@inject HttpClient HttpClient
+
 <MudTable Items="@restaurants">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Restaurants</MudText>
@@ -26,16 +28,10 @@
 @code {
     private List<Restaurant> restaurants = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        restaurants.AddRange(new Restaurant[]
-        {
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 1" },
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 2" },
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 3" },
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 4" },
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 5" },
-        });
-        base.OnInitialized();
+        var response = await HttpClient.GetFromJsonAsync<Restaurant[]>("http://localhost:5101/api/restaurant");
+
+        restaurants = response?.ToList() ?? restaurants;
     }
 }

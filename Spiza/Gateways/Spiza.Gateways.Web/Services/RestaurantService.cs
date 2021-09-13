@@ -1,4 +1,4 @@
-﻿using Spiza.Services.Restaurant;
+﻿using GrpcServices.Restaurant;
 
 namespace Spiza.Gateways.Web.Services;
 public class RestaurantService : IRestaurantService
@@ -10,9 +10,9 @@ public class RestaurantService : IRestaurantService
         this.client = client;
     }
 
-    public async Task<IEnumerable<Models.Restaurant>> GetRestaurants()
+    public IEnumerable<Models.Restaurant> GetRestaurants()
     {
-        var response = await client.GetRestaurantsAsync(new());
+        var response = client.GetRestaurants(new());
 
         return response.Data.Select(MapToRestaurantModel);
     }

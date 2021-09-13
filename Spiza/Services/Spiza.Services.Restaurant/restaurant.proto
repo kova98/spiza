@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Spiza.Services.Restaurant";
+option csharp_namespace = "GrpcServices.Restaurant";
 
 message RestaurantParameters {}
 

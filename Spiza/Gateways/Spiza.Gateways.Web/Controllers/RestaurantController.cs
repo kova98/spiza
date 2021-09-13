@@ -15,8 +15,8 @@ public class RestaurantController : Controller
     }
 
     [HttpGet("")]
-    public async Task<ActionResult<Restaurant[]>> GetRestaurantsAsync()
+    public ActionResult<Restaurant[]> GetRestaurants()
     {
-        return Ok(await restaurantService.GetRestaurants());  
+        return Ok(restaurantService.GetRestaurants());  
     }
 }
