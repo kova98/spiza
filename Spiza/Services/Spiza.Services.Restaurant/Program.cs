@@ -1,22 +1,21 @@
 
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Spiza.Services.Restaurant;
+using System.Net;
 
-// Add services to the container.
+BuildWebHost(args).Run();
 
-builder.Services.AddControllers();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (builder.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+IWebHost BuildWebHost(string[] args) =>
+    WebHost.CreateDefaultBuilder(args)
+        .CaptureStartupErrors(false)
+        .ConfigureKestrel(options =>
+        {
+            options.Listen(IPAddress.Any, 5201, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        })
+        .UseStartup<Startup>()
+        .UseContentRoot(Directory.GetCurrentDirectory())
+        .Build();
