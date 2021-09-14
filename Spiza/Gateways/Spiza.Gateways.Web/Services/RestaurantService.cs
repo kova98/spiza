@@ -14,15 +14,15 @@ public class RestaurantService : IRestaurantService
     {
         var response = client.GetRestaurants(new());
 
-        return response.Data.Select(MapToRestaurantModel);
+        return response.Restaurants.Select(MapToRestaurantModel);
     }
 
-    private Models.Restaurant MapToRestaurantModel(RestaurantResponse response)
+    private Models.Restaurant MapToRestaurantModel(RestaurantMessage restaurant)
     {
         return new Models.Restaurant
         {
-            Id = Guid.Parse(response.Id),
-            Name = response.Name
+            Id = Guid.Parse(restaurant.Id),
+            Name = restaurant.Name
         };
     }
 }

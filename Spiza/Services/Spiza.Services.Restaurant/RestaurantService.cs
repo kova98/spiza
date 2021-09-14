@@ -14,11 +14,11 @@ public class RestaurantService : Restaurant.RestaurantBase
         this.restaurantsRepo = restaurantsRepo;
     }
 
-    public override async Task<RestaurantsResponse> GetRestaurants(RestaurantParameters request, ServerCallContext context)
+    public override async Task<GetRestaurantsResponse> GetRestaurants(GetRestaurantsRequest request, ServerCallContext context)
     {
         var restaurants = restaurantsRepo.GetRestaurants();
-        var response = new RestaurantsResponse();
-        restaurants.ForEach(x => response.Data.Add(new RestaurantResponse
+        var response = new GetRestaurantsResponse();
+        restaurants.ForEach(x => response.Restaurants.Add(new RestaurantMessage
         {
             Id = x.Id.ToString(),
             Name = x.Name

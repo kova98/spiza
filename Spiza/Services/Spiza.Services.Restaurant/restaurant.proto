@@ -2,18 +2,18 @@ syntax = "proto3";
 
 option csharp_namespace = "GrpcServices.Restaurant";
 
-message RestaurantParameters {}
 
-message RestaurantResponse {
+message RestaurantMessage {
 	string id = 1;
 	string name = 2;
 }
 
-message RestaurantsResponse {
-	repeated RestaurantResponse data = 1;
+message GetRestaurantsRequest{}
+message GetRestaurantsResponse {
+	repeated RestaurantMessage Restaurants = 1;
 }
 
 service Restaurant {
-	rpc GetRestaurants(RestaurantParameters) returns (RestaurantsResponse);
+	rpc GetRestaurants(GetRestaurantsRequest) returns (GetRestaurantsResponse);
 }
 
