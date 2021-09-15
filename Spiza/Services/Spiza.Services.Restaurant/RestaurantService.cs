@@ -1,7 +1,7 @@
 ﻿
 using Grpc.Core;
 using Spiza.Services.Restaurant.Repositories;
-using GrpcServices.Restaurant;
+using Entities = Spiza.Services.Restaurant.Entities;
 
 namespace GrpcServices.Restaurant;
 
@@ -20,7 +20,7 @@ public class RestaurantService : Restaurant.RestaurantBase
         var response = new GetRestaurantsResponse();
         restaurants.ForEach(x => response.Restaurants.Add(new RestaurantMessage
         {
-            Id = x.Id.ToString(),
+            Id = x.Id,
             Name = x.Name
         }));
 

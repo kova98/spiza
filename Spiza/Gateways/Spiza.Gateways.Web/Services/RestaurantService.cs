@@ -21,7 +21,7 @@ public class RestaurantService : IRestaurantService
     {
         return new Models.Restaurant
         {
-            Id = Guid.Parse(restaurant.Id),
+            Id = restaurant.Id,
             Name = restaurant.Name
         };
     }

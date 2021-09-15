@@ -1,7 +1,7 @@
 ﻿
 namespace Spiza.Services.Restaurant.Repositories;
 
-using Models;
+using Entities;
 
 public class FakeRestaurantsRepository : IRestaurantsRepository
 {
@@ -11,11 +11,11 @@ public class FakeRestaurantsRepository : IRestaurantsRepository
     {
         restaurants.AddRange(new Restaurant[]
         {
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 1" },
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 2" },
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 3" },
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 4" },
-            new Restaurant { Id = Guid.NewGuid(), Name = "Restaurant 5" },
+            new Restaurant { Id = 1, Name = "Restaurant 1" },
+            new Restaurant { Id = 2, Name = "Restaurant 2" },
+            new Restaurant { Id = 3, Name = "Restaurant 3" },
+            new Restaurant { Id = 4, Name = "Restaurant 4" },
+            new Restaurant { Id = 5, Name = "Restaurant 5" },
         });
     }
 
