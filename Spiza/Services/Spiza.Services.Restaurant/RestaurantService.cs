@@ -32,6 +32,13 @@ public class RestaurantService : Restaurant.RestaurantBase
         var restaurant = new Entities.Restaurant { Name = request.Name };
         restaurantsRepo.CreateRestaurant(restaurant);
 
-        return new CreateRestaurantResponse();
+        return new();
+    }
+
+    public override async Task<DeleteRestaurantResponse> DeleteRestaurant(DeleteRestaurantRequest request, ServerCallContext context)
+    {
+        restaurantsRepo.DeleteRestaurant(request.Id);
+
+        return new();
     }
 }

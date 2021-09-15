@@ -20,5 +20,15 @@ public class FakeRestaurantsRepository : IRestaurantsRepository
     }
 
     public void CreateRestaurant(Restaurant restaurant) => restaurants.Add(restaurant);
+
+    public void DeleteRestaurant(long id)
+    {
+        var restaurantToRemove = restaurants.FirstOrDefault(x => x.Id == id);
+        if (restaurantToRemove != null)
+        {
+            restaurants.Remove(restaurantToRemove);
+        }
+    }
+
     public List<Restaurant> GetRestaurants() => restaurants;
 }

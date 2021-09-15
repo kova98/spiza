@@ -18,8 +18,14 @@ message CreateRestaurantRequest {
 }
 message CreateRestaurantResponse {}
 
+message DeleteRestaurantRequest {
+	int64 id = 1;
+}
+message DeleteRestaurantResponse {}
+
 service Restaurant {
 	rpc GetRestaurants(GetRestaurantsRequest) returns (GetRestaurantsResponse);
 	rpc CreateRestaurant(CreateRestaurantRequest) returns (CreateRestaurantResponse);
+	rpc DeleteRestaurant(DeleteRestaurantRequest) returns (DeleteRestaurantResponse);
 }
 

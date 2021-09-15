@@ -4,6 +4,7 @@ using Spiza.Services.Restaurant.Entities;
 
 public interface IRestaurantsRepository
 {
-    public List<Restaurant> GetRestaurants();
-    public void CreateRestaurant(Restaurant restaurant);
+    List<Restaurant> GetRestaurants();
+    void CreateRestaurant(Restaurant restaurant);
+    void DeleteRestaurant(long id);
 }
