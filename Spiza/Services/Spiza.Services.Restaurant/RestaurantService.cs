@@ -41,4 +41,20 @@ public class RestaurantService : Restaurant.RestaurantBase
 
         return new();
     }
+
+    public override async Task<EditRestaurantResponse> EditRestaurant(EditRestaurantRequest request, ServerCallContext context)
+    {
+        restaurantsRepo.EditRestaurant(MapToEntity(request));
+        return new();
+    }
+
+    public static Entities.Restaurant MapToEntity(EditRestaurantRequest request)
+    {
+        return new Entities.Restaurant
+        {
+            Id = request.Restaurant.Id,
+            Name = request.Restaurant.Name
+        };
+    }
+        
 }

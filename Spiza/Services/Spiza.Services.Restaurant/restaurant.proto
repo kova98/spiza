@@ -10,7 +10,7 @@ message RestaurantMessage {
 
 message GetRestaurantsRequest{}
 message GetRestaurantsResponse {
-	repeated RestaurantMessage Restaurants = 1;
+	repeated RestaurantMessage restaurants = 1;
 }
 
 message CreateRestaurantRequest {
@@ -23,9 +23,15 @@ message DeleteRestaurantRequest {
 }
 message DeleteRestaurantResponse {}
 
+message EditRestaurantRequest {
+	RestaurantMessage restaurant = 1;
+}
+message EditRestaurantResponse {}
+
 service Restaurant {
 	rpc GetRestaurants(GetRestaurantsRequest) returns (GetRestaurantsResponse);
 	rpc CreateRestaurant(CreateRestaurantRequest) returns (CreateRestaurantResponse);
 	rpc DeleteRestaurant(DeleteRestaurantRequest) returns (DeleteRestaurantResponse);
+	rpc EditRestaurant(EditRestaurantRequest) returns (EditRestaurantResponse);
 }
 

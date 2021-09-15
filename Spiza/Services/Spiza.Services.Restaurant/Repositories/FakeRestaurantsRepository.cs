@@ -30,5 +30,14 @@ public class FakeRestaurantsRepository : IRestaurantsRepository
         }
     }
 
+    public void EditRestaurant(Restaurant restaurant)
+    {
+        var restaurantToEdit = restaurants.FirstOrDefault(x => x.Id == restaurant.Id);
+
+        if (restaurantToEdit == null) return;
+
+        restaurantToEdit.Name = restaurant.Name;
+    }
+
     public List<Restaurant> GetRestaurants() => restaurants;
 }
