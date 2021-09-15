@@ -13,7 +13,13 @@ message GetRestaurantsResponse {
 	repeated RestaurantMessage Restaurants = 1;
 }
 
+message CreateRestaurantRequest {
+	string name = 1;
+}
+message CreateRestaurantResponse {}
+
 service Restaurant {
 	rpc GetRestaurants(GetRestaurantsRequest) returns (GetRestaurantsResponse);
+	rpc CreateRestaurant(CreateRestaurantRequest) returns (CreateRestaurantResponse);
 }
 

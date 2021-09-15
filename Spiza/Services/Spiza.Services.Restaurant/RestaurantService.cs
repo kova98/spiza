@@ -26,4 +26,12 @@ public class RestaurantService : Restaurant.RestaurantBase
 
         return response;
     }
+
+    public override async Task<CreateRestaurantResponse> CreateRestaurant(CreateRestaurantRequest request, ServerCallContext context)
+    {
+        var restaurant = new Entities.Restaurant { Name = request.Name };
+        restaurantsRepo.CreateRestaurant(restaurant);
+
+        return new CreateRestaurantResponse();
+    }
 }

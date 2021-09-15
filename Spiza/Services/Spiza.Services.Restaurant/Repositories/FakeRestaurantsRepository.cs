@@ -19,5 +19,6 @@ public class FakeRestaurantsRepository : IRestaurantsRepository
         });
     }
 
+    public void CreateRestaurant(Restaurant restaurant) => restaurants.Add(restaurant);
     public List<Restaurant> GetRestaurants() => restaurants;
 }
