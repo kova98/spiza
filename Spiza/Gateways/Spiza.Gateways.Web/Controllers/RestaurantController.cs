@@ -19,4 +19,25 @@ public class RestaurantController : Controller
     {
         return Ok(restaurantService.GetRestaurants());  
     }
+
+    [HttpPost("")]
+    public ActionResult<Restaurant> CreateRestaurant(Restaurant restaurant)
+    {
+        restaurantService.CreateRestaurant(restaurant);
+        return Ok();
+    }
+
+    [HttpPut("")]
+    public ActionResult<Restaurant> EditRestaurant(Restaurant restaurant)
+    {
+        restaurantService.EditRestaurant(restaurant);
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult<Restaurant> DeleteRestaurant(long id)
+    {
+        restaurantService.DeleteRestaurant(id);
+        return Ok();
+    }
 }
