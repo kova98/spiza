@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors();
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddGrpcClient<Restaurant.RestaurantClient>((services, options) => 
