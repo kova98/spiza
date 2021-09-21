@@ -18,7 +18,7 @@ namespace Spiza.Services.Restaurant
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
-            services.AddTransient<IRestaurantsRepository, FakeRestaurantsRepository>();
+            services.AddSingleton<IRestaurantsRepository, FakeRestaurantsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

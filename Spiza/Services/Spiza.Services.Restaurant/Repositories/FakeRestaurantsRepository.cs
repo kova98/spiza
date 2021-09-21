@@ -19,7 +19,11 @@ public class FakeRestaurantsRepository : IRestaurantsRepository
         });
     }
 
-    public void CreateRestaurant(Restaurant restaurant) => restaurants.Add(restaurant);
+    public void CreateRestaurant(Restaurant restaurant)
+    {
+        restaurant.Id = restaurants.Max(x => x.Id) + 1;
+        restaurants.Add(restaurant);
+    }
 
     public void DeleteRestaurant(long id)
     {
