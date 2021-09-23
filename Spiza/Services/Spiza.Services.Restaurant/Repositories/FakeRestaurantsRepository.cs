@@ -21,7 +21,10 @@ public class FakeRestaurantsRepository : IRestaurantsRepository
 
     public void CreateRestaurant(Restaurant restaurant)
     {
-        restaurant.Id = restaurants.Max(x => x.Id) + 1;
+        restaurant.Id = restaurants
+            .Select(x => x.Id)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
         restaurants.Add(restaurant);
     }
 
