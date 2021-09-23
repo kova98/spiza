@@ -2,49 +2,52 @@
 
 @inject HttpClient HttpClient
 
-<div style="max-width: 400px;">
-    <EditForm Model="@Model">
+<EditForm Model="@Model">
         <DataAnnotationsValidator />
         <MudCard>
             <MudCardHeader>
-                <MudText Typo=Typo.h4>@action Restaurant</MudText>
+                <MudText Typo=Typo.h5>@ActionText Restaurant</MudText>
             </MudCardHeader>
             <MudCardContent>
                 <MudTextField Label="Id" @bind-Value="Model.Id" ReadOnly=true />
-                <MudTextField Label="Name" @bind-Value="Model.Name" Class="mt-3" For="@(() => Model.Name)" />
+                <MudTextField Label="Name" @bind-Value="Model.Name" Class="mt-3" For="@(() => Model.Name)"/>
             </MudCardContent>
             <MudCardActions>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" OnClick=@(() => Submit(context)) Class="ml-auto">Save</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" OnClick=@(() => Submit(context)) Class="ml-auto">
+                            @ActionText
+                </MudButton>
             </MudCardActions>
         </MudCard>
     </EditForm>
-</div>
 @code {
-    [Parameter]
-    public Restaurant Model
+
+    [Parameter] public Action<Restaurant>? AddToTable { get; set; }
+    [Parameter] public Restaurant Model
     {
         get { return model; }
         set
         {
             model = value;
-            action = model.Id == 0 ? "Create" : "Edit";
+            ActionText = model.Id == 0 ? "Create" : "Edit";
         }
     }
 
-    Restaurant model = new();
-    bool success;
-    string action = "Create";
+    private string ActionText = "Create";
+    private Restaurant model = new();
 
     private async Task Submit(EditContext context)
     {
-        if (model.Id == 0)
+        if (Model.Id == 0)
         {
-            await HttpClient.PostAsJsonAsync<Models.Restaurant>($"http://localhost:5101/api/restaurant", model);
+            await HttpClient.PostAsJsonAsync($"http://localhost:5101/api/restaurant", Model);
+            AddToTable?.Invoke(Model);
         }
         else
         {
-            await HttpClient.PutAsJsonAsync<Models.Restaurant>($"http://localhost:5101/api/restaurant/{model.Id}", model);
+            await HttpClient.PutAsJsonAsync($"http://localhost:5101/api/restaurant", Model);
         }
+
+        Model = new();
     }
 
 }

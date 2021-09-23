@@ -18,8 +18,8 @@
                 <MudTd>@context.Id</MudTd>
                 <MudTd>@context.Name</MudTd>
                 <MudTd>
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick=@(() => Edit(context))></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick=@(() => Delete(context)) Color="Color.Error"></MudIconButton>
                 </MudTd>
             </RowTemplate>
             <PagerContent>
@@ -28,7 +28,7 @@
         </MudTable>
     </MudItem>
     <MudItem xs="3">
-        <EditRestaurantForm Model=@selectedRestaurant></EditRestaurantForm>
+        <EditRestaurantForm Model=@selectedRestaurant AddToTable=@AddToTable></EditRestaurantForm>
     </MudItem>
 </MudGrid>
 
@@ -39,6 +39,24 @@
 @code {
     private List<Restaurant> restaurants = new();
     private Restaurant selectedRestaurant = new();
+
+    private void AddToTable(Restaurant restaurant)
+    {
+        restaurants.Add(restaurant);
+        StateHasChanged();
+    }
+
+    private void Edit(Restaurant restaurant)
+    {
+        selectedRestaurant = restaurant;
+    }
+
+    private async Task Delete(Restaurant restaurant)
+    {
+        restaurants.Remove(restaurant);
+        selectedRestaurant = new();
+        await HttpClient.DeleteAsync($"http://localhost:5101/api/restaurant/{restaurant.Id}");
+    }
 
     protected override async Task OnInitializedAsync()
     {
