@@ -21,14 +21,14 @@ public class RestaurantController : Controller
     }
 
     [HttpPost("")]
-    public ActionResult<Restaurant> CreateRestaurant(Restaurant restaurant)
+    public ActionResult<Restaurant> CreateRestaurant([FromBody] Restaurant restaurant)
     {
         restaurantService.CreateRestaurant(restaurant);
         return Ok();
     }
 
     [HttpPut("")]
-    public ActionResult<Restaurant> EditRestaurant(Restaurant restaurant)
+    public ActionResult<Restaurant> EditRestaurant([FromBody] Restaurant restaurant)
     {
         restaurantService.EditRestaurant(restaurant);
         return Ok();
