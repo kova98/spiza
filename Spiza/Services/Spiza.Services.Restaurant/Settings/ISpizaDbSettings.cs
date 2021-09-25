@@ -2,8 +2,8 @@
 {
     public interface ISpizaDbSettings
     {
-        string ConnectionString { get; }
-        string DatabaseName { get; }
-        string RestaurantsCollectionName { get; }
+        string ConnectionString { get; set; }
+        string DatabaseName { get; set; }
+        string RestaurantsCollectionName { get; set; }
     }
 }

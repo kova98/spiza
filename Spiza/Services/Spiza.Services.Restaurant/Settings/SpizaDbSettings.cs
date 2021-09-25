@@ -2,10 +2,10 @@
 {
     internal class SpizaDbSettings : ISpizaDbSettings
     {
-        public string ConnectionString => "mongodb://localhost:27017";
+        public string ConnectionString { get; set; }
 
-        public string DatabaseName => "SpizaDb";
+        public string DatabaseName { get; set; }
 
-        public string RestaurantsCollectionName => "Restaurants";
+        public string RestaurantsCollectionName { get; set; }
     }
 }
