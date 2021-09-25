@@ -20,7 +20,7 @@ public class RestaurantService : Restaurant.RestaurantBase
         var response = new GetRestaurantsResponse();
         restaurants.ForEach(x => response.Restaurants.Add(new RestaurantMessage
         {
-            Id = x.Id,
+            Id = x.Id.ToString(),
             Name = x.Name
         }));
 
@@ -37,7 +37,7 @@ public class RestaurantService : Restaurant.RestaurantBase
 
     public override async Task<DeleteRestaurantResponse> DeleteRestaurant(DeleteRestaurantRequest request, ServerCallContext context)
     {
-        restaurantsRepo.DeleteRestaurant(request.Id);
+        restaurantsRepo.DeleteRestaurant(Guid.Parse(request.Id));
 
         return new();
     }
@@ -52,7 +52,7 @@ public class RestaurantService : Restaurant.RestaurantBase
     {
         return new Entities.Restaurant
         {
-            Id = request.Restaurant.Id,
+            Id = Guid.Parse(request.Restaurant.Id),
             Name = request.Restaurant.Name
         };
     }

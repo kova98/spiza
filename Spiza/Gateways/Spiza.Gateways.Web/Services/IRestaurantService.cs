@@ -7,6 +7,6 @@ namespace Spiza.Gateways.Web.Services
         IEnumerable<Restaurant> GetRestaurants();
         void CreateRestaurant(Restaurant restaurant);
         void EditRestaurant(Restaurant restaurant);
-        void DeleteRestaurant(long id);
+        void DeleteRestaurant(Guid id);
     }
 }

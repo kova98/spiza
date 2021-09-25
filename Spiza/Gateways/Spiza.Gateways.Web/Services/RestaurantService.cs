@@ -18,9 +18,9 @@ public class RestaurantService : IRestaurantService
         client.CreateRestaurant(new CreateRestaurantRequest { Name = restaurant.Name });
     }
 
-    public void DeleteRestaurant(long id)
+    public void DeleteRestaurant(Guid id)
     {
-        client.DeleteRestaurant(new DeleteRestaurantRequest { Id = id });
+        client.DeleteRestaurant(new DeleteRestaurantRequest { Id = id.ToString() });
     }
 
     public void EditRestaurant(Models.Restaurant restaurant)

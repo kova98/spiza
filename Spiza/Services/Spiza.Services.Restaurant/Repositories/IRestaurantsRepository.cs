@@ -6,6 +6,6 @@ public interface IRestaurantsRepository
 {
     List<Restaurant> GetRestaurants();
     void CreateRestaurant(Restaurant restaurant);
-    void DeleteRestaurant(long id);
+    void DeleteRestaurant(Guid id);
     void EditRestaurant(Restaurant restaurant);
 }

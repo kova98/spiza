@@ -1,7 +1,11 @@
 ﻿
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace Spiza.Services.Restaurant.Entities;
 public class Restaurant
 {
-    public long Id { get; set; } 
+    [BsonId]
+    public Guid Id { get; set; } 
     public string? Name { get; set; }
+    public Menu Menu { get; set; }
 }

@@ -35,7 +35,7 @@ public class RestaurantController : Controller
     }
 
     [HttpDelete("{id}")]
-    public ActionResult<Restaurant> DeleteRestaurant(long id)
+    public ActionResult<Restaurant> DeleteRestaurant(Guid id)
     {
         restaurantService.DeleteRestaurant(id);
         return Ok();

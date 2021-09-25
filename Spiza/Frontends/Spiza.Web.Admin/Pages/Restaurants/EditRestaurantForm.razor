@@ -28,7 +28,7 @@
         set
         {
             model = value;
-            ActionText = model.Id == 0 ? "Create" : "Edit";
+            ActionText = model.Id == null ? "Create" : "Edit";
         }
     }
 
@@ -37,7 +37,7 @@
 
     private async Task Submit(EditContext context)
     {
-        if (Model.Id == 0)
+        if (Model.Id == null)
         {
             await HttpClient.PostAsJsonAsync($"http://localhost:5101/api/restaurant", Model);
             AddToTable?.Invoke(Model);
