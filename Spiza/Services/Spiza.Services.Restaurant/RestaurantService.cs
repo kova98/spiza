@@ -1,6 +1,8 @@
 ﻿
 using Grpc.Core;
 using Spiza.Services.Restaurant.Repositories;
+using System;
+using System.Threading.Tasks;
 using Entities = Spiza.Services.Restaurant.Entities;
 
 namespace GrpcServices.Restaurant;

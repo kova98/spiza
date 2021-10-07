@@ -15,7 +15,7 @@
                 <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd>@context.Id</MudTd>
+                <MudTd>@context.Id?.ToString()</MudTd>
                 <MudTd>@context.Name</MudTd>
                 <MudTd>
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick=@(() => Edit(context))></MudIconButton>

@@ -1,6 +1,10 @@
 
 using Spiza.Gateways.Web.Services;
 using GrpcServices.Restaurant;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,5 +1,6 @@
 ﻿
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace Spiza.Services.Restaurant.Entities;
 public class Restaurant

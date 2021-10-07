@@ -1,4 +1,6 @@
-﻿namespace Spiza.Gateways.Web.Models
+﻿using System.Collections.Generic;
+
+namespace Spiza.Gateways.Web.Models
 {
     public class Menu
     {

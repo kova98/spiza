@@ -1,4 +1,6 @@
-﻿namespace Spiza.Web.Admin.Models;
+﻿using System;
+
+namespace Spiza.Web.Admin.Models;
 
 public class Restaurant
 {

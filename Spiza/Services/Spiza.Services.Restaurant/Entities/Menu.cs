@@ -1,4 +1,6 @@
-﻿namespace Spiza.Services.Restaurant.Entities
+﻿using System.Collections.Generic;
+
+namespace Spiza.Services.Restaurant.Entities
 {
     public class Menu
     {

@@ -1,4 +1,6 @@
 ﻿using Spiza.Gateways.Web.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Spiza.Gateways.Web.Services
 {

@@ -1,4 +1,6 @@
-﻿namespace Spiza.Gateways.Web.Models;
+﻿using System;
+
+namespace Spiza.Gateways.Web.Models;
 
 public class Restaurant
 {

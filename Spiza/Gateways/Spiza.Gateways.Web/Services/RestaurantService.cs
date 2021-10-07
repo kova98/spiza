@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using GrpcServices.Restaurant;
+using System;
+using System.Collections.Generic;
 
 namespace Spiza.Gateways.Web.Services;
 public class RestaurantService : IRestaurantService
