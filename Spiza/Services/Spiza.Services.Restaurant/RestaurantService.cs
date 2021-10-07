@@ -1,7 +1,9 @@
 ﻿
+using Google.Protobuf.Collections;
 using Grpc.Core;
 using Spiza.Services.Restaurant.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Entities = Spiza.Services.Restaurant.Entities;
 
@@ -50,6 +52,40 @@ public class RestaurantService : Restaurant.RestaurantBase
         return new();
     }
 
+    public override async Task<UpdateMenuResponse> UpdateMenu(UpdateMenuRequest request, ServerCallContext context)
+    {
+        var restaurantId = Guid.Parse(request.RestaurantId);
+        var menu = MapToEntity(request.Menu);
+
+        restaurantsRepo.UpdateMenu(restaurantId, menu);
+
+        return new();
+    }
+
+    private Entities.Menu MapToEntity(MenuMessage menu) => new Entities.Menu
+    {
+        Categories = menu.Categories,
+        Items = MapToEntity(menu.Items)
+    };
+
+    private IList<Entities.Item> MapToEntity(RepeatedField<ItemMessage> items)
+    {
+        var itemEntities = new List<Entities.Item>();
+
+        foreach(var item in items)
+        {
+            itemEntities.Add(new Entities.Item
+            {
+                Category = item.Category,
+                Name = item.Name,
+                Order = item.Order,
+                Price = item.Price,
+            });
+        }
+
+        return itemEntities;
+    }
+
     public static Entities.Restaurant MapToEntity(UpdateRestaurantRequest request)
     {
         return new Entities.Restaurant
@@ -58,5 +94,4 @@ public class RestaurantService : Restaurant.RestaurantBase
             Name = request.Restaurant.Name,
         };
     }
-        
 }

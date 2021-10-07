@@ -10,4 +10,5 @@ public interface IRestaurantsRepository
     void CreateRestaurant(Restaurant restaurant);
     void DeleteRestaurant(Guid id);
     void UpdateRestaurant(Restaurant restaurant);
+    void UpdateMenu(Guid restaurantId, Menu menu);
 }

@@ -28,10 +28,29 @@ message UpdateRestaurantRequest {
 }
 message UpdateRestaurantResponse {}
 
+message ItemMessage {
+	string name = 1;
+	string category = 2;
+	int32 order = 3;
+	int64 price = 4;
+}
+
+message MenuMessage {
+	repeated string categories = 1;
+	repeated ItemMessage items = 2;
+}
+
+message UpdateMenuRequest {
+	string restaurantId = 1;
+	MenuMessage menu = 2;
+}
+message UpdateMenuResponse {}
+
 service Restaurant {
 	rpc GetRestaurants(GetRestaurantsRequest) returns (GetRestaurantsResponse);
 	rpc CreateRestaurant(CreateRestaurantRequest) returns (CreateRestaurantResponse);
 	rpc DeleteRestaurant(DeleteRestaurantRequest) returns (DeleteRestaurantResponse);
 	rpc UpdateRestaurant(UpdateRestaurantRequest) returns (UpdateRestaurantResponse);
+	rpc UpdateMenu(UpdateMenuRequest) returns (UpdateMenuResponse);
 }
 

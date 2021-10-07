@@ -37,4 +37,15 @@ public class MongoDBRestaurantsRepository : IRestaurantsRepository
 
     public List<Entities.Restaurant> GetRestaurants() =>
         restaurants.Find(x => true).ToList();
+
+    public void UpdateMenu(Guid restaurantId, Menu menu)
+    {
+        var restaurant = restaurants.Find(x => x.Id == restaurantId).FirstOrDefault();
+
+        if (restaurant != null)
+        {
+            restaurant.Menu = menu;
+            restaurants.ReplaceOne(x => x.Id == restaurant.Id, restaurant);
+        }
+    }
 }
