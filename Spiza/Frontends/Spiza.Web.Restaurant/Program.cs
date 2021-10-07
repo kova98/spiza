@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Spiza.Web.Restaurant;
 using MudBlazor.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
+using System;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
