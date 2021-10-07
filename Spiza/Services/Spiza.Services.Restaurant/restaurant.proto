@@ -23,15 +23,15 @@ message DeleteRestaurantRequest {
 }
 message DeleteRestaurantResponse {}
 
-message EditRestaurantRequest {
+message UpdateRestaurantRequest {
 	RestaurantMessage restaurant = 1;
 }
-message EditRestaurantResponse {}
+message UpdateRestaurantResponse {}
 
 service Restaurant {
 	rpc GetRestaurants(GetRestaurantsRequest) returns (GetRestaurantsResponse);
 	rpc CreateRestaurant(CreateRestaurantRequest) returns (CreateRestaurantResponse);
 	rpc DeleteRestaurant(DeleteRestaurantRequest) returns (DeleteRestaurantResponse);
-	rpc EditRestaurant(EditRestaurantRequest) returns (EditRestaurantResponse);
+	rpc UpdateRestaurant(UpdateRestaurantRequest) returns (UpdateRestaurantResponse);
 }
 

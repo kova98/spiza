@@ -44,18 +44,18 @@ public class RestaurantService : Restaurant.RestaurantBase
         return new();
     }
 
-    public override async Task<EditRestaurantResponse> EditRestaurant(EditRestaurantRequest request, ServerCallContext context)
+    public override async Task<UpdateRestaurantResponse> UpdateRestaurant(UpdateRestaurantRequest request, ServerCallContext context)
     {
-        restaurantsRepo.EditRestaurant(MapToEntity(request));
+        restaurantsRepo.UpdateRestaurant(MapToEntity(request));
         return new();
     }
 
-    public static Entities.Restaurant MapToEntity(EditRestaurantRequest request)
+    public static Entities.Restaurant MapToEntity(UpdateRestaurantRequest request)
     {
         return new Entities.Restaurant
         {
             Id = Guid.Parse(request.Restaurant.Id),
-            Name = request.Restaurant.Name
+            Name = request.Restaurant.Name,
         };
     }
         

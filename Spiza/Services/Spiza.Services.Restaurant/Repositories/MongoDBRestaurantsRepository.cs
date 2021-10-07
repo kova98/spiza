@@ -18,15 +18,23 @@ public class MongoDBRestaurantsRepository : IRestaurantsRepository
         restaurants = database.GetCollection<Entities.Restaurant>(settings.RestaurantsCollectionName);
     }
 
-    public void CreateRestaurant(Entities.Restaurant restaurant) => 
+    public void CreateRestaurant(Entities.Restaurant restaurant) =>
         restaurants.InsertOne(restaurant);
 
-    public void DeleteRestaurant(Guid id) => 
+    public void DeleteRestaurant(Guid id) =>
         restaurants.DeleteOne(x => x.Id == id);
 
-    public void EditRestaurant(Entities.Restaurant restaurant) =>
-        restaurants.ReplaceOne(x => x.Id == restaurant.Id, restaurant);
+    public void UpdateRestaurant(Entities.Restaurant restaurant)
+    {
+        var restaurantToUpdate = restaurants.Find(x => x.Id == restaurant.Id).FirstOrDefault();
 
-    public List<Entities.Restaurant> GetRestaurants() => 
+        if (restaurantToUpdate != null)
+        {
+            restaurant.Menu = restaurantToUpdate.Menu;
+            restaurants.ReplaceOne(x => x.Id == restaurant.Id, restaurant);
+        }
+    }
+
+    public List<Entities.Restaurant> GetRestaurants() =>
         restaurants.Find(x => true).ToList();
 }
