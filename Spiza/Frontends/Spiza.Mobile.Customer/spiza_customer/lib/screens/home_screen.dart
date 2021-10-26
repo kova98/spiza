@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spiza_customer/widgets/restaurants_list.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -8,12 +9,59 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
+    var query = "";
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            children: [],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                ),
+                label: Text(
+                  'A long address 5',
+                  style: TextStyle(color: Colors.black87),
+                ),
+                icon: Icon(
+                  Icons.location_on,
+                  color: primaryColor,
+                ),
+                onPressed: () {},
+              ),
+              SizedBox(height: 10),
+              Text(
+                'What would\nyou like to eat?',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32,
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                onChanged: (value) {
+                  query = value;
+                },
+              ),
+              SizedBox(height: 20),
+              Text(
+                'All Restaurants',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+              ),
+              RestaurantsList()
+            ],
           ),
         ),
       ),
