@@ -29,34 +29,45 @@ class RestaurantsList extends StatelessWidget {
                     builder: (context) => MenuScreen(restaurant: item),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image(image: AssetImage("assets/burger.png")),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            item.name,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            '★ 4.5',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    new Container(
+                      height: 150.0,
+                      alignment: Alignment.center,
+                      decoration: new BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                        image: DecorationImage(
+                            image: AssetImage('assets/burger.png'),
+                            fit: BoxFit.cover),
                       ),
-                      Text('5,00 kn')
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          item.name,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '★ 4.5',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '5,00 kn',
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                    SizedBox(height: 17)
+                  ],
                 ),
               );
             },

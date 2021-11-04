@@ -16,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ListView(
+            physics: BouncingScrollPhysics(),
             shrinkWrap: true,
             children: [
               Column(
@@ -48,9 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 20),
               TextField(
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
+                  prefixIcon: Icon(Icons.search),
+                  border: UnderlineInputBorder(),
                 ),
                 onChanged: (value) {
                   // update
@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 24,
                 ),
               ),
+              SizedBox(height: 15),
               RestaurantsList()
             ],
           ),
