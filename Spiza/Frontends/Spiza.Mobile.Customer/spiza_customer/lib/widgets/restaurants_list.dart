@@ -16,50 +16,50 @@ class RestaurantsList extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          return Expanded(
-            child: ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, int index) {
-                final item = snapshot.data[index];
-                return InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MenuScreen(restaurant: item),
-                    ),
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, int index) {
+              final item = snapshot.data[index];
+              return InkWell(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MenuScreen(restaurant: item),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image(image: AssetImage("assets/burger.png")),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              item.name,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image(image: AssetImage("assets/burger.png")),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            item.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Text(
-                              '★ 4.5',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          ),
+                          Text(
+                            '★ 4.5',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        ),
-                        Text('5,00 kn')
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      Text('5,00 kn')
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
         }
       },

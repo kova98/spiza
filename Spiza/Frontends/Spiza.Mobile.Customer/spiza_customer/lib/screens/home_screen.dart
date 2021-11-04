@@ -10,36 +10,40 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
-    var query = "";
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ListView(
+            shrinkWrap: true,
             children: [
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                ),
-                label: Text(
-                  'A long address 5',
-                  style: TextStyle(color: Colors.black87),
-                ),
-                icon: Icon(
-                  Icons.location_on,
-                  color: primaryColor,
-                ),
-                onPressed: () {},
-              ),
-              SizedBox(height: 10),
-              Text(
-                'What would\nyou like to eat?',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 32,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton.icon(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    label: Text(
+                      'A long address 5',
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                    icon: Icon(
+                      Icons.location_on,
+                      color: primaryColor,
+                    ),
+                    onPressed: () {},
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'What would\nyou like to eat?',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 20),
               TextField(
@@ -49,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 onChanged: (value) {
-                  query = value;
+                  // update
                 },
               ),
               SizedBox(height: 20),
