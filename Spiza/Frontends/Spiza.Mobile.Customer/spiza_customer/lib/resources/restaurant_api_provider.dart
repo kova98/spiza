@@ -19,4 +19,18 @@ class RestaurantApiProvider {
       throw Exception('Failed to fetch restaurants');
     }
   }
+
+  Future<Restaurant> getRestaurantWithMenu(String id) async {
+    final response = await _client.get(
+      '$_root/restaurant/$id',
+    );
+
+    if (response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      final restaurant = Restaurant.fromJson(decoded);
+      return restaurant;
+    } else {
+      throw Exception('Failed to fetch restaurant');
+    }
+  }
 }

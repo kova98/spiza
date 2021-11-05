@@ -93,7 +93,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   style: TextStyle(fontSize: 18, color: Colors.black87),
                 ),
                 SizedBox(height: 15),
-                MenuList(),
+                MenuList(restaurant),
               ],
             ),
           ),

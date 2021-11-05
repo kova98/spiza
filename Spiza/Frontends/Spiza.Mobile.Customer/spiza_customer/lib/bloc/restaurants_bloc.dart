@@ -6,14 +6,26 @@ class RestaurantsBloc {
   final _repository = RestaurantRepository();
   final _restaurants = PublishSubject<List<Restaurant>>();
 
-  String searchQuery = "";
-  bool isSearching = false;
+  List<Restaurant> _restaurantsList = List<Restaurant>();
 
   Stream<List<Restaurant>> get restaurants => _restaurants.stream;
 
   Future getRestaurants() async {
-    final restaurants = await _repository.getRestaurants();
-    _restaurants.sink.add(restaurants);
+    _restaurantsList = await _repository.getRestaurants();
+    _restaurants.sink.add(_restaurantsList);
+  }
+
+  Future getRestaurantWithMenu(String id) async {
+    final restaurant = await _repository.getRestaurantWithMenu(id);
+    final existingRestaurant = _restaurantsList.firstWhere(
+      (x) => x.id == id,
+      orElse: () => null,
+    );
+    if (existingRestaurant != null) {
+      final index = _restaurantsList.indexOf(existingRestaurant);
+      _restaurantsList[index] = restaurant;
+    }
+    _restaurants.sink.add(_restaurantsList);
   }
 
   void dispose() {
