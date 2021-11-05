@@ -10,5 +10,6 @@ namespace Spiza.Gateways.Web.Services
         void CreateRestaurant(Restaurant restaurant);
         void EditRestaurant(Restaurant restaurant);
         void DeleteRestaurant(Guid id);
+        Restaurant GetRestaurant(Guid restaurantId);
     }
 }

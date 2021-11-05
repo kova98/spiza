@@ -24,16 +24,11 @@ public class MongoDBRestaurantsRepository : IRestaurantsRepository
     public void DeleteRestaurant(Guid id) =>
         restaurants.DeleteOne(x => x.Id == id);
 
-    public void UpdateRestaurant(Entities.Restaurant restaurant)
-    {
-        var restaurantToUpdate = restaurants.Find(x => x.Id == restaurant.Id).FirstOrDefault();
+    public void UpdateRestaurant(Entities.Restaurant restaurant) =>
+        restaurants.ReplaceOne(x => x.Id == restaurant.Id, restaurant);
 
-        if (restaurantToUpdate != null)
-        {
-            restaurant.Menu = restaurantToUpdate.Menu;
-            restaurants.ReplaceOne(x => x.Id == restaurant.Id, restaurant);
-        }
-    }
+    public Entities.Restaurant GetRestaurant(Guid id) => 
+        restaurants.Find(x => x.Id == id).FirstOrDefault();
 
     public List<Entities.Restaurant> GetRestaurants() =>
         restaurants.Find(x => true).ToList();
@@ -48,4 +43,6 @@ public class MongoDBRestaurantsRepository : IRestaurantsRepository
             restaurants.ReplaceOne(x => x.Id == restaurant.Id, restaurant);
         }
     }
+
+    
 }

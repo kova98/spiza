@@ -27,8 +27,20 @@ public class RestaurantService : IRestaurantService
 
     public void EditRestaurant(Models.Restaurant restaurant)
     {
-        var message = mapper.Map<RestaurantMessage>(restaurant);
-        client.UpdateRestaurant(new UpdateRestaurantRequest { Restaurant = message });
+        var restaurantMessage = new RestaurantMessage
+        {
+            Id = restaurant.Id.ToString(),
+            Name = restaurant.Name,
+            Menu = mapper.Map<MenuMessage>(restaurant.Menu) ?? new()
+        };
+
+        client.UpdateRestaurant(new UpdateRestaurantRequest { Restaurant = restaurantMessage });
+    }
+
+    public Models.Restaurant GetRestaurant(Guid restaurantId)
+    {
+        var response = client.GetRestaurant(new GetRestaurantRequest { Id = restaurantId.ToString() });
+        return mapper.Map<Models.Restaurant>(response.Restaurant);
     }
 
     public IEnumerable<Models.Restaurant> GetRestaurants()

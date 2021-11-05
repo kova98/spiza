@@ -21,17 +21,49 @@ public class RestaurantController : Controller
         return Ok(restaurantService.GetRestaurants());  
     }
 
+    [HttpGet("{id}")]
+    public ActionResult<Restaurant[]> GetRestaurant(string id)
+    {
+        var idValid = Guid.TryParse(id, out Guid restaurantId);
+        
+        if (idValid == false)
+        {
+            return BadRequest();
+        }
+
+        var restaurant = restaurantService.GetRestaurant(restaurantId);
+        
+        if (restaurant == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(restaurant);
+    }
+
     [HttpPost("")]
     public ActionResult<Restaurant> CreateRestaurant([FromBody] Restaurant restaurant)
     {
+        if (restaurant == null)
+        {
+            return BadRequest();
+        }
+
         restaurantService.CreateRestaurant(restaurant);
+
         return Ok();
     }
 
     [HttpPut("")]
     public ActionResult<Restaurant> EditRestaurant([FromBody] Restaurant restaurant)
     {
+        if (restaurant == null)
+        {
+            return BadRequest();
+        }
+
         restaurantService.EditRestaurant(restaurant);
+
         return Ok();
     }
 
