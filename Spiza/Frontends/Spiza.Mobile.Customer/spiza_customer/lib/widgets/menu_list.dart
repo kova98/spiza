@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:spiza_customer/bloc/cart_bloc.dart';
+import 'package:spiza_customer/bloc/cart_provider.dart';
 import 'package:spiza_customer/bloc/restaurants_provider.dart';
 import 'package:spiza_customer/models/item.dart';
 import 'package:spiza_customer/models/restaurant.dart';
 
 class MenuList extends StatelessWidget {
-  final Restaurant restaurant;
-
-  const MenuList(this.restaurant);
+  final String restaurantId;
+  const MenuList(this.restaurantId);
 
   @override
   Widget build(BuildContext context) {
-    final bloc = RestaurantsProvider.of(context);
+    final restaurantsBloc = RestaurantsProvider.of(context);
+    final cartBloc = CartProvider.of(context);
 
     return StreamBuilder(
-      stream: bloc.restaurants,
+      stream: restaurantsBloc.restaurants,
       builder: (context, AsyncSnapshot<List<Restaurant>> snapshot) {
         if (!snapshot.hasData) {
-          bloc.getRestaurantWithMenu(restaurant.id);
+          restaurantsBloc.getRestaurantWithMenu(restaurantId);
           return Center(
             child: CircularProgressIndicator(),
           );
         } else {
+          final restaurant =
+              snapshot.data.firstWhere((r) => r.id == restaurantId);
+          // tu je bug, treba dohvatit snapshot.restaurant bla bla
           return ListView.builder(
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),
@@ -45,7 +50,7 @@ class MenuList extends StatelessWidget {
                             ),
                           ),
                         ),
-                        buildMenuItems(items)
+                        _buildMenuItems(items, cartBloc)
                       ],
                     );
             },
@@ -54,55 +59,60 @@ class MenuList extends StatelessWidget {
       },
     );
   }
-}
 
-Widget buildMenuItems(List<Item> items) {
-  List<Widget> menuItems = List<Widget>();
+  Widget _buildMenuItems(List<Item> items, CartBloc cartBloc) {
+    List<Widget> menuItems = List<Widget>();
 
-  for (var i = 0; i < items.length; i++) {
-    final item = items[i];
-    menuItems.add(
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+    for (var i = 0; i < items.length; i++) {
+      final item = items[i];
+      menuItems.add(
+        InkWell(
+          onTap: () => addToCart(item, cartBloc),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      item.description,
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      "${item.price} kn",
+                    )
+                  ],
+                ),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: SizedBox(
+                  width: 150,
+                  child: Image(
+                    image: AssetImage('assets/burger.png'),
                   ),
                 ),
-                SizedBox(height: 5),
-                Text(
-                  item.description,
-                  style: TextStyle(color: Colors.black54),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  "${item.price} kn",
-                )
-              ],
-            ),
+              )
+            ],
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: SizedBox(
-              width: 150,
-              child: Image(
-                image: AssetImage('assets/burger.png'),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-
-    menuItems.add(SizedBox(height: 15));
+        ),
+      );
+      menuItems.add(SizedBox(height: 15));
+    }
+    return Column(children: menuItems);
   }
 
-  return Column(children: menuItems);
+  void addToCart(Item item, CartBloc cartBloc) {
+    cartBloc.addToCart(item);
+  }
 }
