@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/models/item.dart';
-import 'package:spiza_customer/resources/cart_api_provider.dart';
+import 'package:spiza_customer/data/cart_api_provider.dart';
 
 class CartBloc {
   final _api = CartApiProvider();

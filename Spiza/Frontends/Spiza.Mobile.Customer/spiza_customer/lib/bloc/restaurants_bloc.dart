@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:spiza_customer/models/restaurant.dart';
-import 'package:spiza_customer/resources/restaurant_repository.dart';
+import 'package:spiza_customer/data/restaurant_repository.dart';
 
 class RestaurantsBloc {
   final _repository = RestaurantRepository();
