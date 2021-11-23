@@ -13,7 +13,12 @@ class CartBloc {
 
   void addToCart(Item item) {
     _lastCart.items.add(item);
-    _cart.sink.add(_lastCart);
+    refreshCart();
+  }
+
+  void setRestaurantName(String name) {
+    _lastCart.restaurantName = name;
+    refreshCart();
   }
 
   void refreshCart() {

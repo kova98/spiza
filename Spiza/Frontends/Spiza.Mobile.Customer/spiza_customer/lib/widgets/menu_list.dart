@@ -50,7 +50,7 @@ class MenuList extends StatelessWidget {
                             ),
                           ),
                         ),
-                        _buildMenuItems(items, cartBloc)
+                        _buildMenuItems(items, restaurant.name, cartBloc)
                       ],
                     );
             },
@@ -60,14 +60,15 @@ class MenuList extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItems(List<Item> items, CartBloc cartBloc) {
+  Widget _buildMenuItems(
+      List<Item> items, String restaurantName, CartBloc cartBloc) {
     List<Widget> menuItems = List<Widget>();
 
     for (var i = 0; i < items.length; i++) {
       final item = items[i];
       menuItems.add(
         InkWell(
-          onTap: () => addToCart(item, cartBloc),
+          onTap: () => addToCart(item, restaurantName, cartBloc),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -112,7 +113,8 @@ class MenuList extends StatelessWidget {
     return Column(children: menuItems);
   }
 
-  void addToCart(Item item, CartBloc cartBloc) {
+  void addToCart(Item item, String restaurantName, CartBloc cartBloc) {
     cartBloc.addToCart(item);
+    cartBloc.setRestaurantName(restaurantName);
   }
 }
