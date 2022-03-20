@@ -1,5 +1,13 @@
 package data
 
+import (
+	"context"
+	"log"
+	"os"
+
+	"gopkg.in/mgo.v2/bson"
+)
+
 type Restaurant struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
@@ -20,22 +28,26 @@ type Item struct {
 	Image       string  `json:"image"`
 }
 
-func GetRestaurants() []*Restaurant {
-	return []*Restaurant{
-		{
-			Id:   "test id",
-			Name: "test name",
-			Menu: Menu{
-				Categories: []string{"test category"},
-				Items: []Item{
-					{
-						Name:     "item name",
-						Category: "item category",
-						Order:    4,
-						Price:    12.35,
-					},
-				},
-			},
-		},
+func GetRestaurants() ([]Restaurant, error) {
+	var restaurants []Restaurant
+	var restaurant Restaurant
+	l := log.New(os.Stdout, "gateways-web", log.LstdFlags)
+
+	coll := RestaurantsCollection()
+	cursor, err := coll.Find(context.TODO(), bson.M{})
+	if err != nil {
+		l.Fatal(err)
+		defer cursor.Close(context.TODO())
+		return restaurants, err
 	}
+
+	for cursor.Next(context.TODO()) {
+		err := cursor.Decode(&restaurant)
+		if err != nil {
+			return restaurants, err
+		}
+		restaurants = append(restaurants, restaurant)
+	}
+
+	return restaurants, nil
 }

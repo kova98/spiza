@@ -18,10 +18,12 @@ func NewRestaurantsHandler(l *log.Logger) *RestaurantsHandler {
 func (rh *RestaurantsHandler) GetRestaurants(rw http.ResponseWriter, r *http.Request) {
 	rh.l.Println("Handle GET Products")
 
-	restaurants := data.GetRestaurants()
+	restaurants, err := data.GetRestaurants()
+	if err != nil {
+		http.Error(rw, "Unable to get restaurants", http.StatusInternalServerError)
+	}
 
-	// serialize the list to JSON
-	err := data.ToJSON(restaurants, rw)
+	err = data.ToJSON(restaurants, rw)
 	if err != nil {
 		http.Error(rw, "Unable to marshal json", http.StatusInternalServerError)
 	}
