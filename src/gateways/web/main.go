@@ -18,12 +18,16 @@ func main() {
 
 	rh := handlers.NewRestaurantsHandler(l)
 	sm := mux.NewRouter()
+	sm.Use(handlers.CommonMiddleware)
 
 	getRouter := sm.Methods(http.MethodGet).Subrouter()
-	getRouter.HandleFunc("/", rh.GetRestaurants)
+	getRouter.HandleFunc("/api/restaurant", rh.GetRestaurants)
+	getRouter.HandleFunc("/api/restaurant/{id}", rh.GetRestaurant)
+
+	addr := "127.0.0.1:5101"
 
 	s := http.Server{
-		Addr:         "127.0.0.1:9090",
+		Addr:         addr,
 		Handler:      sm,
 		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  1 * time.Second,
@@ -31,7 +35,7 @@ func main() {
 	}
 
 	go func() {
-		l.Println("Starting server on port 9090")
+		l.Println("Starting server on address " + addr)
 
 		err := s.ListenAndServe()
 		if err != nil {

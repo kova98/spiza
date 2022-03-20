@@ -5,13 +5,14 @@ import (
 	"log"
 	"os"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type Restaurant struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-	Menu Menu   `json:"menu"`
+	Id   primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Name string             `json:"name"`
+	Menu Menu               `json:"menu"`
 }
 
 type Menu struct {
@@ -44,10 +45,28 @@ func GetRestaurants() ([]Restaurant, error) {
 	for cursor.Next(context.TODO()) {
 		err := cursor.Decode(&restaurant)
 		if err != nil {
+			l.Fatal(err)
 			return restaurants, err
 		}
 		restaurants = append(restaurants, restaurant)
 	}
 
 	return restaurants, nil
+}
+
+func GetRestaurant(id string) (Restaurant, error) {
+	var restaurant Restaurant
+	l := log.New(os.Stdout, "gateways-web", log.LstdFlags)
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return restaurant, err
+	}
+
+	coll := RestaurantsCollection()
+	err = coll.FindOne(context.TODO(), bson.M{"_id": objectId}).Decode(&restaurant)
+	if err != nil {
+		l.Fatal(err)
+	}
+	return restaurant, err
 }
