@@ -3,13 +3,14 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/kova98/spiza/gateways/web/data"
 )
 
 type RestaurantsHandler struct {
-	l *log.Logger
+	logger *log.Logger
 }
 
 func NewRestaurantsHandler(l *log.Logger) *RestaurantsHandler {
@@ -17,7 +18,7 @@ func NewRestaurantsHandler(l *log.Logger) *RestaurantsHandler {
 }
 
 func (rh *RestaurantsHandler) GetRestaurants(rw http.ResponseWriter, r *http.Request) {
-	rh.l.Println("Handle GET Restaurants")
+	rh.logger.Println("Handle GET Restaurants")
 
 	restaurants, err := data.GetRestaurants()
 	if err != nil {
@@ -31,10 +32,14 @@ func (rh *RestaurantsHandler) GetRestaurants(rw http.ResponseWriter, r *http.Req
 }
 
 func (rh *RestaurantsHandler) GetRestaurant(rw http.ResponseWriter, r *http.Request) {
-	rh.l.Println("Handle GET Restaurant")
+	rh.logger.Println("Handle GET Restaurant")
 
 	vars := mux.Vars(r)
-	id := vars["id"]
+	idString := vars["id"]
+	id, err := strconv.ParseInt(idString, 10, 64)
+	if err != nil {
+		http.Error(rw, "Invalid id: "+idString, http.StatusInternalServerError)
+	}
 
 	restaurant, err := data.GetRestaurant(id)
 	if err != nil {
