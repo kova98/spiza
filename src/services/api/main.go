@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/kova98/spiza/gateways/web/data"
-	"github.com/kova98/spiza/gateways/web/handlers"
+	"github.com/kova98/spiza/services/api/data"
+	"github.com/kova98/spiza/services/api/handlers"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/kova98/spiza/gateways/web
+module github.com/kova98/spiza/services/api
 
 go 1.16
 

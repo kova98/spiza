@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/kova98/spiza/gateways/web/data"
+	"github.com/kova98/spiza/services/api/data"
 )
 
 type RestaurantHandler struct {

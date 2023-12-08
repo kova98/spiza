@@ -1,5 +1,3 @@
-@root = http://127.0.0.1:5101/api
-
 ### Get all restaurants
 GET {{root}}/restaurant
 
@@ -15,4 +13,4 @@ Content-Type: application/json
 }
 
 ### Delete a restaurant by id
-DELETE {{root}}/restaurant/2
+DELETE {{root}}/restaurant/1
