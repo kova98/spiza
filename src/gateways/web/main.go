@@ -9,26 +9,34 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/kova98/spiza/gateways/web/data"
 	"github.com/kova98/spiza/gateways/web/handlers"
 )
 
 func main() {
 
 	l := log.New(os.Stdout, "gateways-web", log.LstdFlags)
+	db := data.InitDb("user=spiza dbname=spiza password=spiza host=localhost port=5432 sslmode=disable")
+	restaurantRepo := data.NewRestaurantRepo(db)
+	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
+	router := mux.NewRouter()
+	router.Use(handlers.CommonMiddleware)
 
-	rh := handlers.NewRestaurantsHandler(l)
-	sm := mux.NewRouter()
-	sm.Use(handlers.CommonMiddleware)
-
-	getRouter := sm.Methods(http.MethodGet).Subrouter()
+	getRouter := router.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/api/restaurant", rh.GetRestaurants)
 	getRouter.HandleFunc("/api/restaurant/{id}", rh.GetRestaurant)
+
+	postRouter := router.Methods(http.MethodPost).Subrouter()
+	postRouter.HandleFunc("/api/restaurant", rh.CreateRestaurant)
+
+	deleteRouter := router.Methods(http.MethodDelete).Subrouter()
+	deleteRouter.HandleFunc("/api/restaurant/{id}", rh.DeleteRestaurant)
 
 	addr := "127.0.0.1:5101"
 
 	s := http.Server{
 		Addr:         addr,
-		Handler:      sm,
+		Handler:      router,
 		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,
