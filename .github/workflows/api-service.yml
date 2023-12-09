@@ -49,6 +49,7 @@ jobs:
             if [ $? -ne 0 ]; then
               echo "Service failed to start, checking logs..."
               journalctl -u api --no-pager -n 50
+              exit 1
             else
               echo "Service started successfully"
             fi
