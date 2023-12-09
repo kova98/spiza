@@ -19,11 +19,14 @@ jobs:
           go-version: "1.21.5"
 
       - name: Build
-        
-        run: go build -v ./src/services/api
+        run: |
+          cd ./src/services/api/
+          go build -v .
 
       - name: Test
-        run: go test -v ./src/services/api
+        run:  |
+          cd ./src/services/api/
+          go test -v .
 
       - name: Copy To Server
         uses: appleboy/scp-action@v0.1.4
