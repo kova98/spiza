@@ -1,0 +1,12 @@
+[Unit]
+Description=Spiza API Service
+StartLimitIntervalSec=0
+
+[Service]
+Environment="SPIZA_DB_CONN_STR="
+ExecStart=/usr/local/bin/spiza/api
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
