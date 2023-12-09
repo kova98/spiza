@@ -16,7 +16,12 @@ import (
 func main() {
 
 	l := log.New(os.Stdout, "services-api", log.LstdFlags)
-	db := data.InitDb("user=spiza dbname=spiza password=spiza host=localhost port=5432 sslmode=disable")
+	// get the connection string from the environment variable
+	connStr := os.Getenv("SPIZA_DB_CONN_STR")
+	if connStr == "" {
+		l.Fatal("SPIZA_DB_CONN_STR environment variable empty")
+	}
+	db := data.InitDb(connStr)
 	restaurantRepo := data.NewRestaurantRepo(db)
 	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
 	router := mux.NewRouter()
@@ -35,7 +40,7 @@ func main() {
 	putRouter := router.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/api/restaurant", rh.UpdateRestaurant)
 
-	addr := "127.0.0.1:5101"
+	addr := "127.0.0.1:5002"
 
 	s := http.Server{
 		Addr:         addr,
