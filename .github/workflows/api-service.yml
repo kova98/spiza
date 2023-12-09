@@ -36,7 +36,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "./src/services/api/api"
           target: "/usr/local/bin/spiza/"
-          strip_components: 3
+          strip_components: 4
 
       - name: Run
         uses: appleboy/ssh-action@v1.0.0
