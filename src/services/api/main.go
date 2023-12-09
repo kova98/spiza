@@ -25,6 +25,7 @@ func main() {
 	restaurantRepo := data.NewRestaurantRepo(db)
 	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
 	router := mux.NewRouter()
+	router.Use(handlers.CorsMiddleware)
 	router.Use(handlers.CommonMiddleware)
 
 	getRouter := router.Methods(http.MethodGet).Subrouter()
