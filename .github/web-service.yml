@@ -34,7 +34,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         source: "./api" 
-        target: "/usr/local/bin/"
+        target: "/usr/local/bin/spiza"
 
     - name: Run
       uses: appleboy/ssh-action@v1.0.0
