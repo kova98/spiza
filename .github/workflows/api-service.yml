@@ -43,6 +43,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
+          strip_components: 3
           script: |
             systemctl restart api
             systemctl is-active api
