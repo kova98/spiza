@@ -131,32 +131,17 @@ func (r *RestaurantRepo) CreateRestaurant(restaurant *Restaurant) (int64, error)
 }
 
 func (r *RestaurantRepo) UpdateRestaurant(restaurant *Restaurant) error {
-	tx, err := r.db.Begin()
+	_, err := r.db.Exec("UPDATE restaurants SET name = $1 WHERE id = $2", restaurant.Name, restaurant.Id)
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
-
-	_, err = tx.Exec("UPDATE restaurants SET name = $1 WHERE id = $2", restaurant.Name, restaurant.Id)
-	if err != nil {
-		return err
-	}
-
-	return tx.Commit()
+	return nil
 }
 
 func (r *RestaurantRepo) DeleteRestaurant(id int64) error {
-	tx, err := r.db.Begin()
+	_, err := r.db.Exec("DELETE FROM restaurants WHERE id = $1", id)
 	if err != nil {
 		return err
 	}
-
-	defer tx.Rollback()
-
-	_, err = tx.Exec("DELETE FROM restaurants WHERE id = $1", id)
-	if err != nil {
-		return err
-	}
-
-	return tx.Commit()
+	return nil
 }
