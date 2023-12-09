@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,19 +19,24 @@ jobs:
           go-version: "1.21.5"
 
       - name: Build
-        run: go build -v ./...
+        run: |
+          cd ./src/services/api/
+          go build -v .
 
       - name: Test
-        run: go test -v ./...
+        run:  |
+          cd ./src/services/api/
+          go test -v .
 
-      - name: Deploy
-        uses: appleboy/scp-action@v1.0.0
+      - name: Copy To Server
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "./api"
-          target: "/usr/local/bin/spiza"
+          source: "./src/services/api/api"
+          target: "/usr/local/bin/spiza/"
+          strip_components: 4
 
       - name: Run
         uses: appleboy/ssh-action@v1.0.0
@@ -45,6 +50,7 @@ jobs:
             if [ $? -ne 0 ]; then
               echo "Service failed to start, checking logs..."
               journalctl -u api --no-pager -n 50
+              exit 1
             else
               echo "Service started successfully"
             fi
