@@ -36,6 +36,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "./src/services/api/api"
           target: "/usr/local/bin/spiza/"
+          strip_components: 3
 
       - name: Run
         uses: appleboy/ssh-action@v1.0.0
@@ -43,7 +44,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          strip_components: 3
           script: |
             systemctl restart api
             systemctl is-active api
