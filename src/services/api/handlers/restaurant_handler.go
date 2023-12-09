@@ -62,11 +62,18 @@ func (rh *RestaurantHandler) CreateRestaurant(rw http.ResponseWriter, r *http.Re
 		return
 	}
 
-	err = rh.repo.CreateRestaurant(restaurant)
+	id, err := rh.repo.CreateRestaurant(restaurant)
 	if err != nil {
 		http.Error(rw, "Error creating restaurant: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	rw.WriteHeader(http.StatusCreated)
+
+	response := struct {
+		Id int64 `json:"id"`
+	}{Id: id}
+	data.ToJSON(response, rw)
 }
 
 func (rh *RestaurantHandler) DeleteRestaurant(rw http.ResponseWriter, r *http.Request) {

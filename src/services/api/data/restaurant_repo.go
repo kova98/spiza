@@ -9,24 +9,26 @@ import (
 )
 
 type Restaurant struct {
-	Id   int64  `json:"id,omitempty"`
-	Name string `json:"name"`
-	Menu Menu   `json:"menu"`
+	Id         int64          `json:"id,omitempty"`
+	Name       string         `json:"name"`
+	Categories []MenuCategory `json:"categories"`
 }
 
-type Menu struct {
-	Categories []string `json:"categories"`
-	Items      []Item   `json:"items"`
+type MenuCategory struct {
+	Id           int64  `json:"id,omitempty"`
+	Name         string `json:"name"`
+	RestaurantId int64  `json:"restaurant_id"`
+	Items        []Item `json:"items"`
 }
 
 type Item struct {
-	Id          sql.NullInt64   `json:"id,omitempty"`
-	Name        sql.NullString  `json:"name"`
-	Category    sql.NullString  `json:"category"`
-	Order       sql.NullInt32   `json:"order"`
-	Price       sql.NullFloat64 `json:"price"`
-	Description sql.NullString  `json:"description"`
-	Image       sql.NullString  `json:"image"`
+	Id          int64   `json:"id,omitempty"`
+	Name        string  `json:"name"`
+	Category    string  `json:"category"`
+	Order       int32   `json:"order"`
+	Price       float64 `json:"price"`
+	Description string  `json:"description"`
+	Image       string  `json:"image"`
 }
 
 type RestaurantRepo struct {
@@ -70,97 +72,62 @@ func (r *RestaurantRepo) GetRestaurants() ([]Restaurant, error) {
 	return restaurants, nil
 }
 
-func (r *RestaurantRepo) GetRestaurant(id int64) (Restaurant, error) {
-	query := `SELECT r.id as restaurant_id, 
-					 r.name as restaurant_name, 
-					 mc.name as category_name, 
-					 i.name as item_name, 
-					 i.order_num, 
-					 i.price, 
-					 i.description, 
-					 i.image
-			  FROM restaurants r
-			  LEFT JOIN menu_categories mc ON r.id = mc.restaurant_id
-			  LEFT JOIN items i ON mc.id = i.category_id
-			  WHERE r.id = $1`
-
-	rows, err := r.db.Query(query, id)
+func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
+	// Query to get the restaurant
+	var restaurant Restaurant
+	restaurantQuery := `SELECT id, name FROM restaurants WHERE id = $1`
+	err := repo.db.QueryRow(restaurantQuery, id).Scan(&restaurant.Id, &restaurant.Name)
 	if err != nil {
-		log.Fatal(err)
-		return Restaurant{}, err
+		return nil, err
+	}
+
+	// Query to get the menu categories and items
+	categoryQuery := `SELECT mc.id, mc.name, i.id, i.name, i.category, i.order_num, i.price, i.description, i.image 
+                      FROM menu_categories mc 
+                      LEFT JOIN items i ON mc.id = i.category_id 
+                      WHERE mc.restaurant_id = $1`
+
+	rows, err := repo.db.Query(categoryQuery, id)
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
 
-	var restaurant Restaurant
-	menuMap := make(map[string][]Item) // Temporary map to hold items by category
-
+	categoryMap := make(map[int64]*MenuCategory)
 	for rows.Next() {
+		var catId int64
+		var catName string
 		var item Item
-		var catName sql.NullString
-
-		err := rows.Scan(&restaurant.Id, &restaurant.Name, &catName, &item.Name, &item.Order, &item.Price, &item.Description, &item.Image)
+		err := rows.Scan(&catId, &catName, &item.Id, &item.Name, &item.Category, &item.Order, &item.Price, &item.Description, &item.Image)
 		if err != nil {
-			log.Fatal(err)
-			return restaurant, err
+			return nil, err
 		}
 
-		if item.Name.Valid && item.Name.String != "" {
-			if catName.Valid {
-				item.Category = catName
-			}
-			menuMap[item.Category.String] = append(menuMap[item.Category.String], item)
+		if _, ok := categoryMap[catId]; !ok {
+			categoryMap[catId] = &MenuCategory{Id: catId, Name: catName, RestaurantId: id}
+			restaurant.Categories = append(restaurant.Categories, *categoryMap[catId])
+		}
+
+		if item.Id != 0 { // Assuming '0' as default zero value for item.Id
+			categoryMap[catId].Items = append(categoryMap[catId].Items, item)
 		}
 	}
 
-	var menu Menu
-
-	// Convert the map to a slice of categories and items
-	for categoryName, items := range menuMap {
-		if categoryName != "" {
-			menu.Categories = append(menu.Categories, categoryName)
-		}
-		menu.Items = append(menu.Items, items...)
+	if err = rows.Err(); err != nil {
+		return nil, err
 	}
-	restaurant.Menu = menu
 
-	return restaurant, nil
+	return &restaurant, nil
 }
 
-func (r *RestaurantRepo) CreateRestaurant(restaurant *Restaurant) error {
-	tx, err := r.db.Begin()
-	if err != nil {
-		return err
-	}
-
-	defer tx.Rollback()
-
+func (r *RestaurantRepo) CreateRestaurant(restaurant *Restaurant) (int64, error) {
 	var restaurantID int64
-	err = tx.QueryRow("INSERT INTO restaurants (name) VALUES ($1) RETURNING id", restaurant.Name).Scan(&restaurantID)
+	err := r.db.QueryRow("INSERT INTO restaurants (name) VALUES ($1) RETURNING id", restaurant.Name).Scan(&restaurantID)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	for _, category := range restaurant.Menu.Categories {
-		var categoryID int64
-		err = tx.QueryRow(`INSERT INTO menu_categories (name, restaurant_id) VALUES ($1, $2) RETURNING id`,
-			category, restaurantID).Scan(&categoryID)
-		if err != nil {
-			return err
-		}
-
-		for _, item := range restaurant.Menu.Items {
-			if item.Category.Valid && item.Category.String == category {
-				_, err = tx.Exec(`INSERT INTO items (category_id, name, order_num, price, description, image) 
-										VALUES ($1, $2, $3, $4, $5, $6)`,
-					categoryID, item.Name, item.Order, item.Price, item.Description, item.Image)
-				if err != nil {
-					return err
-				}
-			}
-		}
-	}
-
-	return tx.Commit()
+	return restaurantID, nil
 }
 
 func (r *RestaurantRepo) UpdateRestaurant(restaurant *Restaurant) error {
