@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,18 +19,19 @@ jobs:
           go-version: "1.21.5"
 
       - name: Build
-        run: go build -v ./...
+        
+        run: go build -v ./src/services/api/...
 
       - name: Test
-        run: go test -v ./...
+        run: go test -v ./src/services/api/...
 
-      - name: Deploy
+      - name: Copy To Server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "./api"
+          source: "./src/services/api/api"
           target: "/usr/local/bin/spiza"
 
       - name: Run
