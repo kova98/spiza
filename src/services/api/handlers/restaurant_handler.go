@@ -10,8 +10,8 @@ import (
 )
 
 type RestaurantHandler struct {
-	logger *log.Logger
-	repo   *data.RestaurantRepo
+	l    *log.Logger
+	repo *data.RestaurantRepo
 }
 
 func NewRestaurantsHandler(l *log.Logger, r *data.RestaurantRepo) *RestaurantHandler {
@@ -19,7 +19,7 @@ func NewRestaurantsHandler(l *log.Logger, r *data.RestaurantRepo) *RestaurantHan
 }
 
 func (rh *RestaurantHandler) GetRestaurants(rw http.ResponseWriter, r *http.Request) {
-	rh.logger.Println("Handle GET Restaurants")
+	rh.l.Println("Handle GET Restaurants")
 
 	restaurants, err := rh.repo.GetRestaurants()
 	if err != nil {
@@ -33,7 +33,7 @@ func (rh *RestaurantHandler) GetRestaurants(rw http.ResponseWriter, r *http.Requ
 }
 
 func (rh *RestaurantHandler) GetRestaurant(rw http.ResponseWriter, r *http.Request) {
-	rh.logger.Println("Handle GET Restaurant")
+	rh.l.Println("Handle GET Restaurant")
 
 	vars := mux.Vars(r)
 	idString := vars["id"]
@@ -44,6 +44,7 @@ func (rh *RestaurantHandler) GetRestaurant(rw http.ResponseWriter, r *http.Reque
 
 	restaurant, err := rh.repo.GetRestaurant(id)
 	if err != nil {
+		rh.l.Println(err)
 		http.Error(rw, "Unable to get restaurant", http.StatusInternalServerError)
 	}
 
@@ -54,7 +55,7 @@ func (rh *RestaurantHandler) GetRestaurant(rw http.ResponseWriter, r *http.Reque
 }
 
 func (rh *RestaurantHandler) CreateRestaurant(rw http.ResponseWriter, r *http.Request) {
-	rh.logger.Println("Handle POST Restaurant")
+	rh.l.Println("Handle POST Restaurant")
 	restaurant := &data.Restaurant{}
 	err := data.FromJSON(restaurant, r.Body)
 	if err != nil {
@@ -77,7 +78,7 @@ func (rh *RestaurantHandler) CreateRestaurant(rw http.ResponseWriter, r *http.Re
 }
 
 func (rh *RestaurantHandler) DeleteRestaurant(rw http.ResponseWriter, r *http.Request) {
-	rh.logger.Println("Handle DELETE Restaurant")
+	rh.l.Println("Handle DELETE Restaurant")
 	vars := mux.Vars(r)
 	idString := vars["id"]
 	id, err := strconv.ParseInt(idString, 10, 64)
@@ -88,6 +89,23 @@ func (rh *RestaurantHandler) DeleteRestaurant(rw http.ResponseWriter, r *http.Re
 	err = rh.repo.DeleteRestaurant(id)
 	if err != nil {
 		http.Error(rw, "Error deleting restaurant: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (rh *RestaurantHandler) UpdateRestaurant(rw http.ResponseWriter, r *http.Request) {
+	rh.l.Println("Handle PUT Restaurant")
+
+	restaurant := &data.Restaurant{}
+	err := data.FromJSON(restaurant, r.Body)
+	if err != nil {
+		http.Error(rw, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+
+	err = rh.repo.UpdateRestaurant(restaurant)
+	if err != nil {
+		http.Error(rw, "Error updating restaurant: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 }

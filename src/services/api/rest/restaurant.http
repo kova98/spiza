@@ -1,8 +1,10 @@
+@root = http://127.0.0.1:5101/api
+
 ### Get all restaurants
 GET {{root}}/restaurant
 
 ### Get a restaurant by id
-GET {{root}}/restaurant/2
+GET {{root}}/restaurant/1
 
 ### Create a restaurant
 POST {{root}}/restaurant
@@ -14,3 +16,13 @@ Content-Type: application/json
 
 ### Delete a restaurant by id
 DELETE {{root}}/restaurant/1
+
+### Update a restaurant
+PUT {{root}}/restaurant
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "a different name"
+}
+

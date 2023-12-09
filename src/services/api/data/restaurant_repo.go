@@ -9,9 +9,9 @@ import (
 )
 
 type Restaurant struct {
-	Id         int64          `json:"id,omitempty"`
-	Name       string         `json:"name"`
-	Categories []MenuCategory `json:"categories"`
+	Id             int64          `json:"id,omitempty"`
+	Name           string         `json:"name"`
+	MenuCategories []MenuCategory `json:"menu_categories"`
 }
 
 type MenuCategory struct {
@@ -82,7 +82,7 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 	}
 
 	// Query to get the menu categories and items
-	categoryQuery := `SELECT mc.id, mc.name, i.id, i.name, i.category, i.order_num, i.price, i.description, i.image 
+	categoryQuery := `SELECT mc.id, mc.name, i.id, i.name, i.category_id, i.order_num, i.price, i.description, i.image 
                       FROM menu_categories mc 
                       LEFT JOIN items i ON mc.id = i.category_id 
                       WHERE mc.restaurant_id = $1`
@@ -105,7 +105,7 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 
 		if _, ok := categoryMap[catId]; !ok {
 			categoryMap[catId] = &MenuCategory{Id: catId, Name: catName, RestaurantId: id}
-			restaurant.Categories = append(restaurant.Categories, *categoryMap[catId])
+			restaurant.MenuCategories = append(restaurant.MenuCategories, *categoryMap[catId])
 		}
 
 		if item.Id != 0 { // Assuming '0' as default zero value for item.Id

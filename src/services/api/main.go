@@ -15,7 +15,7 @@ import (
 
 func main() {
 
-	l := log.New(os.Stdout, "gateways-web", log.LstdFlags)
+	l := log.New(os.Stdout, "services-api", log.LstdFlags)
 	db := data.InitDb("user=spiza dbname=spiza password=spiza host=localhost port=5432 sslmode=disable")
 	restaurantRepo := data.NewRestaurantRepo(db)
 	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
@@ -31,6 +31,9 @@ func main() {
 
 	deleteRouter := router.Methods(http.MethodDelete).Subrouter()
 	deleteRouter.HandleFunc("/api/restaurant/{id}", rh.DeleteRestaurant)
+
+	putRouter := router.Methods(http.MethodPut).Subrouter()
+	putRouter.HandleFunc("/api/restaurant", rh.UpdateRestaurant)
 
 	addr := "127.0.0.1:5101"
 
