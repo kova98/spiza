@@ -6,11 +6,23 @@ type ItemRepo struct {
 	db *sql.DB
 }
 
-func (r *ItemRepo) CreateItem(item *Item) error {
-	_, err := r.db.Exec(`INSERT INTO items (category_id, name, order_num, price, description, image) 
-						 VALUES ($1, $2, $3, $4, $5, $6)`,
-		item.Category, item.Name, item.Order, item.Price, item.Description, item.Image)
-	return err
+func NewItemRepo(db *sql.DB) *ItemRepo {
+	return &ItemRepo{db}
+}
+
+func (r *ItemRepo) CreateItem(item *Item) (int64, error) {
+	var itemId int64
+	err := r.db.QueryRow(`
+			INSERT INTO items (category_id, name, order_num, price, description, image) 
+			VALUES ($1, $2, $3, $4, $5, $6)
+			RETURNING id`,
+		item.CategoryId, item.Name, item.Order, item.Price, item.Description, item.Image).Scan(&itemId)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return itemId, err
 }
 
 func (r *ItemRepo) UpdateItem(item *Item) error {
@@ -18,4 +30,12 @@ func (r *ItemRepo) UpdateItem(item *Item) error {
 						 WHERE id = $6`,
 		item.Name, item.Order, item.Price, item.Description, item.Image, item.Id)
 	return err
+}
+
+func (r *ItemRepo) DeleteItem(id int64) error {
+	_, err := r.db.Exec(`DELETE FROM items WHERE id = $1`, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

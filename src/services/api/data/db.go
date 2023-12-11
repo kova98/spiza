@@ -28,13 +28,14 @@ func InitDb(connStr string) *sql.DB {
         
         CREATE TABLE IF NOT EXISTS items (
             id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
             category_id INTEGER REFERENCES menu_categories(id),
-            order_num INTEGER,
-            price NUMERIC,
-            description TEXT,
-            image TEXT
-        );
+            name TEXT NOT NULL DEFAULT '',
+            order_num INTEGER DEFAULT 0,
+            price NUMERIC NOT NULL DEFAULT 0,
+            description TEXT NOT NULL DEFAULT '',
+            image TEXT NOT NULL DEFAULT ''
+        );        
+        
         `
 	_, err = db.Exec(init)
 	if err != nil {

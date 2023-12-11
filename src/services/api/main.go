@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-
 	l := log.New(os.Stdout, "services-api", log.LstdFlags)
 	// get the connection string from the environment variable
 	connStr := os.Getenv("SPIZA_DB_CONN_STR")
@@ -23,22 +22,25 @@ func main() {
 	}
 	db := data.InitDb(connStr)
 	restaurantRepo := data.NewRestaurantRepo(db)
+	itemRepo := data.NewItemRepo(db)
 	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
+	ih := handlers.NewItemHandler(l, itemRepo)
 	router := mux.NewRouter()
 	router.Use(handlers.CorsMiddleware)
 	router.Use(handlers.CommonMiddleware)
+	postRouter := router.Methods(http.MethodPost, http.MethodOptions).Subrouter()
+	postRouter.HandleFunc("/api/restaurant", rh.CreateRestaurant)
+	postRouter.HandleFunc("/api/menu-category/{id}/item", ih.CreateItem)
 
-	getRouter := router.Methods(http.MethodGet).Subrouter()
+	getRouter := router.Methods(http.MethodGet, http.MethodOptions).Subrouter()
 	getRouter.HandleFunc("/api/restaurant", rh.GetRestaurants)
 	getRouter.HandleFunc("/api/restaurant/{id}", rh.GetRestaurant)
 
-	postRouter := router.Methods(http.MethodPost).Subrouter()
-	postRouter.HandleFunc("/api/restaurant", rh.CreateRestaurant)
-
-	deleteRouter := router.Methods(http.MethodDelete).Subrouter()
+	deleteRouter := router.Methods(http.MethodDelete, http.MethodOptions).Subrouter()
 	deleteRouter.HandleFunc("/api/restaurant/{id}", rh.DeleteRestaurant)
+	deleteRouter.HandleFunc("/api/item/{id}", ih.DeleteItem)
 
-	putRouter := router.Methods(http.MethodPut).Subrouter()
+	putRouter := router.Methods(http.MethodPut, http.MethodOptions).Subrouter()
 	putRouter.HandleFunc("/api/restaurant", rh.UpdateRestaurant)
 
 	addr := "127.0.0.1:5002"

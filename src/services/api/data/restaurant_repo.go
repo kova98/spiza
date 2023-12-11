@@ -23,8 +23,8 @@ type MenuCategory struct {
 
 type Item struct {
 	Id          int64   `json:"id,omitempty"`
+	CategoryId  int64   `json:"category_id"`
 	Name        string  `json:"name"`
-	Category    string  `json:"category"`
 	Order       int32   `json:"order"`
 	Price       float64 `json:"price"`
 	Description string  `json:"description"`
@@ -99,7 +99,7 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 		var catId int64
 		var catName string
 		var item Item
-		err := rows.Scan(&catId, &catName, &item.Id, &item.Name, &item.Category, &item.Order, &item.Price, &item.Description, &item.Image)
+		err := rows.Scan(&catId, &catName, &item.Id, &item.Name, &item.CategoryId, &item.Order, &item.Price, &item.Description, &item.Image)
 		if err != nil {
 			return nil, err
 		}
