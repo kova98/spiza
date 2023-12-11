@@ -38,7 +38,11 @@
 		});
 
 		if (response.ok) {
-			items = items.filter((item) => item.id !== itemId);
+			const category = restaurant.menu_categories.find((category) =>
+				category.items.some((item) => item.id === itemId)
+			);
+			category.items = category.items.filter((item) => item.id !== itemId);
+			restaurant = restaurant;
 		} else {
 			console.error('Error deleting item');
 		}
