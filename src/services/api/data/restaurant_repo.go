@@ -73,8 +73,9 @@ func (r *RestaurantRepo) GetRestaurants() ([]Restaurant, error) {
 }
 
 func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
-	// Query to get the restaurant
 	var restaurant Restaurant
+
+	// Query to get the restaurant
 	restaurantQuery := `SELECT id, name FROM restaurants WHERE id = $1`
 	err := repo.db.QueryRow(restaurantQuery, id).Scan(&restaurant.Id, &restaurant.Name)
 	if err != nil {
@@ -103,18 +104,22 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 			return nil, err
 		}
 
-		if _, ok := categoryMap[catId]; !ok {
+		if _, exists := categoryMap[catId]; !exists {
 			categoryMap[catId] = &MenuCategory{Id: catId, Name: catName, RestaurantId: id}
-			restaurant.MenuCategories = append(restaurant.MenuCategories, *categoryMap[catId])
 		}
 
-		if item.Id != 0 { // Assuming '0' as default zero value for item.Id
+		if item.Id != 0 { // Check if item exists
 			categoryMap[catId].Items = append(categoryMap[catId].Items, item)
 		}
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, err
+	}
+
+	// Append the fully populated categories to restaurant.MenuCategories
+	for _, category := range categoryMap {
+		restaurant.MenuCategories = append(restaurant.MenuCategories, *category)
 	}
 
 	return &restaurant, nil
