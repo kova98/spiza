@@ -1,5 +1,5 @@
-<script>
-	export let data;
+<script lang="ts">
+	export let data: { restaurant: Restaurant };
 	export let restaurant = data.restaurant;
 
 	let itemName = '';
@@ -8,7 +8,7 @@
 	let itemDescription = '';
 	let itemPrice = 0;
 
-	const handleSubmitItem = async (categoryId) => {
+	const handleSubmitItem = async (categoryId: number) => {
 		const item = { name: itemName, description: itemDescription, price: itemPrice };
 		const response = await fetch(apiRoot + '/menu-category/' + categoryId + '/item', {
 			method: 'POST',
@@ -25,6 +25,10 @@
 
 		const itemResponse = await response.json();
 		const category = restaurant.menu_categories.find((category) => category.id === categoryId);
+		if (!category) {
+			console.error('Error finding category');
+			return;
+		}
 		category.items.push(itemResponse);
 		restaurant = restaurant;
 		itemName = '';
@@ -32,7 +36,28 @@
 		itemPrice = 0;
 	};
 
-	async function deleteItem(itemId) {
+	const handleSubmitCategory = async () => {
+		const category = { name: itemName, restaurant_id: restaurant.id };
+		const response = await fetch(apiRoot + '/menu-category', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(category)
+		});
+
+		if (!response.ok) {
+			console.error('Error submitting category');
+			return;
+		}
+
+		const categoryResponse = await response.json();
+		restaurant.menu_categories.push(categoryResponse);
+		restaurant = restaurant;
+		itemName = '';
+	};
+
+	async function deleteItem(itemId: number) {
 		const response = await fetch(`${apiRoot}/item/${itemId}`, {
 			method: 'DELETE'
 		});
@@ -41,8 +66,10 @@
 			const category = restaurant.menu_categories.find((category) =>
 				category.items.some((item) => item.id === itemId)
 			);
-			category.items = category.items.filter((item) => item.id !== itemId);
-			restaurant = restaurant;
+			if (category) {
+				category.items = category.items.filter((item) => item.id !== itemId);
+				restaurant = restaurant;
+			}
 		} else {
 			console.error('Error deleting item');
 		}
@@ -62,12 +89,18 @@
 					<button on:click={() => deleteItem(item.id)}>Delete</button>
 				</li>
 			{/each}
+			<li>
+				<form on:submit|preventDefault={(e) => handleSubmitItem(category.id)}>
+					<input type="text" bind:value={itemName} placeholder="Item Name" />
+					<input type="text" bind:value={itemDescription} placeholder="Description" />
+					<input type="number" bind:value={itemPrice} placeholder="Price" />
+					<button type="submit">Create Item</button>
+				</form>
+			</li>
 		</ul>
-		<form on:submit|preventDefault={handleSubmitItem(category.id)}>
-			<input type="text" bind:value={itemName} placeholder="Item Name" />
-			<input type="text" bind:value={itemDescription} placeholder="Description" />
-			<input type="number" bind:value={itemPrice} placeholder="Price" />
-			<button type="submit">Create Item</button>
-		</form>
 	{/each}
+	<form on:submit|preventDefault={handleSubmitCategory}>
+		<input type="text" bind:value={itemName} placeholder="Category Name" />
+		<button type="submit">Create Category</button>
+	</form>
 </div>
