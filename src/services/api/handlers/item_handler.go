@@ -26,12 +26,14 @@ func (h *ItemHandler) CreateItem(rw http.ResponseWriter, r *http.Request) {
 	categoryId, err := strconv.ParseInt(idString, 10, 64)
 	if err != nil {
 		http.Error(rw, "Invalid id: "+idString, http.StatusInternalServerError)
+		return
 	}
 
 	item := &data.Item{}
-	err = data.FromJSON(item, r.Body)
-	if err != nil {
+
+	if err = data.FromJSON(item, r.Body); err != nil {
 		http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
+		return
 	}
 	item.CategoryId = categoryId
 
@@ -39,6 +41,7 @@ func (h *ItemHandler) CreateItem(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		h.l.Println(err)
 		http.Error(rw, "Unable to create item", http.StatusInternalServerError)
+		return
 	}
 
 	rw.WriteHeader(http.StatusCreated)

@@ -99,6 +99,7 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 	}
 
 	for i, category := range categories {
+		categories[i].Items = []Item{}
 		for _, item := range items {
 			if item.CategoryId == category.Id {
 				categories[i].Items = append(categories[i].Items, item)
