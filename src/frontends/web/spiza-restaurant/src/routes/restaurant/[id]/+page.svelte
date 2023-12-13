@@ -2,9 +2,10 @@
 	export let data: { restaurant: Restaurant };
 	export let restaurant = data.restaurant;
 
-	let itemName = '';
 	const apiRoot = 'http://127.0.0.1:5002/api';
 
+	let categoryName = '';
+	let itemName = '';
 	let itemDescription = '';
 	let itemPrice = 0;
 
@@ -37,7 +38,7 @@
 	};
 
 	const handleSubmitCategory = async () => {
-		const category = { name: itemName, restaurant_id: restaurant.id };
+		const category = { name: categoryName, restaurant_id: restaurant.id };
 		const response = await fetch(apiRoot + '/menu-category', {
 			method: 'POST',
 			headers: {
@@ -54,7 +55,23 @@
 		const categoryResponse = await response.json();
 		restaurant.menu_categories.push(categoryResponse);
 		restaurant = restaurant;
-		itemName = '';
+		categoryName = '';
+	};
+
+	const deleteCategory = async function deleteCategory(categoryId: number) {
+		const response = await fetch(`${apiRoot}/menu-category/${categoryId}`, {
+			method: 'DELETE'
+		});
+
+		if (!response.ok) {
+			console.error('Error deleting category');
+			return;
+		}
+
+		restaurant.menu_categories = restaurant.menu_categories.filter(
+			(category) => category.id !== categoryId
+		);
+		restaurant = restaurant;
 	};
 
 	async function deleteItem(itemId: number) {
@@ -80,6 +97,7 @@
 <div>
 	{#each restaurant.menu_categories ?? [] as category}
 		<h2>{category.name}</h2>
+		<button on:click={() => deleteCategory(category.id)}>Delete</button>
 		<ul>
 			{#each category.items ?? [] as item}
 				<li>
@@ -100,7 +118,7 @@
 		</ul>
 	{/each}
 	<form on:submit|preventDefault={handleSubmitCategory}>
-		<input type="text" bind:value={itemName} placeholder="Category Name" />
+		<input type="text" bind:value={categoryName} placeholder="Category Name" />
 		<button type="submit">Create Category</button>
 	</form>
 </div>

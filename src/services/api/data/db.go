@@ -1,12 +1,13 @@
 package data
 
 import (
-	"database/sql"
 	"log"
+
+	"github.com/jmoiron/sqlx"
 )
 
-func InitDb(connStr string) *sql.DB {
-	db, err := sql.Open("postgres", connStr)
+func InitDb(connStr string) *sqlx.DB {
+	db, err := sqlx.Connect("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}

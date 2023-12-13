@@ -1,21 +1,24 @@
 package data
 
-import "database/sql"
+import "github.com/jmoiron/sqlx"
 
 type MenuCategoryRepo struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewMenuCategoryRepo(db *sql.DB) *MenuCategoryRepo {
+func NewMenuCategoryRepo(db *sqlx.DB) *MenuCategoryRepo {
 	return &MenuCategoryRepo{db}
 }
 
-func (r *MenuCategoryRepo) CreateMenuCategory(menuCategory MenuCategory) error {
-	_, err := r.db.Exec(`INSERT INTO menu_categories (name, restaurant_id) VALUES ($1, $2)`, menuCategory.Name, menuCategory.RestaurantId)
+func (r *MenuCategoryRepo) CreateMenuCategory(menuCategory *MenuCategory) (int64, error) {
+	var id int64
+	err := r.db.QueryRow(`
+		INSERT INTO menu_categories (name, restaurant_id) VALUES ($1, $2) RETURNING id`,
+		menuCategory.Name, menuCategory.RestaurantId).Scan(&id)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return id, nil
 }
 
 func (r *MenuCategoryRepo) DeleteMenuCategory(id int64) error {

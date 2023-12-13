@@ -23,20 +23,26 @@ func main() {
 	db := data.InitDb(connStr)
 	restaurantRepo := data.NewRestaurantRepo(db)
 	itemRepo := data.NewItemRepo(db)
+	menuCategoryRepo := data.NewMenuCategoryRepo(db)
 	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
 	ih := handlers.NewItemHandler(l, itemRepo)
+	mch := handlers.NewMenuCategoryHandler(l, menuCategoryRepo)
+
 	router := mux.NewRouter()
 	router.Use(handlers.CorsMiddleware)
 	router.Use(handlers.CommonMiddleware)
-	postRouter := router.Methods(http.MethodPost, http.MethodOptions).Subrouter()
-	postRouter.HandleFunc("/api/restaurant", rh.CreateRestaurant)
-	postRouter.HandleFunc("/api/menu-category/{id}/item", ih.CreateItem)
 
 	getRouter := router.Methods(http.MethodGet, http.MethodOptions).Subrouter()
 	getRouter.HandleFunc("/api/restaurant", rh.GetRestaurants)
 	getRouter.HandleFunc("/api/restaurant/{id}", rh.GetRestaurant)
 
+	postRouter := router.Methods(http.MethodPost, http.MethodOptions).Subrouter()
+	postRouter.HandleFunc("/api/restaurant", rh.CreateRestaurant)
+	postRouter.HandleFunc("/api/menu-category/{id}/item", ih.CreateItem)
+	postRouter.HandleFunc("/api/menu-category", mch.CreateMenuCategory)
+
 	deleteRouter := router.Methods(http.MethodDelete, http.MethodOptions).Subrouter()
+	deleteRouter.HandleFunc("/api/menu-category/{id}", mch.DeleteMenuCategory)
 	deleteRouter.HandleFunc("/api/restaurant/{id}", rh.DeleteRestaurant)
 	deleteRouter.HandleFunc("/api/item/{id}", ih.DeleteItem)
 

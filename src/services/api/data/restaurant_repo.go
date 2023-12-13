@@ -1,9 +1,10 @@
 package data
 
 import (
-	"database/sql"
 	"log"
 	"os"
+
+	"github.com/jmoiron/sqlx"
 
 	_ "github.com/lib/pq"
 )
@@ -11,31 +12,32 @@ import (
 type Restaurant struct {
 	Id             int64          `json:"id,omitempty"`
 	Name           string         `json:"name"`
-	MenuCategories []MenuCategory `json:"menu_categories"`
+	MenuCategories []MenuCategory `json:"menu_categories" db:"menu_categories"`
 }
 
 type MenuCategory struct {
 	Id           int64  `json:"id,omitempty"`
 	Name         string `json:"name"`
-	RestaurantId int64  `json:"restaurant_id"`
+	RestaurantId int64  `json:"restaurant_id" db:"restaurant_id"`
 	Items        []Item `json:"items"`
 }
 
 type Item struct {
-	Id          int64   `json:"id,omitempty"`
-	CategoryId  int64   `json:"category_id"`
-	Name        string  `json:"name"`
-	Order       int32   `json:"order"`
-	Price       float64 `json:"price"`
-	Description string  `json:"description"`
-	Image       string  `json:"image"`
+	Id           int64   `json:"id,omitempty"`
+	CategoryId   int64   `json:"category_id" db:"category_id"`
+	CategoryName string  `json:"category_name,omitempty" db:"category_name"`
+	Name         string  `json:"name"`
+	Order        int32   `json:"order" db:"order_num"`
+	Price        float64 `json:"price"`
+	Description  string  `json:"description"`
+	Image        string  `json:"image"`
 }
 
 type RestaurantRepo struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewRestaurantRepo(db *sql.DB) *RestaurantRepo {
+func NewRestaurantRepo(db *sqlx.DB) *RestaurantRepo {
 	return &RestaurantRepo{db}
 }
 
@@ -73,55 +75,38 @@ func (r *RestaurantRepo) GetRestaurants() ([]Restaurant, error) {
 }
 
 func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
+
 	var restaurant Restaurant
-
-	// Query to get the restaurant
 	restaurantQuery := `SELECT id, name FROM restaurants WHERE id = $1`
-	err := repo.db.QueryRow(restaurantQuery, id).Scan(&restaurant.Id, &restaurant.Name)
-	if err != nil {
+	if err := repo.db.Get(&restaurant, restaurantQuery, id); err != nil {
 		return nil, err
 	}
 
-	// Query to get the menu categories and items
-	categoryQuery := `SELECT mc.id, mc.name, i.id, i.name, i.category_id, i.order_num, i.price, i.description, i.image 
-                      FROM menu_categories mc 
-                      LEFT JOIN items i ON mc.id = i.category_id 
-                      WHERE mc.restaurant_id = $1`
-
-	rows, err := repo.db.Query(categoryQuery, id)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	categoryMap := make(map[int64]*MenuCategory)
-	for rows.Next() {
-		var catId int64
-		var catName string
-		var item Item
-		err := rows.Scan(&catId, &catName, &item.Id, &item.Name, &item.CategoryId, &item.Order, &item.Price, &item.Description, &item.Image)
-		if err != nil {
-			return nil, err
-		}
-
-		if _, exists := categoryMap[catId]; !exists {
-			categoryMap[catId] = &MenuCategory{Id: catId, Name: catName, RestaurantId: id}
-		}
-
-		if item.Id != 0 { // Check if item exists
-			categoryMap[catId].Items = append(categoryMap[catId].Items, item)
-		}
-	}
-
-	if err = rows.Err(); err != nil {
+	itemQuery := `
+		SELECT i.id, i.name, i.category_id, i.order_num, i.price, i.description, i.image
+		FROM items i
+		LEFT JOIN menu_categories mc ON mc.id = i.category_id
+		WHERE mc.restaurant_id = $1`
+	var items []Item
+	if err := repo.db.Select(&items, itemQuery, id); err != nil {
 		return nil, err
 	}
 
-	// Append the fully populated categories to restaurant.MenuCategories
-	for _, category := range categoryMap {
-		restaurant.MenuCategories = append(restaurant.MenuCategories, *category)
+	categoryQuery := "SELECT id, name FROM menu_categories WHERE restaurant_id = $1"
+	var categories []MenuCategory
+	if err := repo.db.Select(&categories, categoryQuery, id); err != nil {
+		return nil, err
 	}
 
+	for i, category := range categories {
+		for _, item := range items {
+			if item.CategoryId == category.Id {
+				categories[i].Items = append(categories[i].Items, item)
+			}
+		}
+	}
+
+	restaurant.MenuCategories = categories
 	return &restaurant, nil
 }
 

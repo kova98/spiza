@@ -1,12 +1,14 @@
 package data
 
-import "database/sql"
+import (
+	"github.com/jmoiron/sqlx"
+)
 
 type ItemRepo struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewItemRepo(db *sql.DB) *ItemRepo {
+func NewItemRepo(db *sqlx.DB) *ItemRepo {
 	return &ItemRepo{db}
 }
 
