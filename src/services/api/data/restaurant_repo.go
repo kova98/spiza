@@ -58,7 +58,6 @@ func (r *RestaurantRepo) GetRestaurants() ([]Restaurant, error) {
 			l.Println(err)
 			return nil, err
 		}
-		// You would need additional queries to populate the Menu and Items
 		restaurants = append(restaurants, restaurant)
 	}
 
@@ -107,6 +106,9 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 		}
 	}
 
+	if categories == nil {
+		categories = []MenuCategory{}
+	}
 	restaurant.MenuCategories = categories
 	return &restaurant, nil
 }
