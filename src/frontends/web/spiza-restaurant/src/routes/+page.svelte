@@ -50,8 +50,6 @@
 	</Card.Root>
 </div>
 
-<a href="/restaurant/{1}">restaurant</a>
-
 <style>
 	.background {
 		background-color: #fad02c;
