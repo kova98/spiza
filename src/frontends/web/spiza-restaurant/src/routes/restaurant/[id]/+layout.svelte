@@ -25,6 +25,12 @@
 	>
 		Menu
 	</a>
+	<a
+		href="/restaurant/{restaurant.id}/orders"
+		class="text-sm font-medium transition-colors hover:text-primary"
+	>
+		Orders
+	</a>
 	<Button class="ml-auto" variant="ghost" href="/"><Exit /></Button>
 </nav>
 <div class="p-6">
