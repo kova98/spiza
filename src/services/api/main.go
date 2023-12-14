@@ -24,9 +24,11 @@ func main() {
 	restaurantRepo := data.NewRestaurantRepo(db)
 	itemRepo := data.NewItemRepo(db)
 	menuCategoryRepo := data.NewMenuCategoryRepo(db)
+	orderRepo := data.NewOrderRepo(db)
 	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
 	ih := handlers.NewItemHandler(l, itemRepo)
 	mch := handlers.NewMenuCategoryHandler(l, menuCategoryRepo)
+	oh := handlers.NewOrderHandler(l, orderRepo)
 
 	router := mux.NewRouter()
 	router.Use(handlers.CorsMiddleware)
@@ -40,6 +42,7 @@ func main() {
 	postRouter.HandleFunc("/api/restaurant", rh.CreateRestaurant)
 	postRouter.HandleFunc("/api/menu-category/{id}/item", ih.CreateItem)
 	postRouter.HandleFunc("/api/menu-category", mch.CreateMenuCategory)
+	postRouter.HandleFunc("/api/order", oh.CreateOrder)
 
 	deleteRouter := router.Methods(http.MethodDelete, http.MethodOptions).Subrouter()
 	deleteRouter.HandleFunc("/api/menu-category/{id}", mch.DeleteMenuCategory)

@@ -37,6 +37,18 @@ func InitDb(connStr string) *sqlx.DB {
             image TEXT NOT NULL DEFAULT ''
         );        
         
+		CREATE TABLE IF NOT EXISTS users (
+			id serial PRIMARY KEY,
+			name TEXT NOT NULL
+		);
+		
+		CREATE TABLE IF NOT EXISTS orders (
+			id SERIAL PRIMARY KEY,
+			user_id INTEGER NOT NULL REFERENCES users(id),
+			restaurant_id INTEGER NOT NULL REFERENCES restaurants(id),
+			status INTEGER NOT NULL DEFAULT 0,
+			items INTEGER[] NOT NULL 
+		);
         `
 	_, err = db.Exec(init)
 	if err != nil {
