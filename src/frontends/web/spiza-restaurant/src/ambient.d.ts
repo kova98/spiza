@@ -16,3 +16,10 @@ interface Restaurant {
 	name: string;
 	menu_categories: MenuCategory[];
 }
+
+interface Order {
+	id: number;
+	date_created: string;
+	date_updated: string;
+	items: Item[];
+}

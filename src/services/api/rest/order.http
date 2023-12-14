@@ -1,0 +1,11 @@
+@root = http://127.0.0.1:5101/api
+
+### Create an order
+POST {{root}}/order
+Content-Type: application/json
+
+{
+  "restaurant_id": 1,
+  "user_id": 1,
+  "items": [1,2]
+}

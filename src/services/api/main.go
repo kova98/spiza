@@ -37,6 +37,7 @@ func main() {
 	getRouter := router.Methods(http.MethodGet, http.MethodOptions).Subrouter()
 	getRouter.HandleFunc("/api/restaurant", rh.GetRestaurants)
 	getRouter.HandleFunc("/api/restaurant/{id}", rh.GetRestaurant)
+	getRouter.HandleFunc("/api/restaurant/{id}/order", oh.GetOrders)
 
 	postRouter := router.Methods(http.MethodPost, http.MethodOptions).Subrouter()
 	postRouter.HandleFunc("/api/restaurant", rh.CreateRestaurant)

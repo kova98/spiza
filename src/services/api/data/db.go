@@ -47,7 +47,8 @@ func InitDb(connStr string) *sqlx.DB {
 			user_id INTEGER NOT NULL REFERENCES users(id),
 			restaurant_id INTEGER NOT NULL REFERENCES restaurants(id),
 			status INTEGER NOT NULL DEFAULT 0,
-			items INTEGER[] NOT NULL 
+			items INTEGER[] NOT NULL,
+			date_created timestamp DEFAULT NOW()
 		);
         `
 	_, err = db.Exec(init)
