@@ -6,6 +6,7 @@
 
 	let orders: Order[] = [];
 
+	let socket: WebSocket;
 	onMount(async () => {
 		const ordersRoute =
 			'http://127.0.0.1:5002/api/restaurant/' +
@@ -16,6 +17,18 @@
 		const response = await fetch(ordersRoute);
 
 		orders = await response.json();
+		socket = new WebSocket(
+			'ws://127.0.0.1:5002/api/restaurant/' + data.restaurant.id + '/order-ws'
+		);
+		socket.onopen = () => {
+			console.log('Opened');
+			socket.send('Hello!');
+		};
+		socket.onmessage = (e) => {
+			let order = JSON.parse(e.data) as Order;
+			orders = orders.concat(order);
+		};
+	});
 </script>
 
 <h1 class="font-bold text-4xl mb-5">Orders</h1>

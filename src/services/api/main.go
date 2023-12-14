@@ -25,6 +25,7 @@ func main() {
 	itemRepo := data.NewItemRepo(db)
 	menuCategoryRepo := data.NewMenuCategoryRepo(db)
 	orderRepo := data.NewOrderRepo(db)
+
 	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
 	ih := handlers.NewItemHandler(l, itemRepo)
 	mch := handlers.NewMenuCategoryHandler(l, menuCategoryRepo)
@@ -38,6 +39,7 @@ func main() {
 	getRouter.HandleFunc("/api/restaurant", rh.GetRestaurants)
 	getRouter.HandleFunc("/api/restaurant/{id}", rh.GetRestaurant)
 	getRouter.HandleFunc("/api/restaurant/{id}/order", oh.GetOrders)
+	getRouter.HandleFunc("/api/restaurant/{id}/order-ws", oh.HandleOrderWebSocket)
 
 	postRouter := router.Methods(http.MethodPost, http.MethodOptions).Subrouter()
 	postRouter.HandleFunc("/api/restaurant", rh.CreateRestaurant)
