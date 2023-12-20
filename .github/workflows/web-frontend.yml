@@ -18,7 +18,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd src/frontends/web/spiza-restaurant
+          npm install
 
       - name: build
         env:
