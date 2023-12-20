@@ -2,7 +2,7 @@ name: Web Frontend
 
 on:
   push:
-    branches: 'main'
+    branches: 'web-frontend-pipeline'
 
 jobs:
   build_site:
