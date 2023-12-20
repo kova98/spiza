@@ -16,16 +16,19 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: |
-          cd src/frontends/web/spiza-restaurant
-          npm install
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: src/frontends/web/spiza-restaurant/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('src/frontends/web/spiza-restaurant/package-lock.json') }}
 
-      - name: build
-        env:
-          BASE_PATH: '/${{ github.event.repository.name }}/src/frontends/web/spiza-restaurant'
-        run: |
-          npm run build
+      - name: Install dependencies
+        working-directory: ./src/frontends/web/spiza-restaurant
+        run: npm install
+
+      - name: Build
+        working-directory: ./src/frontends/web/spiza-restaurant
+        run: npm run build
 
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v2
