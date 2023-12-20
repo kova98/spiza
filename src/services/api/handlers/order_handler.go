@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"github.com/kova98/spiza/services/api/data"
@@ -19,34 +18,42 @@ type OrderWithItems struct {
 }
 
 type OrderHandler struct {
-	l    *log.Logger
-	repo *data.OrderRepo
+	l        *log.Logger
+	repo     *data.OrderRepo
+	itemRepo *data.ItemRepo
+	broker   *data.Broker
 }
 
-func NewOrderHandler(l *log.Logger, repo *data.OrderRepo) *OrderHandler {
-	return &OrderHandler{l, repo}
+func NewOrderHandler(l *log.Logger, or *data.OrderRepo, ir *data.ItemRepo, b *data.Broker) *OrderHandler {
+	return &OrderHandler{l, or, ir, b}
 }
 
 func (oh *OrderHandler) CreateOrder(rw http.ResponseWriter, r *http.Request) {
 	oh.l.Println("Handle POST Order")
 
-	order := &data.Order{}
-	err := data.FromJSON(order, r.Body)
+	order := data.Order{}
+	err := data.FromJSON(&order, r.Body)
 	if err != nil {
 		oh.l.Println(err)
 		http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
 		return
 	}
 
-	id, err := oh.repo.CreateOrder(order)
+	createdOrder, err := oh.repo.CreateOrder(&order)
 	if err != nil {
 		oh.l.Println(err)
 		http.Error(rw, "Unable to create order", http.StatusInternalServerError)
 		return
 	}
 
-	order.Id = id
-	err = data.ToJSON(order, rw)
+	items, err := oh.itemRepo.GetByOrder(order.Id)
+	if err != nil {
+		oh.l.Println(err)
+		return
+	}
+	oh.broker.Publish(createdOrder.WithItems(items))
+
+	err = data.ToJSON(createdOrder, rw)
 	if err != nil {
 		oh.l.Println(err)
 		http.Error(rw, "Unable to marshal json", http.StatusInternalServerError)
@@ -86,37 +93,22 @@ var upgrader = websocket.Upgrader{
 func (oh *OrderHandler) HandleOrderWebSocket(rw http.ResponseWriter, r *http.Request) {
 	oh.l.Println("Handle GET OrderWebSocket")
 
-	vars := mux.Vars(r)
-	idString := vars["id"]
-	restaurantId, err := strconv.ParseInt(idString, 10, 64)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	conn, err := upgrader.Upgrade(rw, r, nil)
 	if err != nil {
 		oh.l.Print("upgrade: ", err)
 		return
 	}
 	defer conn.Close()
+
+	oh.broker.Subscribe(conn)
+	defer oh.broker.Unsubscribe(conn)
+
 	for {
-		mt, message, err := conn.ReadMessage()
+		_, message, err := conn.ReadMessage()
 		if err != nil {
-			log.Println("read:", err)
+			oh.l.Println("read:", err)
 			break
 		}
-		log.Printf("recv: %s", message)
-		orders, err := oh.repo.GetOrders(restaurantId)
-		if err != nil {
-			log.Println(err)
-			break
-		}
-		msg, err := json.Marshal(orders)
-		err = conn.WriteMessage(mt, msg)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
+		oh.l.Printf("recv: %s", message)
 	}
 }

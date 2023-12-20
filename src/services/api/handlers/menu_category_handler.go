@@ -22,8 +22,7 @@ func (mch *MenuCategoryHandler) CreateMenuCategory(rw http.ResponseWriter, r *ht
 	mch.l.Println("Handle POST MenuCategory")
 
 	menuCategory := &data.MenuCategory{}
-	err := data.FromJSON(menuCategory, r.Body)
-	if err != nil {
+	if err := data.FromJSON(menuCategory, r.Body); err != nil {
 		http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
 		return
 	}
@@ -34,10 +33,9 @@ func (mch *MenuCategoryHandler) CreateMenuCategory(rw http.ResponseWriter, r *ht
 		http.Error(rw, "Unable to create menu category", http.StatusInternalServerError)
 		return
 	}
-
 	menuCategory.Id = id
-	err = data.ToJSON(menuCategory, rw)
-	if err != nil {
+
+	if err = data.ToJSON(menuCategory, rw); err != nil {
 		http.Error(rw, "Unable to marshal json", http.StatusInternalServerError)
 	}
 }

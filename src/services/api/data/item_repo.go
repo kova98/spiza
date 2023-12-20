@@ -41,3 +41,15 @@ func (r *ItemRepo) DeleteItem(id int64) error {
 	}
 	return nil
 }
+
+func (r *ItemRepo) GetByOrder(orderId int64) ([]Item, error) {
+	var items []Item
+	sql := `SELECT i.*
+			FROM orders o
+			JOIN items i ON i.id = ANY(o.items)
+			WHERE o.restaurant_id = $1`
+	if err := r.db.Select(&items, sql, orderId); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

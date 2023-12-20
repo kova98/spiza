@@ -32,18 +32,19 @@ type OrderWithItems struct {
 	Items       []OrderItem `json:"items" `
 }
 
-func (r *OrderRepo) CreateOrder(o *Order) (int64, error) {
-	var id int64
-	sql := "INSERT INTO orders (restaurant_id, user_id, items) VALUES($1, $2, $3) RETURNING id;"
-	if err := r.db.Get(&id, sql, o.RestaurantId, o.UserId, SqlArrayValue(o.Items)); err != nil {
-		return 0, err
+func (r *OrderRepo) CreateOrder(o *Order) (*Order, error) {
+	var created Order
+	sql := `INSERT INTO orders (restaurant_id, user_id, items) VALUES($1, $2, $3) 
+		    RETURNING id, user_id, restaurant_id, status, date_created, items;`
+	if err := r.db.Get(&created, sql, o.RestaurantId, o.UserId, SqlArrayValue(o.Items)); err != nil {
+		return nil, err
 	}
-	return id, nil
+	return &created, nil
 }
 
 func (r *OrderRepo) GetOrders(restaurantId int64) ([]OrderWithItems, error) {
 	var orders []OrderWithItems
-	oQuery := "SELECT id, user_id, status, date_created FROM orders WHERE restaurant_id = $1;"
+	oQuery := "SELECT id, user_id, status, date_created FROM orders WHERE restaurant_id = $1 ORDER BY date_created DESC;"
 	if err := r.db.Select(&orders, oQuery, restaurantId); err != nil {
 		return nil, err
 	}

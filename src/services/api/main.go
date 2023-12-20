@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	l := log.New(os.Stdout, "services-api", log.LstdFlags)
+	l := log.New(os.Stdout, "api-", log.LstdFlags)
 	// get the connection string from the environment variable
 	connStr := os.Getenv("SPIZA_DB_CONN_STR")
 	if connStr == "" {
@@ -25,11 +25,12 @@ func main() {
 	itemRepo := data.NewItemRepo(db)
 	menuCategoryRepo := data.NewMenuCategoryRepo(db)
 	orderRepo := data.NewOrderRepo(db)
+	broker := data.NewBroker(l)
 
 	rh := handlers.NewRestaurantsHandler(l, restaurantRepo)
 	ih := handlers.NewItemHandler(l, itemRepo)
 	mch := handlers.NewMenuCategoryHandler(l, menuCategoryRepo)
-	oh := handlers.NewOrderHandler(l, orderRepo)
+	oh := handlers.NewOrderHandler(l, orderRepo, itemRepo, broker)
 
 	router := mux.NewRouter()
 	router.Use(handlers.CorsMiddleware)

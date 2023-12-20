@@ -8,12 +8,7 @@
 
 	let socket: WebSocket;
 	onMount(async () => {
-		const ordersRoute =
-			'http://127.0.0.1:5002/api/restaurant/' +
-			data.restaurant.id +
-			'/order' +
-			'?restaurant_id=' +
-			data.restaurant.id;
+		const ordersRoute = 'http://127.0.0.1:5002/api/restaurant/' + data.restaurant.id + '/order';
 		const response = await fetch(ordersRoute);
 
 		orders = await response.json();
@@ -26,7 +21,7 @@
 		};
 		socket.onmessage = (e) => {
 			let order = JSON.parse(e.data) as Order;
-			orders = orders.concat(order);
+			orders = [order].concat(orders);
 		};
 	});
 </script>

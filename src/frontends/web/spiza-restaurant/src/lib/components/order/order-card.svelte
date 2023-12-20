@@ -5,7 +5,7 @@
 
 	function formatDate(dateString: string) {
 		const date = new Date(dateString);
-		const secondsAgo = (Date.now() - date.getTime()) / 1000;
+		const secondsAgo = (new Date().getTime() - date.getTime()) / 1000;
 
 		return secondsAgo < 15
 			? 'Just now'
@@ -21,7 +21,7 @@
 	}
 </script>
 
-<Card.Root class="w-full border-green-500 ">
+<Card.Root class="w-full">
 	<Card.Header>
 		<Card.Title>
 			<p class="text-lg leading-none">Order #{order?.id}</p>
