@@ -7,7 +7,7 @@
 	export let data: { restaurant: Restaurant };
 	export let restaurant = data.restaurant;
 
-	const apiRoot = 'http://127.0.0.1:5002/api';
+	const apiRoot = `${import.meta.env.VITE_HTTP_ROOT}/api`;
 
 	let categoryName = '';
 	let itemName = '';

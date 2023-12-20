@@ -7,7 +7,7 @@
 	export let restaurants: Restaurant[] = [];
 	export let selectedRest: Restaurant;
 
-	const apiRoot = 'http://127.0.0.1:5002/api/restaurant';
+	const apiRoot = `${import.meta.env.VITE_HTTP_ROOT}/api/restaurant`;
 
 	onMount(async () => {
 		const response = await fetch(apiRoot);
