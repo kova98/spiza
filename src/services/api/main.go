@@ -15,7 +15,6 @@ import (
 
 func main() {
 	l := log.New(os.Stdout, "api-", log.LstdFlags)
-	// get the connection string from the environment variable
 	connStr := os.Getenv("SPIZA_DB_CONN_STR")
 	if connStr == "" {
 		l.Fatal("SPIZA_DB_CONN_STR environment variable empty")
