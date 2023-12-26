@@ -31,10 +31,10 @@ func (b *Broker) Subscribe(conn *websocket.Conn) {
 	b.subs = append(b.subs, conn)
 }
 
-func (b *Broker) Publish(order OrderWithItems) {
-	json, err := json.Marshal(order)
+func (b *Broker) Publish(msg interface{}) {
+	marshalled, err := json.Marshal(msg)
 	for _, sub := range b.subs {
-		err = sub.WriteMessage(websocket.TextMessage, json)
+		err = sub.WriteMessage(websocket.TextMessage, marshalled)
 		if err != nil {
 			b.l.Println("write:", err)
 		}

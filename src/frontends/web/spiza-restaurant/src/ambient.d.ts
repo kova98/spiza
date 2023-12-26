@@ -22,4 +22,5 @@ interface Order {
   date_created: string;
   date_updated: string;
   items: Item[];
+  status: number;
 }

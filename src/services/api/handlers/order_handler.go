@@ -1,12 +1,14 @@
 package handlers
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/gorilla/websocket"
-	"github.com/kova98/spiza/services/api/data"
+	"encoding/json"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
+	"github.com/kova98/spiza/services/api/data"
 )
 
 type OrderWithItems struct {
@@ -23,6 +25,20 @@ type OrderHandler struct {
 	itemRepo *data.ItemRepo
 	broker   *data.Broker
 }
+
+type UpdateOrderMsg struct {
+	Id     int64
+	Action string
+}
+
+const (
+	OrderStatusCreated   = 0
+	OrderStatusAccepted  = 1
+	OrderStatusRejected  = 2
+	OrderStatusReady     = 3
+	OrderStatusPickedUp  = 4
+	OrderStatusDelivered = 5
+)
 
 func NewOrderHandler(l *log.Logger, or *data.OrderRepo, ir *data.ItemRepo, b *data.Broker) *OrderHandler {
 	return &OrderHandler{l, or, ir, b}
@@ -109,6 +125,24 @@ func (oh *OrderHandler) HandleOrderWebSocket(rw http.ResponseWriter, r *http.Req
 			oh.l.Println("read:", err)
 			break
 		}
-		oh.l.Printf("recv: %s", message)
+		var msg UpdateOrderMsg
+		if err := json.Unmarshal(message, &msg); err != nil {
+			oh.l.Println(err)
+			return
+		}
+		oh.l.Println("Updating order", msg.Id, "to status", msg.Action)
+		status := getStatus(msg.Action)
+		oh.repo.UpdateOrderStatus(msg.Id, status)
+	}
+}
+
+func getStatus(action string) int64 {
+	switch action {
+	case "accept":
+		return OrderStatusAccepted
+	case "reject":
+		return OrderStatusRejected
+	default:
+		return 0
 	}
 }

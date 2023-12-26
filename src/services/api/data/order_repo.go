@@ -1,10 +1,11 @@
 package data
 
 import (
-	"github.com/jmoiron/sqlx"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type OrderRepo struct {
@@ -68,6 +69,12 @@ func (r *OrderRepo) GetOrders(restaurantId int64) ([]OrderWithItems, error) {
 	}
 
 	return orders, nil
+}
+
+func (r *OrderRepo) UpdateOrderStatus(orderId int64, status int64) error {
+	sql := `UPDATE orders SET status = $1 WHERE id = $2;`
+	_, err := r.db.Exec(sql, status, orderId)
+	return err
 }
 
 func SqlArrayValue(ids []int64) string {

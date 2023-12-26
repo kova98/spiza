@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { Button } from "../ui/button";
   import * as Card from "../ui/card";
 
   export let order: Order;
+  export let updateOrder: (orderId: number, action: string) => void;
 
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -29,10 +31,19 @@
     </Card.Title>
   </Card.Header>
   <Card.Content>
-    <ul class="text-sm">
-      {#each order?.items ?? [] as item}
-        <li>• {item.name}</li>
-      {/each}
-    </ul>
+    <div class="flex flex-row justify-between">
+      <div class="flex flex-col gap-1">
+        <ul class="text-sm">
+          {#each order?.items ?? [] as item}
+            <li>• {item.name}</li>
+          {/each}
+        </ul>
+      </div>
+      <div class="flex flex-col gap-1">
+        <Button variant="default" on:click={() => updateOrder(order?.id, "accept")}>Accept</Button>
+        <Button variant="default" on:click={() => updateOrder(order?.id, "refuse")}>Refuse</Button>
+        <p class="text-sm font-bold">{order?.status}</p>
+      </div>
+    </div>
   </Card.Content>
 </Card.Root>
