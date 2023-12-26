@@ -1,6 +1,0 @@
-package com.example.spiza_customer
-
-import io.flutter.embedding.android.FlutterActivity
-
-class MainActivity: FlutterActivity() {
-}
