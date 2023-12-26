@@ -7,8 +7,14 @@
   import { navigate } from "svelte-routing";
 
   const apiRoot = `${import.meta.env.VITE_HTTP_ROOT}/api/restaurant`;
-  async function getRestaurants() {
+  async function getRestaurants(): Promise<Restaurant[]> {
     const response = await fetch(apiRoot);
+    const data = await response.json();
+    return data;
+  }
+
+  async function getRestaurant(id: number): Promise<Restaurant> {
+    const response = await fetch(`${apiRoot}/${id}`);
     const data = await response.json();
     return data;
   }
@@ -27,6 +33,9 @@
   };
 
   function goToRestaurant() {
+    getRestaurant($restaurantStore.id).then((data) => {
+      $restaurantStore = data;
+    });
     navigate("/restaurant");
   }
 </script>
