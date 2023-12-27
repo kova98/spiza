@@ -71,7 +71,7 @@ func (r *OrderRepo) GetOrders(restaurantId int64) ([]OrderWithItems, error) {
 	return orders, nil
 }
 
-func (r *OrderRepo) UpdateOrderStatus(orderId int64, status int64) error {
+func (r *OrderRepo) UpdateOrderStatus(orderId int64, status int) error {
 	sql := `UPDATE orders SET status = $1 WHERE id = $2;`
 	_, err := r.db.Exec(sql, status, orderId)
 	return err

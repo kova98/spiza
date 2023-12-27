@@ -2,6 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
+	"time"
+
 	"log"
 	"net/http"
 	"strconv"
@@ -67,7 +70,8 @@ func (oh *OrderHandler) CreateOrder(rw http.ResponseWriter, r *http.Request) {
 		oh.l.Println(err)
 		return
 	}
-	oh.broker.Publish(createdOrder.WithItems(items))
+	topic := "order/" + strconv.FormatInt(order.Id, 10) + "/created"
+	oh.broker.Publish(topic, createdOrder.WithItems(items))
 
 	err = data.ToJSON(createdOrder, rw)
 	if err != nil {
@@ -128,21 +132,38 @@ func (oh *OrderHandler) HandleOrderWebSocket(rw http.ResponseWriter, r *http.Req
 		var msg UpdateOrderMsg
 		if err := json.Unmarshal(message, &msg); err != nil {
 			oh.l.Println(err)
-			return
+			continue
 		}
-		oh.l.Println("Updating order", msg.Id, "to status", msg.Action)
-		status := getStatus(msg.Action)
-		oh.repo.UpdateOrderStatus(msg.Id, status)
+		if err := updateOrderStatus(oh, msg.Id, msg.Action); err != nil {
+			oh.l.Println(err)
+			continue
+		}
 	}
 }
 
-func getStatus(action string) int64 {
+func updateOrderStatus(oh *OrderHandler, id int64, action string) error {
+	oh.l.Println("Updating order", id, "to status", action)
+	status, err := getStatus(action)
+	if err != nil {
+		return err
+	}
+	if err := oh.repo.UpdateOrderStatus(id, status); err != nil {
+		return err
+	}
+	topic := "order/" + strconv.FormatInt(id, 10)
+
+	deliveryTime := time.Now().UTC().Add(time.Hour)
+	oh.broker.Publish(topic, data.OrderStatusUpdated{Status: status, DeliveryTime: deliveryTime})
+	return nil
+}
+
+func getStatus(action string) (int, error) {
 	switch action {
 	case "accept":
-		return OrderStatusAccepted
+		return OrderStatusAccepted, nil
 	case "reject":
-		return OrderStatusRejected
+		return OrderStatusRejected, nil
 	default:
-		return 0
+		return 0, fmt.Errorf("Invalid action:" + action)
 	}
 }
