@@ -24,3 +24,12 @@ interface Order {
   items: Item[];
   status: number;
 }
+
+enum OrderStatus {
+  Created,
+  Accepted,
+  Rejected,
+  Ready,
+  PickedUp,
+  Delivered,
+}

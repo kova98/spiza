@@ -17,13 +17,24 @@
     };
     socket.onmessage = (e) => {
       let order = JSON.parse(e.data) as Order;
-      orders = [order].concat(orders);
+      if (order.id > 0) {
+        orders = [order].concat(orders);
+      }
     };
   });
 
   let updateOrder = async (orderId: number, action: string) => {
+    let order = orders.find((o) => o.id == orderId);
+    if (!order) {
+      return;
+    }
+
+    let status = action == "accept" ? 1 : action == "reject" ? 2 : action == "ready" ? 3 : 0;
+    order.status = status;
+    orders = orders;
+
     let msg = {
-      action: action,
+      status: status,
       id: orderId,
     };
     socket.send(JSON.stringify(msg));

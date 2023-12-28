@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"log"
@@ -31,7 +30,7 @@ type OrderHandler struct {
 
 type UpdateOrderMsg struct {
 	Id     int64
-	Action string
+	Status int
 }
 
 const (
@@ -134,19 +133,15 @@ func (oh *OrderHandler) HandleOrderWebSocket(rw http.ResponseWriter, r *http.Req
 			oh.l.Println(err)
 			continue
 		}
-		if err := updateOrderStatus(oh, msg.Id, msg.Action); err != nil {
+		if err := updateOrderStatus(oh, msg.Id, msg.Status); err != nil {
 			oh.l.Println(err)
 			continue
 		}
 	}
 }
 
-func updateOrderStatus(oh *OrderHandler, id int64, action string) error {
-	oh.l.Println("Updating order", id, "to status", action)
-	status, err := getStatus(action)
-	if err != nil {
-		return err
-	}
+func updateOrderStatus(oh *OrderHandler, id int64, status int) error {
+	oh.l.Println("Updating order", id, "to status", status)
 	if err := oh.repo.UpdateOrderStatus(id, status); err != nil {
 		return err
 	}
@@ -155,15 +150,4 @@ func updateOrderStatus(oh *OrderHandler, id int64, action string) error {
 	deliveryTime := time.Now().UTC().Add(time.Hour)
 	oh.broker.Publish(topic, data.OrderStatusUpdated{Status: status, DeliveryTime: deliveryTime})
 	return nil
-}
-
-func getStatus(action string) (int, error) {
-	switch action {
-	case "accept":
-		return OrderStatusAccepted, nil
-	case "reject":
-		return OrderStatusRejected, nil
-	default:
-		return 0, fmt.Errorf("Invalid action:" + action)
-	}
 }
