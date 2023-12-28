@@ -19,9 +19,9 @@ class RestaurantsList extends StatelessWidget {
           return ListView.builder(
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data!.length,
             itemBuilder: (context, int index) {
-              final item = snapshot.data[index];
+              final item = snapshot.data![index];
               return InkWell(
                 onTap: () => Navigator.push(
                   context,

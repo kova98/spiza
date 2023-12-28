@@ -6,7 +6,7 @@ import 'package:spiza_customer/models/item.dart';
 import 'package:spiza_customer/models/restaurant.dart';
 
 class MenuList extends StatelessWidget {
-  final String restaurantId;
+  final int restaurantId;
   const MenuList(this.restaurantId);
 
   @override
@@ -24,7 +24,7 @@ class MenuList extends StatelessWidget {
           );
         } else {
           final restaurant =
-              snapshot.data.firstWhere((r) => r.id == restaurantId);
+              snapshot.data!.firstWhere((r) => r.id == restaurantId);
           // tu je bug, treba dohvatit snapshot.restaurant bla bla
           return ListView.builder(
             shrinkWrap: true,
@@ -62,7 +62,7 @@ class MenuList extends StatelessWidget {
 
   Widget _buildMenuItems(
       List<Item> items, String restaurantName, CartBloc cartBloc) {
-    List<Widget> menuItems = List<Widget>();
+    List<Widget> menuItems = List<Widget>.empty();
 
     for (var i = 0; i < items.length; i++) {
       final item = items[i];

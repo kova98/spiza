@@ -8,7 +8,7 @@ class RestaurantRepository {
     return reustaurantApiProvider.getRestaurants();
   }
 
-  Future<Restaurant> getRestaurantWithMenu(String id) {
+  Future<Restaurant> getRestaurantWithMenu(int id) {
     return reustaurantApiProvider.getRestaurantWithMenu(id);
   }
 }

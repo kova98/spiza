@@ -6,7 +6,7 @@ import 'package:spiza_customer/widgets/order_button.dart';
 class MenuScreen extends StatefulWidget {
   final Restaurant restaurant;
 
-  const MenuScreen({Key key, this.restaurant}) : super(key: key);
+  const MenuScreen({Key? key, required this.restaurant}) : super(key: key);
 
   @override
   _MenuScreenState createState() => _MenuScreenState(restaurant);

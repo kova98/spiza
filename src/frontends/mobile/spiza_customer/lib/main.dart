@@ -15,8 +15,8 @@ class SpizaApp extends StatelessWidget {
           title: 'Spiza',
           theme: ThemeData(
               primaryColor: Colors.amber[600],
-              accentColor: Colors.red,
-              backgroundColor: Colors.white),
+              colorScheme: ColorScheme.fromSwatch()
+                  .copyWith(secondary: Colors.red, background: Colors.white)),
           home: HomeScreen(),
         ),
       ),

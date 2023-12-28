@@ -14,7 +14,7 @@ class OrderButton extends StatelessWidget {
         if (!snapshot.hasData) {
           cartBloc.refreshCart();
           return SizedBox.shrink();
-        } else if (snapshot.data.items.length == 0) {
+        } else if (snapshot.data!.items.length == 0) {
           return SizedBox.shrink();
         } else {
           return Padding(
@@ -38,7 +38,7 @@ class OrderButton extends StatelessWidget {
                     ),
                     primary: Colors.amber),
                 child: Text(
-                  'Order ${snapshot.data.items.length} for ${snapshot.data.totalPrice} kn',
+                  'Order ${snapshot.data!.items.length} for ${snapshot.data!.totalPrice} kn',
                   style: TextStyle(fontSize: 24, color: Colors.black),
                 ),
               ),

@@ -16,7 +16,7 @@ class CartScreen extends StatelessWidget {
         if (!snapshot.hasData) {
           cartBloc.refreshCart();
           return CircularProgressIndicator();
-        } else if (snapshot.data.items.length == 0) {
+        } else if (snapshot.data!.items.length == 0) {
           return SizedBox.shrink();
         } else {
           return Scaffold(
@@ -24,7 +24,7 @@ class CartScreen extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0,
               centerTitle: true,
-              title: Text(snapshot.data.restaurantName),
+              title: Text(snapshot.data!.restaurantName ?? ""),
             ),
             body: Container(
               padding: EdgeInsets.all(20),
@@ -32,9 +32,9 @@ class CartScreen extends StatelessWidget {
                 children: [
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: snapshot.data.items.length,
+                    itemCount: snapshot.data!.items.length,
                     itemBuilder: (context, index) {
-                      final Item item = snapshot.data.items[index];
+                      final Item item = snapshot.data!.items[index];
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -51,7 +51,7 @@ class CartScreen extends StatelessWidget {
                       Text('Total:',
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold)),
-                      Text("${snapshot.data.totalPrice}",
+                      Text("${snapshot.data!.totalPrice}",
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold))
                     ],
@@ -68,10 +68,10 @@ class CartScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                             textStyle: TextStyle(
                                 color: Theme.of(context).primaryColor),
+                            backgroundColor: Colors.amber,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
-                            ),
-                            primary: Colors.amber),
+                            )),
                         child: Text(
                           'Confirm Order',
                           style: TextStyle(fontSize: 24, color: Colors.black),
