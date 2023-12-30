@@ -1,7 +1,7 @@
 import 'package:spiza_customer/models/item.dart';
 
 class Cart {
-  List<Item> items = List<Item>.empty();
+  List<Item> items = List<Item>.empty(growable: true);
   String? address;
   String? restaurantName;
   num? deliveryTime;

@@ -32,9 +32,7 @@ class MenuList extends StatelessWidget {
             itemCount: restaurant.menu.categories.length,
             itemBuilder: (context, int index) {
               final category = restaurant.menu.categories[index];
-              final items = restaurant.menu.items
-                  .where((element) => element.category == category)
-                  .toList();
+              final items = category.items;
               return items.length == 0
                   ? SizedBox.shrink()
                   : Column(
@@ -43,7 +41,7 @@ class MenuList extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: Text(
-                            category,
+                            category.name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 24,
@@ -62,7 +60,7 @@ class MenuList extends StatelessWidget {
 
   Widget _buildMenuItems(
       List<Item> items, String restaurantName, CartBloc cartBloc) {
-    List<Widget> menuItems = List<Widget>.empty();
+    List<Widget> menuItems = List<Widget>.empty(growable: true);
 
     for (var i = 0; i < items.length; i++) {
       final item = items[i];

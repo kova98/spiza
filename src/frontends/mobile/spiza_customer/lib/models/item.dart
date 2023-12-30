@@ -1,9 +1,9 @@
 class Item {
-  final String id;
+  final int id;
   final String name;
   final String description;
   final String image;
-  final String category;
+  final int categoryId;
   final num price;
   final int amount;
   final int order;
@@ -14,7 +14,7 @@ class Item {
         description = parsedJson['description'],
         image = parsedJson['image'],
         price = parsedJson['price'],
-        category = parsedJson['category'],
-        amount = parsedJson['amount'],
+        categoryId = parsedJson['category_id'],
+        amount = parsedJson['amount'] ?? 0,
         order = parsedJson['order'];
 }

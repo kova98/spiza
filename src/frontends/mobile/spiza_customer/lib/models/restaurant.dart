@@ -12,8 +12,11 @@ class Restaurant {
         name = '',
         menu = Menu.empty();
 
-  Restaurant.fromJson(Map<String, dynamic> parsedJson)
-      : id = parsedJson['id'],
-        name = parsedJson['name'],
-        menu = Menu.fromJson(parsedJson['menu'] ?? {});
+  factory Restaurant.fromJson(Map<String, dynamic> json) {
+    return Restaurant(
+      id: json['id'],
+      name: json['name'],
+      menu: Menu.fromJson(json['menu_categories'] ?? [] as List),
+    );
+  }
 }
