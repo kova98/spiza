@@ -1,10 +1,10 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/models/item.dart';
-import 'package:spiza_customer/data/cart_api_provider.dart';
+import 'package:spiza_customer/data/order_api_provider.dart';
 
 class CartBloc {
-  final _api = CartApiProvider();
+  final _api = OrderApiProvider();
   final _cart = PublishSubject<Cart>();
 
   static Cart _lastCart = Cart();
@@ -22,10 +22,20 @@ class CartBloc {
   }
 
   void refreshCart() {
+    // TODO: support multiple restaurants
     _cart.sink.add(_lastCart);
   }
 
   void dispose() {
     _cart.close();
+  }
+
+  void confirmOrder() {
+    var order = _lastCart.toOrder(1);
+    _api.submitOrder(order);
+  }
+
+  void createCart(int restaurantId) {
+    _lastCart = Cart(restaurantId: restaurantId);
   }
 }

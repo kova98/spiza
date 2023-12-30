@@ -4,6 +4,10 @@ import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/screens/cart_screen.dart';
 
 class OrderButton extends StatelessWidget {
+  final int id;
+
+  const OrderButton(this.id);
+
   @override
   Widget build(BuildContext context) {
     final cartBloc = CartProvider.of(context);
@@ -12,6 +16,7 @@ class OrderButton extends StatelessWidget {
       stream: cartBloc.cart,
       builder: (context, AsyncSnapshot<Cart> snapshot) {
         if (!snapshot.hasData) {
+          cartBloc.createCart(id);
           cartBloc.refreshCart();
           return SizedBox.shrink();
         } else if (snapshot.data!.items.length == 0) {

@@ -17,4 +17,17 @@ class Item {
         categoryId = parsedJson['category_id'],
         amount = parsedJson['amount'] ?? 0,
         order = parsedJson['order'];
+
+  toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'image': image,
+      'price': price,
+      'category_id': categoryId,
+      'amount': amount,
+      'order': order,
+    };
+  }
 }

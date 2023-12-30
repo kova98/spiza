@@ -64,7 +64,7 @@ class CartScreen extends StatelessWidget {
                         height: 60,
                       ),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: cartBloc.confirmOrder,
                         style: ElevatedButton.styleFrom(
                             textStyle: TextStyle(
                                 color: Theme.of(context).primaryColor),
