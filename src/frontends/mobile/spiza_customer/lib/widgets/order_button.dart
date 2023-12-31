@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:spiza_customer/bloc/cart_provider.dart';
 import 'package:spiza_customer/models/cart.dart';
+import 'package:spiza_customer/models/restaurant.dart';
 import 'package:spiza_customer/screens/cart_screen.dart';
 
 class OrderButton extends StatelessWidget {
-  final int id;
+  final Restaurant restaurant;
 
-  const OrderButton(this.id);
+  const OrderButton(this.restaurant);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,7 @@ class OrderButton extends StatelessWidget {
       stream: cartBloc.cart,
       builder: (context, AsyncSnapshot<Cart> snapshot) {
         if (!snapshot.hasData) {
-          cartBloc.createCart(id);
-          cartBloc.refreshCart();
+          cartBloc.createCart(restaurant);
           return SizedBox.shrink();
         } else if (snapshot.data!.items.length == 0) {
           return SizedBox.shrink();

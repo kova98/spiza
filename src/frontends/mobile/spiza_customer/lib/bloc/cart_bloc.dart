@@ -1,13 +1,12 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/models/item.dart';
-import 'package:spiza_customer/data/order_api_provider.dart';
+import 'package:spiza_customer/models/restaurant.dart';
 
 class CartBloc {
-  final _api = OrderApiProvider();
   final _cart = PublishSubject<Cart>();
 
-  static Cart _lastCart = Cart();
+  static Cart _lastCart = Cart(restaurantName: '');
 
   Stream<Cart> get cart => _cart.stream;
 
@@ -30,12 +29,8 @@ class CartBloc {
     _cart.close();
   }
 
-  void confirmOrder() {
-    var order = _lastCart.toOrder(1);
-    _api.submitOrder(order);
-  }
-
-  void createCart(int restaurantId) {
-    _lastCart = Cart(restaurantId: restaurantId);
+  void createCart(Restaurant res) {
+    _lastCart = Cart(restaurantId: res.id, restaurantName: res.name);
+    _cart.sink.add(_lastCart);
   }
 }

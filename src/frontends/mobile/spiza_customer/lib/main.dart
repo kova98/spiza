@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spiza_customer/bloc/cart_provider.dart';
+import 'package:spiza_customer/bloc/order_provider.dart';
 import 'package:spiza_customer/bloc/restaurants_provider.dart';
 import 'package:spiza_customer/screens/home_screen.dart';
 
@@ -10,14 +11,16 @@ class SpizaApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return RestaurantsProvider(
       child: CartProvider(
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Spiza',
-          theme: ThemeData(
-              primaryColor: Colors.amber[600],
-              colorScheme: ColorScheme.fromSwatch()
-                  .copyWith(secondary: Colors.red, background: Colors.white)),
-          home: HomeScreen(),
+        child: OrderProvider(
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Spiza',
+            theme: ThemeData(
+                primaryColor: Colors.amber[600],
+                colorScheme: ColorScheme.fromSwatch()
+                    .copyWith(secondary: Colors.red, background: Colors.white)),
+            home: HomeScreen(),
+          ),
         ),
       ),
     );

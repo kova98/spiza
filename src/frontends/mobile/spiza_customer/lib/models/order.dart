@@ -8,10 +8,11 @@ class Order {
   num userId = 0;
 
   Order({
-    required this.userId,
-    required this.restaurantId,
-    required this.address,
     required this.items,
+    required this.address,
+    required this.restaurantId,
+    this.restaurantName,
+    required this.userId,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -31,4 +32,13 @@ class Order {
         'address': address,
         'items': items,
       };
+
+  static Order empty() {
+    return Order(
+      userId: 0,
+      restaurantId: 0,
+      address: '',
+      items: List<int>.empty(),
+    );
+  }
 }

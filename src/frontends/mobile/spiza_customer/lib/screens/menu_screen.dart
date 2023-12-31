@@ -103,7 +103,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ],
           ),
-          OrderButton(restaurant.id),
+          OrderButton(restaurant),
         ],
       ),
     );

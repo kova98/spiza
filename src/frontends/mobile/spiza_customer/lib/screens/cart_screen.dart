@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spiza_customer/bloc/cart_bloc.dart';
 import 'package:spiza_customer/bloc/cart_provider.dart';
+import 'package:spiza_customer/bloc/order_bloc.dart';
+import 'package:spiza_customer/bloc/order_provider.dart';
 import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/models/item.dart';
+import 'package:spiza_customer/screens/order_screen.dart';
 
 class CartScreen extends StatelessWidget {
   final menuText = TextStyle(fontSize: 24);
@@ -9,6 +13,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartBloc = CartProvider.of(context);
+    final orderBloc = OrderProvider.of(context);
 
     return StreamBuilder<Cart>(
       stream: cartBloc.cart,
@@ -64,7 +69,8 @@ class CartScreen extends StatelessWidget {
                         height: 60,
                       ),
                       child: ElevatedButton(
-                        onPressed: cartBloc.confirmOrder,
+                        onPressed: () =>
+                            confirmOrder(snapshot.data!, context, orderBloc),
                         style: ElevatedButton.styleFrom(
                             textStyle: TextStyle(
                                 color: Theme.of(context).primaryColor),
@@ -86,5 +92,23 @@ class CartScreen extends StatelessWidget {
         }
       },
     );
+  }
+
+  void confirmOrder(Cart cart, BuildContext context, OrderBloc orderBloc) {
+    orderBloc.confirmOrder(cart).then((value) => {
+          if (value == "")
+            {
+              orderBloc.getOrderStatus(),
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OrderScreen(),
+                ),
+              ),
+              orderBloc.refreshOrder()
+            }
+          else
+            {}
+        });
   }
 }
