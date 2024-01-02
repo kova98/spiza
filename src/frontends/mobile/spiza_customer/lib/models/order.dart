@@ -18,6 +18,16 @@ class Order {
     required this.userId,
   });
 
+  String getTime() {
+    if (deliveryTime == null) {
+      return '00:00';
+    } else {
+      final utcTime = DateTime.parse(deliveryTime ?? '').toUtc();
+      final localTime = utcTime.toLocal();
+      return '${localTime.hour}:${localTime.minute}';
+    }
+  }
+
   factory Order.fromJson(Map<String, dynamic> json) {
     var itemsList = json['items'] as List;
     List<Item> items = itemsList.map((i) => Item.fromJson(i)).toList();

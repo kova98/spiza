@@ -17,12 +17,7 @@ class _OrderScreenState extends State<OrderScreen> {
     final orderBloc = OrderProvider.of(context);
 
     return StreamBuilder<Order>(
-        stream: Rx.combineLatest2(orderBloc.order, orderBloc.orderUpdate,
-            (Order o, OrderUpdate u) {
-          o.status = u.status;
-          o.deliveryTime = u.deliveryTime;
-          return o;
-        }),
+        stream: orderBloc.order,
         builder: (context, snapshot) {
           if (snapshot.hasData == false) {
             orderBloc.refreshOrderUpdate();
@@ -68,7 +63,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 20),
                                 child: Text(
-                                  getTime(snapshot.data!.deliveryTime),
+                                  snapshot.data!.getTime(),
                                   style: const TextStyle(
                                       fontSize: 50,
                                       fontWeight: FontWeight.w500),
@@ -88,15 +83,5 @@ class _OrderScreenState extends State<OrderScreen> {
                   ),
                 );
         });
-  }
-
-  String getTime(String? deliveryTime) {
-    if (deliveryTime == null) {
-      return '00:00';
-    } else {
-      final utcTime = DateTime.parse(deliveryTime).toUtc();
-      final localTime = utcTime.toLocal();
-      return '${localTime.hour}:${localTime.minute}';
-    }
   }
 }

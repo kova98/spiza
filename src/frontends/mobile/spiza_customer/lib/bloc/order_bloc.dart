@@ -18,6 +18,15 @@ class OrderBloc {
   Stream<Order> get order => _orderSubject.stream;
   Stream<OrderUpdate> get orderUpdate => _orderUpdateSubject.stream;
 
+  OrderBloc() {
+    _orderUpdateSubject.listen((event) {
+      _orderUpdate = event;
+      _order.deliveryTime = event.deliveryTime;
+      _order.status = event.status;
+      refreshOrder();
+    });
+  }
+
   Future getOrderStatus(int orderId) async {
     print('connecting to mqtt with order id $orderId');
     final mqtt = MqttProvider();
