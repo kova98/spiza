@@ -96,9 +96,9 @@ class CartScreen extends StatelessWidget {
 
   void confirmOrder(Cart cart, BuildContext context, OrderBloc orderBloc) {
     orderBloc.confirmOrder(cart).then((value) => {
-          if (value == "")
+          if (value.$2 == "")
             {
-              orderBloc.getOrderStatus(),
+              orderBloc.getOrderStatus(value.$1),
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:spiza_customer/bloc/order_provider.dart';
 import 'package:spiza_customer/models/order.dart';
+import 'package:spiza_customer/models/order_update.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -15,9 +17,15 @@ class _OrderScreenState extends State<OrderScreen> {
     final orderBloc = OrderProvider.of(context);
 
     return StreamBuilder<Order>(
-        stream: orderBloc.order,
+        stream: Rx.combineLatest2(orderBloc.order, orderBloc.orderUpdate,
+            (Order o, OrderUpdate u) {
+          o.status = u.status;
+          o.deliveryTime = u.deliveryTime;
+          return o;
+        }),
         builder: (context, snapshot) {
           if (snapshot.hasData == false) {
+            orderBloc.refreshOrderUpdate();
             orderBloc.refreshOrder();
           }
           return !snapshot.hasData
@@ -36,31 +44,37 @@ class _OrderScreenState extends State<OrderScreen> {
                   body: Column(
                     children: [
                       Container(
-                        alignment: Alignment.center,
-                        color: Colors.white,
-                        height: 40,
-                        child: const Text(
-                          'current status',
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ),
+                          alignment: Alignment.center,
+                          height: 60,
+                          child: Text(
+                            snapshot.data!.status.description,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          decoration:
+                              BoxDecoration(color: Colors.white, boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                spreadRadius: 3,
+                                blurRadius: 3,
+                                offset: const Offset(0, 1))
+                          ])),
                       const Expanded(child: Text('map')),
                       Container(
                           alignment: Alignment.center,
                           color: Colors.white,
                           height: 100,
-                          child: const Row(
+                          child: Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(left: 20),
+                                padding: const EdgeInsets.only(left: 20),
                                 child: Text(
-                                  '14:33',
-                                  style: TextStyle(
+                                  getTime(snapshot.data!.deliveryTime),
+                                  style: const TextStyle(
                                       fontSize: 50,
                                       fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.only(left: 20),
                                 child: Text(
                                   'Estimated delivery time',
@@ -74,5 +88,15 @@ class _OrderScreenState extends State<OrderScreen> {
                   ),
                 );
         });
+  }
+
+  String getTime(String? deliveryTime) {
+    if (deliveryTime == null) {
+      return '00:00';
+    } else {
+      final utcTime = DateTime.parse(deliveryTime).toUtc();
+      final localTime = utcTime.toLocal();
+      return '${localTime.hour}:${localTime.minute}';
+    }
   }
 }

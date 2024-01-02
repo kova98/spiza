@@ -6,6 +6,9 @@ class Order {
   String? restaurantName;
   num restaurantId = 0;
   num userId = 0;
+  OrderStatus status = OrderStatus.created;
+
+  String? deliveryTime;
 
   Order({
     required this.items,
@@ -40,5 +43,35 @@ class Order {
       address: '',
       items: List<int>.empty(),
     );
+  }
+}
+
+enum OrderStatus {
+  created,
+  accepted,
+  rejected,
+  ready,
+  pickedUp,
+  delivered,
+}
+
+extension OrderStatusExtension on OrderStatus {
+  String get description {
+    switch (this) {
+      case OrderStatus.created:
+        return 'Your order has been placed.';
+      case OrderStatus.accepted:
+        return 'Your order is in progress.';
+      case OrderStatus.rejected:
+        return 'Your order has been rejected.';
+      case OrderStatus.ready:
+        return 'Your order is ready for pickup.';
+      case OrderStatus.pickedUp:
+        return 'Your order is on the way.';
+      case OrderStatus.delivered:
+        return 'Your order has been delivered.';
+      default:
+        return 'unknown status';
+    }
   }
 }
