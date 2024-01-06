@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:flutter/services.dart';
 import 'package:spiza_customer/bloc/order_provider.dart';
 import 'package:spiza_customer/models/order.dart';
-import 'package:spiza_customer/models/order_update.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:spiza_customer/utility/asset_helper.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -12,6 +15,26 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  final LatLng _center = const LatLng(45.8150, 15.9819);
+
+  final Map<String, BitmapDescriptor> _markerIcons = {
+    'restaurant': BitmapDescriptor.defaultMarker,
+    'courier': BitmapDescriptor.defaultMarker,
+    'user': BitmapDescriptor.defaultMarker,
+  };
+
+  @override
+  void initState() {
+    _markerIcons.forEach((key, value) {
+      AssetHelper.getBytesFromAsset('assets/$key-icon.png', 64).then((onValue) {
+        setState(() {
+          _markerIcons[key] = BitmapDescriptor.fromBytes(onValue);
+        });
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final orderBloc = OrderProvider.of(context);
@@ -53,7 +76,20 @@ class _OrderScreenState extends State<OrderScreen> {
                                 blurRadius: 3,
                                 offset: const Offset(0, 1))
                           ])),
-                      const Expanded(child: Text('map')),
+                      Expanded(
+                        child: GoogleMap(
+                          onMapCreated: (GoogleMapController c) {
+                            changeMapMode(c, "assets/maps_style.json");
+                          },
+                          myLocationButtonEnabled: true,
+                          zoomControlsEnabled: false,
+                          initialCameraPosition: CameraPosition(
+                            target: _center,
+                            zoom: 18,
+                          ),
+                          markers: _getMarkers(context, snapshot.data!),
+                        ),
+                      ),
                       Container(
                           alignment: Alignment.center,
                           color: Colors.white,
@@ -83,5 +119,50 @@ class _OrderScreenState extends State<OrderScreen> {
                   ),
                 );
         });
+  }
+
+  Set<Marker> _getMarkers(BuildContext context, Order order) {
+    return <Marker>{
+      if (order.restaurantLocation != null)
+        Marker(
+          markerId: MarkerId('restaurant'),
+          position: stringToLatLng(order.restaurantLocation),
+          icon: _markerIcons['restaurant']!,
+        ),
+      if (order.driverLocation != null)
+        Marker(
+          markerId: MarkerId('courier'),
+          position: stringToLatLng(order.driverLocation),
+          icon: _markerIcons['courier']!,
+        ),
+      if (order.destinationLocation != null)
+        Marker(
+          markerId: MarkerId('user'),
+          position: stringToLatLng(order.destinationLocation),
+          icon: _markerIcons['user']!,
+        ),
+    };
+  }
+
+  void changeMapMode(GoogleMapController mapController, String stylePath) {
+    _getJsonFile(stylePath).then((value) => _setMapStyle(value, mapController));
+  }
+
+  void _setMapStyle(String mapStyle, GoogleMapController mapController) {
+    mapController.setMapStyle(mapStyle);
+  }
+
+  Future<String> _getJsonFile(String path) async {
+    ByteData byte = await rootBundle.load(path);
+    var list = byte.buffer.asUint8List(byte.offsetInBytes, byte.lengthInBytes);
+    return utf8.decode(list);
+  }
+
+  stringToLatLng(String? restaurantLocation) {
+    if (restaurantLocation == null) {
+      return _center;
+    }
+    final split = restaurantLocation.split(',');
+    return LatLng(double.parse(split[0]), double.parse(split[1]));
   }
 }

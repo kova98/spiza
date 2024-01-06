@@ -25,7 +25,7 @@ class MqttProvider {
 
   Future connectToMQTT() async {
     client = MqttServerClient.withPort('10.0.2.2', 'flutter_client', 1883);
-    client!.logging(on: true);
+    // client!.logging(on: true);
     client!.onConnected = onConnected;
     client!.onDisconnected = onDisconnected;
     await client!.connect();

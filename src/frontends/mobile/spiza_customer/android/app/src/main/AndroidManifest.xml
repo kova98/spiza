@@ -3,6 +3,11 @@
         android:label="spiza_customer"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+         <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB7VBHijYya2Wd49MPLBXG_BaQw-1jtU0Y" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

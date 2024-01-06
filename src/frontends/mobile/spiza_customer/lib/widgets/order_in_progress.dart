@@ -10,65 +10,64 @@ class OrderInProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
     final orderBloc = OrderProvider.of(context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: StreamBuilder<Order>(
-          stream: orderBloc.order,
-          builder: (context, snapshot) {
-            if (snapshot.hasData == false) {
-              orderBloc.refreshOrder();
-            }
-            if (!snapshot.hasData || snapshot.data!.restaurantId == 0) {
-              return Container();
-            }
-            return Container(
-              alignment: Alignment.bottomCenter,
-              height: 80,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 3,
-                    blurRadius: 3,
-                    offset: Offset(0, 1),
+        stream: orderBloc.order,
+        builder: (context, snapshot) {
+          if (snapshot.hasData == false) {
+            orderBloc.refreshOrder();
+          }
+          if (!snapshot.hasData || snapshot.data!.restaurantId == 0) {
+            return Container();
+          }
+          return Container(
+            alignment: Alignment.bottomCenter,
+            height: 80,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 3,
+                  blurRadius: 3,
+                  offset: Offset(0, 1),
+                ),
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black, width: 2),
+            ),
+            child: InkWell(
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => OrderScreen())),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(padding: EdgeInsets.only(left: 16)),
+                  Text(
+                    snapshot.data!.getTime(),
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  Padding(padding: EdgeInsets.only(left: 16)),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        snapshot.data!.restaurantName ?? "",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Text(snapshot.data!.status.description)
+                    ],
                   ),
                 ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.black, width: 2),
               ),
-              child: InkWell(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => OrderScreen())),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(padding: EdgeInsets.only(left: 16)),
-                    Text(
-                      snapshot.data!.getTime(),
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 16)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          snapshot.data!.restaurantName ?? "",
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        Text(snapshot.data!.status.description)
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 }

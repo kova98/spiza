@@ -37,6 +37,7 @@ dependencies:
   rxdart: ^0.27.7
   http: ^1.1.2
   mqtt_client: ^10.0.1
+  google_maps_flutter: ^2.5.0
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/burger.png
+    - assets/maps_style.json
+    - assets/restaurant-icon.png
+    - assets/courier-icon.png
+    - assets/user-icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

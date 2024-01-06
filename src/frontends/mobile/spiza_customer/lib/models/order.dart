@@ -9,6 +9,9 @@ class Order {
   OrderStatus status = OrderStatus.created;
 
   String? deliveryTime;
+  String? restaurantLocation;
+  String? driverLocation;
+  String? destinationLocation;
 
   Order({
     required this.items,
