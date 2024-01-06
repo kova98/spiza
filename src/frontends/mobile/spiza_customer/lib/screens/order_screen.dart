@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spiza_customer/bloc/order_provider.dart';
+import 'package:spiza_customer/models/location.dart';
 import 'package:spiza_customer/models/order.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:spiza_customer/utility/asset_helper.dart';
@@ -125,23 +126,27 @@ class _OrderScreenState extends State<OrderScreen> {
     return <Marker>{
       if (order.restaurantLocation != null)
         Marker(
-          markerId: MarkerId('restaurant'),
-          position: stringToLatLng(order.restaurantLocation),
+          markerId: const MarkerId('restaurant'),
+          position: toLatLng(order.restaurantLocation!),
           icon: _markerIcons['restaurant']!,
         ),
-      if (order.driverLocation != null)
+      if (order.courierLocation != null)
         Marker(
-          markerId: MarkerId('courier'),
-          position: stringToLatLng(order.driverLocation),
+          markerId: const MarkerId('courier'),
+          position: toLatLng(order.courierLocation!),
           icon: _markerIcons['courier']!,
         ),
       if (order.destinationLocation != null)
         Marker(
-          markerId: MarkerId('user'),
-          position: stringToLatLng(order.destinationLocation),
+          markerId: const MarkerId('user'),
+          position: toLatLng(order.destinationLocation!),
           icon: _markerIcons['user']!,
         ),
     };
+  }
+
+  LatLng toLatLng(Location location) {
+    return LatLng(location.lat, location.lng);
   }
 
   void changeMapMode(GoogleMapController mapController, String stylePath) {
@@ -156,13 +161,5 @@ class _OrderScreenState extends State<OrderScreen> {
     ByteData byte = await rootBundle.load(path);
     var list = byte.buffer.asUint8List(byte.offsetInBytes, byte.lengthInBytes);
     return utf8.decode(list);
-  }
-
-  stringToLatLng(String? restaurantLocation) {
-    if (restaurantLocation == null) {
-      return _center;
-    }
-    final split = restaurantLocation.split(',');
-    return LatLng(double.parse(split[0]), double.parse(split[1]));
   }
 }

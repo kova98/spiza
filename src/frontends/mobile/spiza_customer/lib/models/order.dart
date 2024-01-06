@@ -1,3 +1,4 @@
+import 'package:spiza_customer/models/location.dart';
 import 'package:spiza_customer/models/item.dart';
 
 class Order {
@@ -9,9 +10,9 @@ class Order {
   OrderStatus status = OrderStatus.created;
 
   String? deliveryTime;
-  String? restaurantLocation;
-  String? driverLocation;
-  String? destinationLocation;
+  Location? restaurantLocation;
+  Location? courierLocation;
+  Location? destinationLocation;
 
   Order({
     required this.items,

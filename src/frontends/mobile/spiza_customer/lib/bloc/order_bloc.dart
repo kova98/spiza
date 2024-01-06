@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:spiza_customer/data/mqtt_provider.dart';
 import 'package:spiza_customer/data/order_api_provider.dart';
+import 'package:spiza_customer/models/location.dart';
 import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/models/order.dart';
 import 'package:spiza_customer/models/order_update.dart';
@@ -10,6 +9,7 @@ import 'package:spiza_customer/models/order_update.dart';
 class OrderBloc {
   final _orderSubject = PublishSubject<Order>();
   final _orderUpdateSubject = PublishSubject<OrderUpdate>();
+  final _courierLocationSubject = PublishSubject<Location>();
   final _api = OrderApiProvider();
 
   Order _order = Order.empty();
@@ -17,6 +17,7 @@ class OrderBloc {
 
   Stream<Order> get order => _orderSubject.stream;
   Stream<OrderUpdate> get orderUpdate => _orderUpdateSubject.stream;
+  Stream<Location> get courierLocation => _courierLocationSubject.stream;
 
   OrderBloc() {
     _orderUpdateSubject.listen((event) {
@@ -25,13 +26,27 @@ class OrderBloc {
       _order.status = event.status;
       refreshOrder();
     });
+
+    _courierLocationSubject.listen((event) {
+      _order.courierLocation = event;
+      refreshOrder();
+    });
   }
 
   Future getOrderStatus(int orderId) async {
-    print('connecting to mqtt with order id $orderId');
     final mqtt = MqttProvider();
-    mqtt.connectToMQTT().then(
-        (value) => {mqtt.subscribe('order/$orderId', _orderUpdateSubject)});
+    mqtt.connectToMQTT().then((value) => {
+          mqtt.subscribe(
+            'order/$orderId',
+            _orderUpdateSubject,
+            OrderUpdate.fromJson,
+          ),
+          mqtt.subscribe(
+            'order/$orderId/courier-location',
+            _courierLocationSubject,
+            Location.fromJson,
+          )
+        });
     _orderSubject.sink.add(_order);
   }
 
