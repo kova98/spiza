@@ -4,9 +4,9 @@ import 'package:spiza_customer/bloc/restaurants_bloc.dart';
 class RestaurantsProvider extends InheritedWidget {
   final RestaurantsBloc bloc;
 
-  RestaurantsProvider({Key? key, required Widget child})
-      : bloc = RestaurantsBloc(),
-        super(key: key, child: child);
+  const RestaurantsProvider(
+      {Key? key, required Widget child, required this.bloc})
+      : super(key: key, child: child);
 
   @override
   bool updateShouldNotify(oldWidget) => true;

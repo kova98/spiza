@@ -23,8 +23,10 @@ class MenuList extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          final restaurant =
-              snapshot.data!.firstWhere((r) => r.id == restaurantId);
+          final restaurant = snapshot.data!.firstWhere(
+            (r) => r.id == restaurantId,
+            orElse: () => Restaurant.empty(),
+          );
           // tu je bug, treba dohvatit snapshot.restaurant bla bla
           return ListView.builder(
             shrinkWrap: true,

@@ -4,9 +4,8 @@ import 'package:spiza_customer/bloc/cart_bloc.dart';
 class CartProvider extends InheritedWidget {
   final CartBloc bloc;
 
-  CartProvider({Key? key, required Widget child})
-      : bloc = CartBloc(),
-        super(key: key, child: child);
+  const CartProvider({Key? key, required Widget child, required this.bloc})
+      : super(key: key, child: child);
 
   @override
   bool updateShouldNotify(oldWidget) => true;
