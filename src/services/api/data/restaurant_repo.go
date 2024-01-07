@@ -57,10 +57,19 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 		return nil, err
 	}
 
+	var address Address
+	addressQuery := `SELECT a.id, a.full_address, a.lat_lng FROM addresses a 
+					 JOIN restaurants r ON a.id = r.address_id
+					 WHERE r.id = $1`
+	if err := repo.db.Get(&address, addressQuery, id); err != nil {
+		return nil, err
+	}
+	restaurant.Address = address
+
 	itemQuery := `
-		SELECT i.id, i.name, i.category_id, i.order_num, i.price, i.description, i.image
+		SELECT i.id, i.name, i.category_id, i.order_num, i.price, i.description, i.image 
 		FROM items i
-		LEFT JOIN menu_categories mc ON mc.id = i.category_id
+		JOIN menu_categories mc ON i.category_id = mc.id
 		WHERE mc.restaurant_id = $1`
 	var items []Item
 	if err := repo.db.Select(&items, itemQuery, id); err != nil {

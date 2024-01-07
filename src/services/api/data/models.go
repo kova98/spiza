@@ -1,13 +1,21 @@
 package data
 
 import (
-	"github.com/lib/pq"
 	"time"
+
+	"github.com/lib/pq"
 )
+
+type Address struct {
+	Id          int64  `json:"id,omitempty"`
+	FullAddress string `json:"full_address" db:"full_address"`
+	LatLng      string `json:"lat_lng" db:"lat_lng"`
+}
 
 type Restaurant struct {
 	Id             int64          `json:"id,omitempty"`
 	Name           string         `json:"name"`
+	Address        Address        `json:"address"`
 	MenuCategories []MenuCategory `json:"menu_categories" db:"menu_categories"`
 }
 
@@ -34,8 +42,8 @@ type Order struct {
 	UserId       int64         `json:"user_id" db:"user_id"`
 	RestaurantId int64         `json:"restaurant_id" db:"restaurant_id"`
 	Status       int64         `json:"status"`
-	DateCreated  time.Time     `json:"˙date_created" db:"date_created"`
-	Items        pq.Int64Array `json:"items" `
+	DateCreated  time.Time     `json:"date_created" db:"date_created"`
+	Items        pq.Int64Array `json:"items"`
 }
 
 func (o Order) WithItems(i []Item) OrderWithItems {

@@ -18,7 +18,8 @@ func InitDb(connStr string) *sqlx.DB {
 	init := `
         CREATE TABLE IF NOT EXISTS restaurants (
             id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL
+            name TEXT NOT NULL,
+			address_id INTEGER REFERENCES addresses(id)
         );
         
         CREATE TABLE IF NOT EXISTS menu_categories (
@@ -39,7 +40,8 @@ func InitDb(connStr string) *sqlx.DB {
         
 		CREATE TABLE IF NOT EXISTS users (
 			id serial PRIMARY KEY,
-			name TEXT NOT NULL
+			name TEXT NOT NULL,
+			addresses INTEGER[] NOT NULL DEFAULT '{}'
 		);
 		
 		CREATE TABLE IF NOT EXISTS orders (
@@ -49,6 +51,12 @@ func InitDb(connStr string) *sqlx.DB {
 			status INTEGER NOT NULL DEFAULT 0,
 			items INTEGER[] NOT NULL,
 			date_created timestamp DEFAULT (NOW() AT TIME ZONE 'UTC')
+		);
+
+		CREATE TABLE IF NOT EXISTS addresses (
+			id SERIAL PRIMARY KEY,
+			full_address TEXT NOT NULL,
+			lat_lng TEXT NOT NULL  
 		);
         `
 	_, err = db.Exec(init)
