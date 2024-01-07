@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,8 +17,6 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  final LatLng _center = const LatLng(45.8150, 15.9819);
-
   final Map<String, BitmapDescriptor> _markerIcons = {
     'restaurant': BitmapDescriptor.defaultMarker,
     'courier': BitmapDescriptor.defaultMarker,
@@ -41,81 +40,87 @@ class _OrderScreenState extends State<OrderScreen> {
     final orderBloc = OrderProvider.of(context);
 
     return StreamBuilder<Order>(
-        stream: orderBloc.order,
-        builder: (context, snapshot) {
-          return !snapshot.hasData
-              ? const CircularProgressIndicator()
-              : Scaffold(
-                  backgroundColor: Colors.yellow,
-                  appBar: AppBar(
-                    backgroundColor: Colors.white,
-                    elevation: 0,
-                    centerTitle: true,
-                    title: Text(
-                      snapshot.data!.restaurantName ?? "",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
+      stream: orderBloc.order,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const CircularProgressIndicator();
+        }
+        final restLoc = toLatLng(snapshot.data!.destinationLocation!);
+        final destLoc = toLatLng(snapshot.data!.restaurantLocation!);
+        return Scaffold(
+          backgroundColor: Colors.yellow,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            centerTitle: true,
+            title: Text(
+              snapshot.data!.restaurantName ?? "",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          body: Column(
+            children: [
+              Container(
+                  alignment: Alignment.center,
+                  height: 60,
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 3,
+                        blurRadius: 3,
+                        offset: const Offset(0, 1))
+                  ]),
+                  child: Text(
+                    snapshot.data!.status.description,
+                    style: const TextStyle(fontSize: 20),
+                  )),
+              Expanded(
+                child: GoogleMap(
+                  onMapCreated: (GoogleMapController c) {
+                    changeMapStyle(c, "assets/maps_style.json");
+                    c.animateCamera(
+                      CameraUpdate.newLatLngBounds(
+                          _createBounds([restLoc, destLoc]), 30),
+                    );
+                  },
+                  myLocationButtonEnabled: true,
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: CameraPosition(
+                    target: _getCentralPoint(restLoc, destLoc),
+                    zoom: 16,
                   ),
-                  body: Column(
-                    children: [
-                      Container(
-                          alignment: Alignment.center,
-                          height: 60,
-                          decoration:
-                              BoxDecoration(color: Colors.white, boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                spreadRadius: 3,
-                                blurRadius: 3,
-                                offset: const Offset(0, 1))
-                          ]),
-                          child: Text(
-                            snapshot.data!.status.description,
-                            style: const TextStyle(fontSize: 20),
-                          )),
-                      Expanded(
-                        child: GoogleMap(
-                          onMapCreated: (GoogleMapController c) {
-                            changeMapMode(c, "assets/maps_style.json");
-                          },
-                          myLocationButtonEnabled: true,
-                          zoomControlsEnabled: false,
-                          initialCameraPosition: CameraPosition(
-                            target: _center,
-                            zoom: 18,
-                          ),
-                          markers: _getMarkers(context, snapshot.data!),
-                        ),
+                  markers: _getMarkers(context, snapshot.data!),
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                color: Colors.white,
+                height: 100,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        snapshot.data!.getTime(),
+                        style: const TextStyle(
+                            fontSize: 50, fontWeight: FontWeight.w500),
                       ),
-                      Container(
-                          alignment: Alignment.center,
-                          color: Colors.white,
-                          height: 100,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  snapshot.data!.getTime(),
-                                  style: const TextStyle(
-                                      fontSize: 50,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Text(
-                                  'Estimated delivery time',
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.black54),
-                                ),
-                              )
-                            ],
-                          )),
-                    ],
-                  ),
-                );
-        });
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text(
+                        'Estimated delivery time',
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Set<Marker> _getMarkers(BuildContext context, Order order) {
@@ -145,7 +150,7 @@ class _OrderScreenState extends State<OrderScreen> {
     return LatLng(location.lat, location.lng);
   }
 
-  void changeMapMode(GoogleMapController mapController, String stylePath) {
+  void changeMapStyle(GoogleMapController mapController, String stylePath) {
     _getJsonFile(stylePath).then((value) => _setMapStyle(value, mapController));
   }
 
@@ -154,8 +159,25 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   Future<String> _getJsonFile(String path) async {
-    ByteData byte = await rootBundle.load(path);
+    var byte = await rootBundle.load(path);
     var list = byte.buffer.asUint8List(byte.offsetInBytes, byte.lengthInBytes);
     return utf8.decode(list);
+  }
+
+  LatLng _getCentralPoint(LatLng point1, LatLng point2) {
+    var centralLat = (point1.latitude + point2.latitude) / 2;
+    var centralLng = (point1.longitude + point2.longitude) / 2;
+    return LatLng(centralLat, centralLng);
+  }
+
+  LatLngBounds _createBounds(List<LatLng> positions) {
+    final southwestLat = positions.map((p) => p.latitude).reduce(min);
+    final southwestLon = positions.map((p) => p.longitude).reduce(min);
+    final northeastLat = positions.map((p) => p.latitude).reduce(max);
+    final northeastLon = positions.map((p) => p.longitude).reduce((max));
+    return LatLngBounds(
+      southwest: LatLng(southwestLat, southwestLon),
+      northeast: LatLng(northeastLat, northeastLon),
+    );
   }
 }
