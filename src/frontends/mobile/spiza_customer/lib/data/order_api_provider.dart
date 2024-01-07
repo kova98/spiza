@@ -6,7 +6,7 @@ import 'package:spiza_customer/models/order.dart';
 
 class OrderApiProvider {
   final _root = "10.0.2.2:5002";
-  Client _client = Client();
+  final Client _client = Client();
 
   Future<(int, String)> submitOrder(Order order) async {
     final body = json.encode(order.toJson());

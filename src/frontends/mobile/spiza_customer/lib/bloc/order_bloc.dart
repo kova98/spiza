@@ -63,7 +63,7 @@ class OrderBloc {
   }
 
   Future<(int id, String error)> confirmOrder(Cart cart) {
-    final userId = 1; // TODO: get user id from auth
+    const userId = 1; // TODO: get user id from auth
     _order = cart.toOrder(userId);
     refreshOrder();
     return _api.submitOrder(_order);

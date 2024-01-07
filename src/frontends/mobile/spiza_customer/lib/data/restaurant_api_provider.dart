@@ -4,7 +4,7 @@ import 'package:http/http.dart' show Client;
 
 class RestaurantApiProvider {
   final _root = "10.0.2.2:5002";
-  Client _client = Client();
+  final Client _client = Client();
 
   Future<List<Restaurant>> getRestaurants() async {
     final response = await _client.get(Uri.http(_root, '/api/restaurant'));

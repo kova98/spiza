@@ -4,9 +4,11 @@ import 'package:spiza_customer/bloc/order_provider.dart';
 import 'package:spiza_customer/bloc/restaurants_provider.dart';
 import 'package:spiza_customer/screens/home_screen.dart';
 
-main() => runApp(SpizaApp());
+main() => runApp(const SpizaApp());
 
 class SpizaApp extends StatelessWidget {
+  const SpizaApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return RestaurantsProvider(
@@ -19,7 +21,7 @@ class SpizaApp extends StatelessWidget {
                 primaryColor: Colors.amber[600],
                 colorScheme: ColorScheme.fromSwatch()
                     .copyWith(secondary: Colors.red, background: Colors.white)),
-            home: HomeScreen(),
+            home: const HomeScreen(),
           ),
         ),
       ),

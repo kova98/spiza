@@ -8,7 +8,8 @@ class OrderProvider extends InheritedWidget {
       : bloc = OrderBloc(),
         super(key: key, child: child);
 
-  bool updateShouldNotify(_) => true;
+  @override
+  bool updateShouldNotify(oldWidget) => true;
 
   static OrderBloc of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<OrderProvider>()!.bloc;

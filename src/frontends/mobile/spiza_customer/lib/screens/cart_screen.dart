@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spiza_customer/bloc/cart_bloc.dart';
 import 'package:spiza_customer/bloc/cart_provider.dart';
 import 'package:spiza_customer/bloc/order_bloc.dart';
 import 'package:spiza_customer/bloc/order_provider.dart';
@@ -8,7 +7,9 @@ import 'package:spiza_customer/models/item.dart';
 import 'package:spiza_customer/screens/order_screen.dart';
 
 class CartScreen extends StatelessWidget {
-  final menuText = TextStyle(fontSize: 24);
+  final menuText = const TextStyle(fontSize: 24);
+
+  const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +21,19 @@ class CartScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           cartBloc.refreshCart();
-          return CircularProgressIndicator();
-        } else if (snapshot.data!.items.length == 0) {
-          return SizedBox.shrink();
+          return const CircularProgressIndicator();
+        } else if (snapshot.data!.items.isEmpty) {
+          return const SizedBox.shrink();
         } else {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
               centerTitle: true,
-              title: Text(snapshot.data!.restaurantName ?? ""),
+              title: Text(snapshot.data!.restaurantName),
             ),
             body: Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   ListView.builder(
@@ -44,7 +45,7 @@ class CartScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("${item.amount} x ${item.name}",
-                              style: TextStyle(fontSize: 24)),
+                              style: const TextStyle(fontSize: 24)),
                           Text("${item.price}", style: menuText),
                         ],
                       );
@@ -53,11 +54,11 @@ class CartScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Total:',
+                      const Text('Total:',
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold)),
                       Text("${snapshot.data!.totalPrice}",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold))
                     ],
                   ),
@@ -78,7 +79,7 @@ class CartScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             )),
-                        child: Text(
+                        child: const Text(
                           'Confirm Order',
                           style: TextStyle(fontSize: 24, color: Colors.black),
                         ),
@@ -102,7 +103,7 @@ class CartScreen extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => OrderScreen(),
+                  builder: (context) => const OrderScreen(),
                 ),
               ),
               orderBloc.refreshOrder()

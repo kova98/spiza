@@ -21,11 +21,9 @@ class RestaurantsBloc {
       (x) => x.id == id,
       orElse: () => Restaurant.empty(),
     );
-    if (existingRestaurant != null) {
-      final index = _restaurantsList.indexOf(existingRestaurant);
-      _restaurantsList[index] = restaurant;
-    }
-    _restaurants.sink.add(_restaurantsList);
+    final index = _restaurantsList.indexOf(existingRestaurant);
+    _restaurantsList[index] = restaurant;
+      _restaurants.sink.add(_restaurantsList);
   }
 
   void dispose() {

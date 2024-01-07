@@ -7,7 +7,7 @@ import 'package:spiza_customer/screens/cart_screen.dart';
 class OrderButton extends StatelessWidget {
   final Restaurant restaurant;
 
-  const OrderButton(this.restaurant);
+  const OrderButton(this.restaurant, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,9 @@ class OrderButton extends StatelessWidget {
       builder: (context, AsyncSnapshot<Cart> snapshot) {
         if (!snapshot.hasData) {
           cartBloc.createCart(restaurant);
-          return SizedBox.shrink();
-        } else if (snapshot.data!.items.length == 0) {
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
+        } else if (snapshot.data!.items.isEmpty) {
+          return const SizedBox.shrink();
         } else {
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -33,18 +33,17 @@ class OrderButton extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CartScreen(),
+                    builder: (context) => const CartScreen(),
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(color: Theme.of(context).primaryColor),
+                    textStyle: TextStyle(color: Theme.of(context).primaryColor), backgroundColor: Colors.amber,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
-                    ),
-                    primary: Colors.amber),
+                    )),
                 child: Text(
                   'Order ${snapshot.data!.items.length} for ${snapshot.data!.totalPrice} kn',
-                  style: TextStyle(fontSize: 24, color: Colors.black),
+                  style: const TextStyle(fontSize: 24, color: Colors.black),
                 ),
               ),
             ),

@@ -32,7 +32,7 @@ class OrderInProgress extends StatelessWidget {
                   color: Colors.black.withOpacity(0.2),
                   spreadRadius: 3,
                   blurRadius: 3,
-                  offset: Offset(0, 1),
+                  offset: const Offset(0, 1),
                 ),
               ],
               color: Colors.white,
@@ -41,23 +41,23 @@ class OrderInProgress extends StatelessWidget {
             ),
             child: InkWell(
               onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => OrderScreen())),
+                  MaterialPageRoute(builder: (context) => const OrderScreen())),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(padding: EdgeInsets.only(left: 16)),
+                  const Padding(padding: EdgeInsets.only(left: 16)),
                   Text(
                     snapshot.data!.getTime(),
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  Padding(padding: EdgeInsets.only(left: 16)),
+                  const Padding(padding: EdgeInsets.only(left: 16)),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         snapshot.data!.restaurantName ?? "",
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Text(snapshot.data!.status.description)
                     ],

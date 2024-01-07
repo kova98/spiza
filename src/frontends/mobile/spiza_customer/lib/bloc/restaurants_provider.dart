@@ -8,7 +8,8 @@ class RestaurantsProvider extends InheritedWidget {
       : bloc = RestaurantsBloc(),
         super(key: key, child: child);
 
-  bool updateShouldNotify(_) => true;
+  @override
+  bool updateShouldNotify(oldWidget) => true;
 
   static RestaurantsBloc of(BuildContext context) {
     return context

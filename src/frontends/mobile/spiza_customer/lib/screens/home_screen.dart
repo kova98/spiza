@@ -3,6 +3,8 @@ import 'package:spiza_customer/widgets/order_in_progress.dart';
 import 'package:spiza_customer/widgets/restaurants_list.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
@@ -14,7 +16,7 @@ class HomeScreen extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             children: [
               ListView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 children: [
                   Column(
@@ -24,7 +26,7 @@ class HomeScreen extends StatelessWidget {
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                         ),
-                        label: Text(
+                        label: const Text(
                           'A long address 5',
                           style: TextStyle(color: Colors.black87),
                         ),
@@ -34,8 +36,8 @@ class HomeScreen extends StatelessWidget {
                         ),
                         onPressed: () {},
                       ),
-                      SizedBox(height: 10),
-                      Text(
+                      const SizedBox(height: 10),
+                      const Text(
                         'What would\nyou like to eat?',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -44,9 +46,9 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.search),
                       border: UnderlineInputBorder(),
                     ),
@@ -54,19 +56,19 @@ class HomeScreen extends StatelessWidget {
                       // update
                     },
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'All Restaurants',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
                   ),
-                  SizedBox(height: 15),
-                  RestaurantsList()
+                  const SizedBox(height: 15),
+                  const RestaurantsList()
                 ],
               ),
-              OrderInProgress(),
+              const OrderInProgress(),
             ],
           ),
         ),

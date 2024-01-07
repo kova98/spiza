@@ -1,5 +1,4 @@
 import 'package:spiza_customer/models/location.dart';
-import 'package:spiza_customer/models/item.dart';
 
 class Order {
   List<int> items = List<int>.empty(growable: true);

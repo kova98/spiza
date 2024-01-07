@@ -65,10 +65,6 @@ class _OrderScreenState extends State<OrderScreen> {
                       Container(
                           alignment: Alignment.center,
                           height: 60,
-                          child: Text(
-                            snapshot.data!.status.description,
-                            style: const TextStyle(fontSize: 20),
-                          ),
                           decoration:
                               BoxDecoration(color: Colors.white, boxShadow: [
                             BoxShadow(
@@ -76,7 +72,11 @@ class _OrderScreenState extends State<OrderScreen> {
                                 spreadRadius: 3,
                                 blurRadius: 3,
                                 offset: const Offset(0, 1))
-                          ])),
+                          ]),
+                          child: Text(
+                            snapshot.data!.status.description,
+                            style: const TextStyle(fontSize: 20),
+                          )),
                       Expanded(
                         child: GoogleMap(
                           onMapCreated: (GoogleMapController c) {

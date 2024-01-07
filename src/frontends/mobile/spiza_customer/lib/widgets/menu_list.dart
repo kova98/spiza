@@ -7,7 +7,7 @@ import 'package:spiza_customer/models/restaurant.dart';
 
 class MenuList extends StatelessWidget {
   final int restaurantId;
-  const MenuList(this.restaurantId);
+  const MenuList(this.restaurantId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class MenuList extends StatelessWidget {
       builder: (context, AsyncSnapshot<List<Restaurant>> snapshot) {
         if (!snapshot.hasData) {
           restaurantsBloc.getRestaurantWithMenu(restaurantId);
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
@@ -28,13 +28,13 @@ class MenuList extends StatelessWidget {
           // tu je bug, treba dohvatit snapshot.restaurant bla bla
           return ListView.builder(
             shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             itemCount: restaurant.menu.categories.length,
             itemBuilder: (context, int index) {
               final category = restaurant.menu.categories[index];
               final items = category.items;
-              return items.length == 0
-                  ? SizedBox.shrink()
+              return items.isEmpty
+                  ? const SizedBox.shrink()
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -42,7 +42,7 @@ class MenuList extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: Text(
                             category.name,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 24,
                             ),
@@ -76,17 +76,17 @@ class MenuList extends StatelessWidget {
                   children: [
                     Text(
                       item.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Text(
                       item.description,
-                      style: TextStyle(color: Colors.black54),
+                      style: const TextStyle(color: Colors.black54),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Text(
                       "${item.price} kn",
                     )
@@ -95,7 +95,7 @@ class MenuList extends StatelessWidget {
               ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: SizedBox(
+                child: const SizedBox(
                   width: 150,
                   child: Image(
                     image: AssetImage('assets/burger.png'),
@@ -106,7 +106,7 @@ class MenuList extends StatelessWidget {
           ),
         ),
       );
-      menuItems.add(SizedBox(height: 15));
+      menuItems.add(const SizedBox(height: 15));
     }
     return Column(children: menuItems);
   }

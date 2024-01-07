@@ -9,13 +9,10 @@ class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key, required this.restaurant}) : super(key: key);
 
   @override
-  _MenuScreenState createState() => _MenuScreenState(restaurant);
+  State<MenuScreen> createState() => _MenuScreenState();
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  final Restaurant restaurant;
-  _MenuScreenState(this.restaurant);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,29 +21,30 @@ class _MenuScreenState extends State<MenuScreen> {
         alignment: Alignment.bottomCenter,
         children: [
           ListView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             children: [
               Stack(
                 children: [
-                  Image(
+                  const Image(
                     image: AssetImage("assets/burger.png"),
                   ),
                   Positioned(
                     bottom: 20,
                     right: 20,
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 8),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.white,
                         ),
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                           Radius.circular(20),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         '20-30 min',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -55,12 +53,12 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ),
                   AppBar(
-                    iconTheme: IconThemeData(color: Colors.white),
+                    iconTheme: const IconThemeData(color: Colors.white),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                     actions: [
                       IconButton(
-                        icon: Icon(Icons.search),
+                        icon: const Icon(Icons.search),
                         onPressed: () {},
                       ),
                     ],
@@ -68,7 +66,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 ],
               ),
               Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -76,13 +74,13 @@ class _MenuScreenState extends State<MenuScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          restaurant.name,
-                          style: TextStyle(
+                          widget.restaurant.name,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 32,
                           ),
                         ),
-                        Text(
+                        const Text(
                           '★ 4.5',
                           style: TextStyle(
                             fontSize: 24,
@@ -91,19 +89,19 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
-                    Text(
+                    const SizedBox(height: 5),
+                    const Text(
                       'Delivery 5,00 kn',
                       style: TextStyle(fontSize: 18, color: Colors.black87),
                     ),
-                    SizedBox(height: 15),
-                    MenuList(restaurant.id),
+                    const SizedBox(height: 15),
+                    MenuList(widget.restaurant.id),
                   ],
                 ),
               ),
             ],
           ),
-          OrderButton(restaurant),
+          OrderButton(widget.restaurant),
         ],
       ),
     );
