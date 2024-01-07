@@ -3,10 +3,10 @@ import 'package:spiza_customer/models/item.dart';
 
 class Order {
   List<int> items = List<int>.empty(growable: true);
-  String? address;
   String? restaurantName;
-  num restaurantId = 0;
-  num userId = 0;
+  int addressId;
+  int restaurantId = 0;
+  int userId = 0;
   OrderStatus status = OrderStatus.created;
 
   String? deliveryTime;
@@ -16,11 +16,26 @@ class Order {
 
   Order({
     required this.items,
-    required this.address,
+    required this.addressId,
     required this.restaurantId,
     this.restaurantName,
+    this.restaurantLocation,
     required this.userId,
+    this.destinationLocation,
   });
+
+  Order.empty()
+      : userId = 0,
+        restaurantId = 0,
+        addressId = 0,
+        items = List<int>.empty();
+
+  Map<String, dynamic> toJson() => {
+        'user_id': userId,
+        'restaurant_id': restaurantId,
+        'address': addressId,
+        'items': items,
+      };
 
   String getTime() {
     if (deliveryTime == null) {
@@ -30,33 +45,6 @@ class Order {
       final localTime = utcTime.toLocal();
       return '${localTime.hour}:${localTime.minute}';
     }
-  }
-
-  factory Order.fromJson(Map<String, dynamic> json) {
-    var itemsList = json['items'] as List;
-    List<Item> items = itemsList.map((i) => Item.fromJson(i)).toList();
-    return Order(
-      userId: json['user_id'],
-      restaurantId: json['restaurant_id'],
-      address: json['address'],
-      items: items.map((i) => i.id).toList(),
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'user_id': userId,
-        'restaurant_id': restaurantId,
-        'address': address,
-        'items': items,
-      };
-
-  static Order empty() {
-    return Order(
-      userId: 0,
-      restaurantId: 0,
-      address: '',
-      items: List<int>.empty(),
-    );
   }
 }
 

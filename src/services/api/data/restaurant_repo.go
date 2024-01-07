@@ -1,6 +1,7 @@
 package data
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
@@ -61,7 +62,7 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 	addressQuery := `SELECT a.id, a.full_address, a.lat_lng FROM addresses a 
 					 JOIN restaurants r ON a.id = r.address_id
 					 WHERE r.id = $1`
-	if err := repo.db.Get(&address, addressQuery, id); err != nil {
+	if err := repo.db.Get(&address, addressQuery, id); err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
 	restaurant.Address = address
@@ -81,7 +82,6 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 	if err := repo.db.Select(&categories, categoryQuery, id); err != nil {
 		return nil, err
 	}
-
 	for i, category := range categories {
 		categories[i].Items = []Item{}
 		for _, item := range items {
@@ -90,11 +90,11 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 			}
 		}
 	}
-
 	if categories == nil {
 		categories = []MenuCategory{}
 	}
 	restaurant.MenuCategories = categories
+
 	return &restaurant, nil
 }
 
