@@ -20,6 +20,26 @@ class Cart {
     required this.restaurantLocation,
   });
 
+  Cart copyWith({
+    List<Item>? items,
+    int? addressId,
+    int? restaurantId,
+    String? restaurantName,
+    Location? restaurantLocation,
+    Location? destinationLocation,
+    num? deliveryTime,
+  }) {
+    return Cart(
+      addressId: addressId ?? this.addressId,
+      restaurantId: restaurantId ?? this.restaurantId,
+      restaurantName: restaurantName ?? this.restaurantName,
+      restaurantLocation: restaurantLocation ?? this.restaurantLocation,
+    )
+      ..items = items ?? this.items
+      ..destinationLocation = destinationLocation ?? this.destinationLocation
+      ..deliveryTime = deliveryTime ?? this.deliveryTime;
+  }
+
   Cart.empty()
       : addressId = 0,
         restaurantName = '',

@@ -7,65 +7,66 @@ import 'package:spiza_customer/models/order.dart';
 import 'package:spiza_customer/models/order_update.dart';
 
 class OrderBloc {
-  final _orderSubject = PublishSubject<Order>();
-  final _orderUpdateSubject = PublishSubject<OrderUpdate>();
-  final _courierLocationSubject = PublishSubject<Location>();
+  final BehaviorSubject<Order> _orderSubject =
+      BehaviorSubject.seeded(Order.empty());
+  final BehaviorSubject<OrderUpdate> _orderUpdateSubject =
+      BehaviorSubject.seeded(OrderUpdate(status: OrderStatus.created));
+  final BehaviorSubject<Location> _courierLocationSubject =
+      BehaviorSubject.seeded(Location.empty());
   final _api = OrderApiProvider();
 
-  Order _order = Order.empty();
-  OrderUpdate _orderUpdate = OrderUpdate(status: OrderStatus.created);
+  final MqttProvider _mqtt = MqttProvider();
 
   Stream<Order> get order => _orderSubject.stream;
   Stream<OrderUpdate> get orderUpdate => _orderUpdateSubject.stream;
   Stream<Location> get courierLocation => _courierLocationSubject.stream;
 
   OrderBloc() {
-    _orderUpdateSubject.listen((event) {
-      _orderUpdate = event;
-      _order.deliveryTime = event.deliveryTime;
-      _order.status = event.status;
-      refreshOrder();
+    _orderUpdateSubject.stream.listen((event) {
+      var updatedOrder = _orderSubject.value.copyWith(
+        deliveryTime: event.deliveryTime,
+        status: event.status,
+      );
+      _orderSubject.add(updatedOrder);
     });
 
-    _courierLocationSubject.listen((event) {
-      _order.courierLocation = event;
-      refreshOrder();
+    _courierLocationSubject.stream.listen((event) {
+      var updatedOrder = _orderSubject.value.copyWith(
+        courierLocation: event,
+      );
+      _orderSubject.add(updatedOrder);
     });
   }
 
   Future getOrderStatus(int orderId) async {
-    final mqtt = MqttProvider();
-    mqtt.connectToMQTT().then((value) => {
-          mqtt.subscribe(
-            'order/$orderId',
-            _orderUpdateSubject,
-            OrderUpdate.fromJson,
-          ),
-          mqtt.subscribe(
-            'order/$orderId/courier-location',
-            _courierLocationSubject,
-            Location.fromJson,
-          )
-        });
-    _orderSubject.sink.add(_order);
+    try {
+      await _mqtt.connectToMQTT();
+      _mqtt.subscribe(
+        'order/$orderId',
+        _orderUpdateSubject,
+        OrderUpdate.fromJson,
+      );
+      _mqtt.subscribe(
+        'order/$orderId/courier-location',
+        _courierLocationSubject,
+        Location.fromJson,
+      );
+    } catch (e) {
+      // Handle error
+      print(e); // Replace with proper error handling
+    }
   }
 
   void dispose() {
     _orderSubject.close();
+    _orderUpdateSubject.close();
+    _courierLocationSubject.close();
   }
 
-  void refreshOrder() {
-    _orderSubject.sink.add(_order);
-  }
-
-  void refreshOrderUpdate() {
-    _orderUpdateSubject.sink.add(_orderUpdate);
-  }
-
-  Future<(int id, String error)> confirmOrder(Cart cart) {
+  Future<(int id, String error)> confirmOrder(Cart cart) async {
     const userId = 1; // TODO: get user id from auth
-    _order = cart.toOrder(userId);
-    refreshOrder();
-    return _api.submitOrder(_order);
+    var newOrder = cart.toOrder(userId);
+    _orderSubject.add(newOrder);
+    return _api.submitOrder(newOrder);
   }
 }

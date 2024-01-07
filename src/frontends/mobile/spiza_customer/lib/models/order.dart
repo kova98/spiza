@@ -13,15 +13,17 @@ class Order {
   Location? courierLocation;
   Location? destinationLocation;
 
-  Order({
-    required this.items,
-    required this.addressId,
-    required this.restaurantId,
-    this.restaurantName,
-    this.restaurantLocation,
-    required this.userId,
-    this.destinationLocation,
-  });
+  Order(
+      {required this.items,
+      required this.addressId,
+      required this.restaurantId,
+      this.restaurantName,
+      this.restaurantLocation,
+      required this.userId,
+      this.destinationLocation,
+      this.status = OrderStatus.created,
+      this.deliveryTime,
+      this.courierLocation});
 
   Order.empty()
       : userId = 0,
@@ -35,6 +37,32 @@ class Order {
         'address': addressId,
         'items': items,
       };
+
+  Order copyWith({
+    List<int>? items,
+    String? restaurantName,
+    int? addressId,
+    int? restaurantId,
+    int? userId,
+    OrderStatus? status,
+    String? deliveryTime,
+    Location? restaurantLocation,
+    Location? courierLocation,
+    Location? destinationLocation,
+  }) {
+    return Order(
+      items: items ?? this.items,
+      restaurantName: restaurantName ?? this.restaurantName,
+      addressId: addressId ?? this.addressId,
+      restaurantId: restaurantId ?? this.restaurantId,
+      userId: userId ?? this.userId,
+      status: status ?? this.status,
+      deliveryTime: deliveryTime ?? this.deliveryTime,
+      restaurantLocation: restaurantLocation ?? this.restaurantLocation,
+      courierLocation: courierLocation ?? this.courierLocation,
+      destinationLocation: destinationLocation ?? this.destinationLocation,
+    );
+  }
 
   String getTime() {
     if (deliveryTime == null) {

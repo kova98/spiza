@@ -43,10 +43,6 @@ class _OrderScreenState extends State<OrderScreen> {
     return StreamBuilder<Order>(
         stream: orderBloc.order,
         builder: (context, snapshot) {
-          if (snapshot.hasData == false) {
-            orderBloc.refreshOrderUpdate();
-            orderBloc.refreshOrder();
-          }
           return !snapshot.hasData
               ? const CircularProgressIndicator()
               : Scaffold(

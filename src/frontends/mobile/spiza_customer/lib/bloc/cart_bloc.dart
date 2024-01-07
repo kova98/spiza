@@ -4,27 +4,25 @@ import 'package:spiza_customer/models/item.dart';
 import 'package:spiza_customer/models/restaurant.dart';
 
 class CartBloc {
-  final _cart = PublishSubject<Cart>();
-
-  static Cart _lastCart = Cart.empty();
+  final _cart = BehaviorSubject<Cart>.seeded(Cart.empty());
 
   Stream<Cart> get cart => _cart.stream;
 
   void addToCart(Item item) {
-    _lastCart.items.add(item);
-    refreshCart();
+    final currentCart = _cart.value;
+    final updatedCart = currentCart.copyWith(
+      items: List.from(currentCart.items)..add(item),
+    );
+    _cart.sink.add(updatedCart);
   }
 
   void setRestaurant(Restaurant restaurant) {
-    _lastCart.restaurantName = restaurant.name;
-    _lastCart.restaurantId = restaurant.id;
-    _lastCart.restaurantLocation = restaurant.address.getLocation();
-    refreshCart();
-  }
-
-  void refreshCart() {
-    // TODO: support multiple restaurants
-    _cart.sink.add(_lastCart);
+    final updatedCart = _cart.value.copyWith(
+      restaurantName: restaurant.name,
+      restaurantId: restaurant.id,
+      restaurantLocation: restaurant.address.getLocation(),
+    );
+    _cart.sink.add(updatedCart);
   }
 
   void dispose() {
@@ -32,12 +30,12 @@ class CartBloc {
   }
 
   void createCart(Restaurant res) {
-    _lastCart = Cart(
+    final newCart = Cart(
       restaurantId: res.id,
       restaurantName: res.name,
       addressId: res.id,
       restaurantLocation: res.address.getLocation(),
     );
-    _cart.sink.add(_lastCart);
+    _cart.sink.add(newCart);
   }
 }

@@ -20,7 +20,6 @@ class CartScreen extends StatelessWidget {
       stream: cartBloc.cart,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          cartBloc.refreshCart();
           return const CircularProgressIndicator();
         } else if (snapshot.data!.items.isEmpty) {
           return const SizedBox.shrink();
@@ -106,7 +105,6 @@ class CartScreen extends StatelessWidget {
                   builder: (context) => const OrderScreen(),
                 ),
               ),
-              orderBloc.refreshOrder()
             }
           else
             {}

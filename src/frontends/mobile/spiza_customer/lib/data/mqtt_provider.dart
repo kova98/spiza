@@ -6,7 +6,7 @@ import 'package:rxdart/rxdart.dart';
 
 class Subscription<T> {
   final String topic;
-  final PublishSubject<T> subject;
+  final BehaviorSubject<T> subject;
   final T Function(Map<String, dynamic>) parser;
 
   Subscription(this.topic, this.subject, this.parser);
@@ -16,7 +16,7 @@ class MqttProvider {
   MqttServerClient? client;
   final _subscriptions = <String, Subscription>{};
 
-  void subscribe<T>(String topic, PublishSubject<T> subject,
+  void subscribe<T>(String topic, BehaviorSubject<T> subject,
       T Function(Map<String, dynamic>) parser) {
     final sub = Subscription<T>(topic, subject, parser);
     client!.subscribe(sub.topic, MqttQos.atLeastOnce);

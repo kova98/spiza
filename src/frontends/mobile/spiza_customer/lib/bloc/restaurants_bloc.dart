@@ -4,26 +4,35 @@ import 'package:spiza_customer/data/restaurant_repository.dart';
 
 class RestaurantsBloc {
   final _repository = RestaurantRepository();
-  final _restaurants = PublishSubject<List<Restaurant>>();
-
-  List<Restaurant> _restaurantsList = List<Restaurant>.empty();
+  final BehaviorSubject<List<Restaurant>> _restaurants =
+      BehaviorSubject.seeded(List<Restaurant>.empty());
 
   Stream<List<Restaurant>> get restaurants => _restaurants.stream;
 
   Future getRestaurants() async {
-    _restaurantsList = await _repository.getRestaurants();
-    _restaurants.sink.add(_restaurantsList);
+    try {
+      var restaurantsList = await _repository.getRestaurants();
+      _restaurants.sink.add(restaurantsList);
+    } catch (e) {
+      // TODO: handle the error or forward it to the UI
+      print(e);
+    }
   }
 
   Future getRestaurantWithMenu(int id) async {
-    final restaurant = await _repository.getRestaurantWithMenu(id);
-    final existingRestaurant = _restaurantsList.firstWhere(
-      (x) => x.id == id,
-      orElse: () => Restaurant.empty(),
-    );
-    final index = _restaurantsList.indexOf(existingRestaurant);
-    _restaurantsList[index] = restaurant;
-      _restaurants.sink.add(_restaurantsList);
+    try {
+      final restaurant = await _repository.getRestaurantWithMenu(id);
+      var existingRestaurantIndex =
+          _restaurants.value.indexWhere((x) => x.id == id);
+      if (existingRestaurantIndex >= 0) {
+        var updatedList = List<Restaurant>.from(_restaurants.value);
+        updatedList[existingRestaurantIndex] = restaurant;
+        _restaurants.sink.add(updatedList);
+      }
+    } catch (e) {
+      // TODO: Handle the error or forward it to the UI
+      print(e);
+    }
   }
 
   void dispose() {

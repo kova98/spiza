@@ -17,9 +17,6 @@ class OrderInProgress extends StatelessWidget {
       child: StreamBuilder<Order>(
         stream: orderBloc.order,
         builder: (context, snapshot) {
-          if (snapshot.hasData == false) {
-            orderBloc.refreshOrder();
-          }
           if (!snapshot.hasData || snapshot.data!.restaurantId == 0) {
             return Container();
           }
@@ -48,7 +45,8 @@ class OrderInProgress extends StatelessWidget {
                   const Padding(padding: EdgeInsets.only(left: 16)),
                   Text(
                     snapshot.data!.getTime(),
-                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   const Padding(padding: EdgeInsets.only(left: 16)),
                   Column(

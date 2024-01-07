@@ -18,62 +18,67 @@ class RestaurantsList extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, int index) {
-              final item = snapshot.data![index];
-              return InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MenuScreen(restaurant: item),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 150.0,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
-                        image: DecorationImage(
-                            image: AssetImage('assets/burger.png'),
-                            fit: BoxFit.cover),
+          return snapshot.data!.isNotEmpty
+              ? ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, int index) {
+                    final item = snapshot.data![index];
+                    return InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MenuScreen(restaurant: item),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          item.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 150.0,
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7)),
+                              image: DecorationImage(
+                                  image: AssetImage('assets/burger.png'),
+                                  fit: BoxFit.cover),
+                            ),
                           ),
-                        ),
-                        const Text(
-                          '★ 4.5',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                item.name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Text(
+                                '★ 4.5',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    const Text(
-                      '5,00 kn',
-                      style: TextStyle(color: Colors.black87),
-                    ),
-                    const SizedBox(height: 17)
-                  ],
-                ),
-              );
-            },
-          );
+                          const Text(
+                            '5,00 kn',
+                            style: TextStyle(color: Colors.black87),
+                          ),
+                          const SizedBox(height: 17)
+                        ],
+                      ),
+                    );
+                  },
+                )
+              : const Center(
+                  child: CircularProgressIndicator(),
+                );
         }
       },
     );
