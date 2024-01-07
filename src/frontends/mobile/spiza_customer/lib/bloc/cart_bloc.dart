@@ -1,10 +1,15 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:spiza_customer/bloc/auth_bloc.dart';
 import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/models/item.dart';
 import 'package:spiza_customer/models/restaurant.dart';
 
 class CartBloc {
   final _cart = BehaviorSubject<Cart>.seeded(Cart.empty());
+
+  final AuthBloc authBloc;
+
+  CartBloc(this.authBloc);
 
   Stream<Cart> get cart => _cart.stream;
 
@@ -30,11 +35,14 @@ class CartBloc {
   }
 
   void createCart(Restaurant res) {
+    final address = authBloc.userSubject.value.address;
+
     final newCart = Cart(
       restaurantId: res.id,
       restaurantName: res.name,
       addressId: res.id,
       restaurantLocation: res.address.getLocation(),
+      destinationLocation: address.getLocation(),
     );
     _cart.sink.add(newCart);
   }

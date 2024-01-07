@@ -14,10 +14,13 @@ class Cart {
   get totalPrice => items.fold<num>(0, (prev, i) => i.price + prev);
 
   Cart({
+    this.items = const [],
+    required this.addressId,
     required this.restaurantId,
     required this.restaurantName,
-    required this.addressId,
     required this.restaurantLocation,
+    this.destinationLocation,
+    this.deliveryTime,
   });
 
   Cart copyWith({
@@ -34,10 +37,10 @@ class Cart {
       restaurantId: restaurantId ?? this.restaurantId,
       restaurantName: restaurantName ?? this.restaurantName,
       restaurantLocation: restaurantLocation ?? this.restaurantLocation,
-    )
-      ..items = items ?? this.items
-      ..destinationLocation = destinationLocation ?? this.destinationLocation
-      ..deliveryTime = deliveryTime ?? this.deliveryTime;
+      destinationLocation: destinationLocation ?? this.destinationLocation,
+      items: items ?? this.items,
+      deliveryTime: deliveryTime ?? this.deliveryTime,
+    );
   }
 
   Cart.empty()

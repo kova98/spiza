@@ -3,7 +3,7 @@ import 'package:spiza_customer/models/address.dart';
 import 'package:spiza_customer/models/user.dart';
 
 class AuthBloc {
-  final _userSubject = BehaviorSubject<User>.seeded(
+  final userSubject = BehaviorSubject<User>.seeded(
     User(
       id: 1,
       name: 'Placeholder User',
@@ -16,13 +16,13 @@ class AuthBloc {
     ),
   );
 
-  Stream<User> get user => _userSubject.stream;
+  Stream<User> get user => userSubject.stream;
 
   void dispose() {
-    _userSubject.close();
+    userSubject.close();
   }
 
   void setUser(User user) {
-    _userSubject.add(user);
+    userSubject.add(user);
   }
 }

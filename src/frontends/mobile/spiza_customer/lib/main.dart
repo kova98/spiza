@@ -10,16 +10,16 @@ import 'package:spiza_customer/bloc/restaurants_provider.dart';
 import 'package:spiza_customer/screens/home_screen.dart';
 
 main() {
-  final cartBloc = CartBloc();
+  final authBloc = AuthBloc();
+  final cartBloc = CartBloc(authBloc);
   final orderBloc = OrderBloc();
   final restaurantsBloc = RestaurantsBloc();
-  final authBloc = AuthBloc();
 
   runApp(SpizaApp(
+    authBloc: authBloc,
     cartBloc: cartBloc,
     orderBloc: orderBloc,
     restaurantsBloc: restaurantsBloc,
-    authBloc: authBloc,
   ));
 }
 
