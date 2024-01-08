@@ -8,7 +8,7 @@ class OrderUpdate {
   OrderUpdate({this.orderId = 0, required this.status, this.deliveryTime});
 
   OrderUpdate.fromJson(Map<String, dynamic> json)
-      : orderId = json['orderId'] ?? 0,
+      : orderId = json['order_id'] ?? 0,
         status = OrderStatus.values[json['status']],
-        deliveryTime = json['deliveryTime'];
+        deliveryTime = json['delivery_time'];
 }

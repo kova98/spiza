@@ -3,6 +3,6 @@ package data
 import "time"
 
 type OrderStatusUpdated struct {
-	Status       int
-	DeliveryTime time.Time
+	Status       int       `json:"status"`
+	DeliveryTime time.Time `json:"delivery_time"`
 }
