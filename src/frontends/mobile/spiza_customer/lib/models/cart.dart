@@ -6,6 +6,7 @@ class Cart {
   List<Item> items = List<Item>.empty(growable: true);
   int addressId;
   int restaurantId;
+  int destinationId;
   String restaurantName;
   Location restaurantLocation;
   Location? destinationLocation;
@@ -19,6 +20,7 @@ class Cart {
     required this.restaurantId,
     required this.restaurantName,
     required this.restaurantLocation,
+    required this.destinationId,
     this.destinationLocation,
     this.deliveryTime,
   });
@@ -27,6 +29,7 @@ class Cart {
     List<Item>? items,
     int? addressId,
     int? restaurantId,
+    int? destinationId,
     String? restaurantName,
     Location? restaurantLocation,
     Location? destinationLocation,
@@ -35,6 +38,7 @@ class Cart {
     return Cart(
       addressId: addressId ?? this.addressId,
       restaurantId: restaurantId ?? this.restaurantId,
+      destinationId: destinationId ?? this.destinationId,
       restaurantName: restaurantName ?? this.restaurantName,
       restaurantLocation: restaurantLocation ?? this.restaurantLocation,
       destinationLocation: destinationLocation ?? this.destinationLocation,
@@ -47,6 +51,7 @@ class Cart {
       : addressId = 0,
         restaurantName = '',
         restaurantId = 0,
+        destinationId = 0,
         restaurantLocation = Location.empty();
 
   Order toOrder(int userId) {
@@ -54,6 +59,7 @@ class Cart {
       restaurantId: restaurantId,
       restaurantName: restaurantName,
       addressId: addressId,
+      destinationId: destinationId,
       items: items.map((i) => i.id).toList(),
       userId: userId,
       restaurantLocation: restaurantLocation,

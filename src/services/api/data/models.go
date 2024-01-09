@@ -38,12 +38,13 @@ type Item struct {
 }
 
 type Order struct {
-	Id           int64         `json:"id"`
-	UserId       int64         `json:"user_id" db:"user_id"`
-	RestaurantId int64         `json:"restaurant_id" db:"restaurant_id"`
-	Status       int64         `json:"status"`
-	DateCreated  time.Time     `json:"date_created" db:"date_created"`
-	Items        pq.Int64Array `json:"items"`
+	Id            int64         `json:"id"`
+	UserId        int64         `json:"user_id" db:"user_id"`
+	RestaurantId  int64         `json:"restaurant_id" db:"restaurant_id"`
+	DestinationId int64         `json:"destination_id" db:"destination_id"`
+	Status        int64         `json:"status"`
+	DateCreated   time.Time     `json:"date_created" db:"date_created"`
+	Items         pq.Int64Array `json:"items"`
 }
 
 func (o Order) WithItems(i []Item) OrderWithItems {

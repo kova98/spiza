@@ -89,7 +89,7 @@ func InitBusClient(l *log.Logger) mqtt.Client {
 	opts.OnConnectionLost = NewConnectionLostHandler(l)
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
+		l.Panic("Error connecting to broker: ", token.Error())
 	}
 	return client
 }
@@ -108,6 +108,6 @@ func NewConnectHandler(l *log.Logger, addr string) mqtt.OnConnectHandler {
 
 func NewConnectionLostHandler(l *log.Logger) mqtt.ConnectionLostHandler {
 	return func(client mqtt.Client, err error) {
-		l.Println("Connection to broker lost:", err)
+		l.Println("Connection to broker lost: ", err)
 	}
 }

@@ -41,6 +41,7 @@ class CartBloc {
       restaurantId: res.id,
       restaurantName: res.name,
       addressId: res.id,
+      destinationId: address.id,
       restaurantLocation: res.address.getLocation(),
       destinationLocation: address.getLocation(),
     );

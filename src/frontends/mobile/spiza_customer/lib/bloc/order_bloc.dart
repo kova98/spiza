@@ -1,4 +1,5 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:spiza_customer/bloc/auth_bloc.dart';
 import 'package:spiza_customer/data/mqtt_provider.dart';
 import 'package:spiza_customer/data/order_api_provider.dart';
 import 'package:spiza_customer/models/location.dart';
@@ -16,12 +17,13 @@ class OrderBloc {
   final _api = OrderApiProvider();
 
   final MqttProvider _mqtt = MqttProvider();
+  final AuthBloc authBloc;
 
   Stream<Order> get order => _orderSubject.stream;
   Stream<OrderUpdate> get orderUpdate => _orderUpdateSubject.stream;
   Stream<Location> get courierLocation => _courierLocationSubject.stream;
 
-  OrderBloc() {
+  OrderBloc(this.authBloc) {
     _orderUpdateSubject.stream.listen((event) {
       var updatedOrder = _orderSubject.value.copyWith(
         deliveryTime: event.deliveryTime,
@@ -52,8 +54,7 @@ class OrderBloc {
         Location.fromJson,
       );
     } catch (e) {
-      // Handle error
-      print(e); // Replace with proper error handling
+      print(e); // TODO: Replace with proper error handling
     }
   }
 
@@ -64,8 +65,8 @@ class OrderBloc {
   }
 
   Future<(int id, String error)> confirmOrder(Cart cart) async {
-    const userId = 1; // TODO: get user id from auth
-    var newOrder = cart.toOrder(userId);
+    final user = authBloc.userSubject.value;
+    var newOrder = cart.toOrder(user.id);
     _orderSubject.add(newOrder);
     return _api.submitOrder(newOrder);
   }

@@ -5,6 +5,7 @@ class Order {
   String? restaurantName;
   int addressId;
   int restaurantId = 0;
+  int destinationId = 0;
   int userId = 0;
   OrderStatus status = OrderStatus.created;
 
@@ -17,7 +18,8 @@ class Order {
       {required this.items,
       required this.addressId,
       required this.restaurantId,
-      this.restaurantName,
+      required this.destinationId,
+      required this.restaurantName,
       this.restaurantLocation,
       required this.userId,
       this.destinationLocation,
@@ -34,6 +36,7 @@ class Order {
   Map<String, dynamic> toJson() => {
         'user_id': userId,
         'restaurant_id': restaurantId,
+        'destination_id': destinationId,
         'address': addressId,
         'items': items,
       };
@@ -43,6 +46,7 @@ class Order {
     String? restaurantName,
     int? addressId,
     int? restaurantId,
+    int? destinationId,
     int? userId,
     OrderStatus? status,
     String? deliveryTime,
@@ -55,6 +59,7 @@ class Order {
       restaurantName: restaurantName ?? this.restaurantName,
       addressId: addressId ?? this.addressId,
       restaurantId: restaurantId ?? this.restaurantId,
+      destinationId: destinationId ?? this.destinationId,
       userId: userId ?? this.userId,
       status: status ?? this.status,
       deliveryTime: deliveryTime ?? this.deliveryTime,

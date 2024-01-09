@@ -12,7 +12,7 @@ import 'package:spiza_customer/screens/home_screen.dart';
 main() {
   final authBloc = AuthBloc();
   final cartBloc = CartBloc(authBloc);
-  final orderBloc = OrderBloc();
+  final orderBloc = OrderBloc(authBloc);
   final restaurantsBloc = RestaurantsBloc();
 
   runApp(SpizaApp(

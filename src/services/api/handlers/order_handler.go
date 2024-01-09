@@ -170,7 +170,7 @@ func updateOrderStatus(oh *OrderHandler, id int64, status int) error {
 	deliveryTime := time.Now().UTC().Add(time.Hour)
 	oh.broker.Publish(topic, data.OrderStatusUpdated{Status: status, DeliveryTime: deliveryTime})
 
-	if status == OrderStatusAccepted {
+	if status == OrderStatusReady {
 		// assign courier
 		courierId := int64(1)
 		topic := "order/" + strconv.FormatInt(courierId, 10) + "/courier-assigned"

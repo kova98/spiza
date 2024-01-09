@@ -49,6 +49,7 @@ func InitDb(connStr string) *sqlx.DB {
 			user_id INTEGER NOT NULL REFERENCES users(id),
 			courier_id INTEGER REFERENCES couriers(id),
 			restaurant_id INTEGER NOT NULL REFERENCES restaurants(id),
+			destination_id INTEGER REFERENCES addresses(id),
 			status INTEGER NOT NULL DEFAULT 0,
 			items INTEGER[] NOT NULL,
 			date_created timestamp DEFAULT (NOW() AT TIME ZONE 'UTC')

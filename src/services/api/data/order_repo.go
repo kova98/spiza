@@ -35,9 +35,9 @@ type OrderWithItems struct {
 
 func (r *OrderRepo) CreateOrder(o *Order) (*Order, error) {
 	var created Order
-	sql := `INSERT INTO orders (restaurant_id, user_id, items) VALUES($1, $2, $3) 
-		    RETURNING id, user_id, restaurant_id, status, date_created, items;`
-	if err := r.db.Get(&created, sql, o.RestaurantId, o.UserId, SqlArrayValue(o.Items)); err != nil {
+	sql := `INSERT INTO orders (restaurant_id, user_id, destination_id, items) VALUES($1, $2, $3, $4) 
+		    RETURNING id, user_id, restaurant_id, destination_id, status, date_created, items;`
+	if err := r.db.Get(&created, sql, o.RestaurantId, o.UserId, o.DestinationId, SqlArrayValue(o.Items)); err != nil {
 		return nil, err
 	}
 	return &created, nil
