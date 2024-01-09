@@ -47,7 +47,7 @@ func (r *ItemRepo) GetByOrder(orderId int64) ([]Item, error) {
 	sql := `SELECT i.*
 			FROM orders o
 			JOIN items i ON i.id = ANY(o.items)
-			WHERE o.restaurant_id = $1`
+			WHERE o.id = $1`
 	if err := r.db.Select(&items, sql, orderId); err != nil {
 		return nil, err
 	}

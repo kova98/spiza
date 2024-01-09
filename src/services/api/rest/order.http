@@ -1,4 +1,4 @@
-@root = http://127.0.0.1:5101/api
+@root = http://127.0.0.1:5002/api
 
 ### Create an order
 POST {{root}}/order

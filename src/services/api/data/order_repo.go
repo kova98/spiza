@@ -43,6 +43,15 @@ func (r *OrderRepo) CreateOrder(o *Order) (*Order, error) {
 	return &created, nil
 }
 
+func (r *OrderRepo) GetOrder(id int64) (*Order, error) {
+	var order Order
+	sql := `SELECT * FROM orders WHERE id = $1;`
+	if err := r.db.Get(&order, sql, id); err != nil {
+		return nil, err
+	}
+	return &order, nil
+}
+
 func (r *OrderRepo) GetOrders(restaurantId int64) ([]OrderWithItems, error) {
 	var orders []OrderWithItems
 	oQuery := "SELECT id, user_id, status, date_created FROM orders WHERE restaurant_id = $1 ORDER BY date_created DESC;"
@@ -74,6 +83,12 @@ func (r *OrderRepo) GetOrders(restaurantId int64) ([]OrderWithItems, error) {
 func (r *OrderRepo) UpdateOrderStatus(orderId int64, status int) error {
 	sql := `UPDATE orders SET status = $1 WHERE id = $2;`
 	_, err := r.db.Exec(sql, status, orderId)
+	return err
+}
+
+func (r *OrderRepo) SetCourier(orderId int64, courierId int64) error {
+	sql := `UPDATE orders SET courier_id = $1 WHERE id = $2;`
+	_, err := r.db.Exec(sql, courierId, orderId)
 	return err
 }
 

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"github.com/kova98/spiza/services/api/data"
@@ -43,7 +44,26 @@ const (
 )
 
 func NewOrderHandler(l *log.Logger, or *data.OrderRepo, ir *data.ItemRepo, b *data.Broker) *OrderHandler {
+	b.Bus.Subscribe("order/delivered", 0, NewOrderDeliveredHandler(l, or))
 	return &OrderHandler{l, or, ir, b}
+}
+
+func NewOrderDeliveredHandler(l *log.Logger, or *data.OrderRepo) mqtt.MessageHandler {
+	return func(client mqtt.Client, mqttMsg mqtt.Message) {
+		l.Println("Handle MSG order/delivered")
+
+		var msg data.OrderDelivered
+		if err := json.Unmarshal(mqttMsg.Payload(), &msg); err != nil {
+			l.Println(err)
+			return
+		}
+
+		err := or.UpdateOrderStatus(msg.OrderId, OrderStatusDelivered)
+		if err != nil {
+			l.Println("Error updating order status", err)
+			return
+		}
+	}
 }
 
 func (oh *OrderHandler) CreateOrder(rw http.ResponseWriter, r *http.Request) {
@@ -64,12 +84,12 @@ func (oh *OrderHandler) CreateOrder(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	items, err := oh.itemRepo.GetByOrder(order.Id)
+	items, err := oh.itemRepo.GetByOrder(createdOrder.Id)
 	if err != nil {
 		oh.l.Println(err)
 		return
 	}
-	topic := "order/" + strconv.FormatInt(order.Id, 10) + "/created"
+	topic := "order/" + strconv.FormatInt(createdOrder.Id, 10) + "/created"
 	oh.broker.Publish(topic, createdOrder.WithItems(items))
 
 	err = data.ToJSON(createdOrder, rw)
@@ -149,5 +169,15 @@ func updateOrderStatus(oh *OrderHandler, id int64, status int) error {
 
 	deliveryTime := time.Now().UTC().Add(time.Hour)
 	oh.broker.Publish(topic, data.OrderStatusUpdated{Status: status, DeliveryTime: deliveryTime})
+
+	if status == OrderStatusAccepted {
+		// assign courier
+		courierId := int64(1)
+		topic := "order/" + strconv.FormatInt(courierId, 10) + "/courier-assigned"
+		oh.broker.Publish(topic, data.CourierAssigned{OrderId: id, CourierId: courierId})
+		// TODO: select closest available courier
+		oh.repo.SetCourier(id, courierId)
+	}
+
 	return nil
 }

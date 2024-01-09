@@ -47,6 +47,7 @@ func InitDb(connStr string) *sqlx.DB {
 		CREATE TABLE IF NOT EXISTS orders (
 			id SERIAL PRIMARY KEY,
 			user_id INTEGER NOT NULL REFERENCES users(id),
+			courier_id INTEGER REFERENCES couriers(id),
 			restaurant_id INTEGER NOT NULL REFERENCES restaurants(id),
 			status INTEGER NOT NULL DEFAULT 0,
 			items INTEGER[] NOT NULL,
@@ -58,7 +59,12 @@ func InitDb(connStr string) *sqlx.DB {
 			full_address TEXT NOT NULL,
 			lat_lng TEXT NOT NULL  
 		);
-        `
+
+		CREATE TABLE IF NOT EXISTS couriers (
+			id SERIAL PRIMARY KEY,
+			name TEXT NOT NULL
+		);
+	`
 	_, err = db.Exec(init)
 	if err != nil {
 		log.Fatal(err)

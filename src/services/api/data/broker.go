@@ -26,7 +26,7 @@ func (s Subscription) isSubscribed(topic string) bool {
 type Broker struct {
 	subs []Subscription
 	l    *log.Logger
-	bus  mqtt.Client
+	Bus  mqtt.Client
 }
 
 func NewBroker(l *log.Logger) *Broker {
@@ -66,7 +66,7 @@ func (b *Broker) Publish(topic string, msg interface{}) {
 	}
 
 	// Publish to bus
-	t := b.bus.Publish(topic, 0, false, marshalled)
+	t := b.Bus.Publish(topic, 0, false, marshalled)
 	go func() {
 		_ = t.Done()
 		if t.Error() != nil {
