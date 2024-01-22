@@ -1,8 +1,10 @@
-package main
+package util
 
 import (
 	"encoding/json"
 	"math"
+
+	"github.com/kova98/spiza/services/simulator/data"
 )
 
 type GoogleMapsResponse struct {
@@ -18,22 +20,17 @@ type Leg struct {
 }
 
 type Step struct {
-	StartLocation Location `json:"start_location"`
-	EndLocation   Location `json:"end_location"`
+	StartLocation data.Location `json:"start_location"`
+	EndLocation   data.Location `json:"end_location"`
 }
 
-type Location struct {
-	Lat float64 `json:"lat"`
-	Lng float64 `json:"lng"`
-}
-
-func lerp(start, end Location, t float64) Location {
+func lerp(start, end data.Location, t float64) data.Location {
 	lat := start.Lat + (end.Lat-start.Lat)*t
 	lng := start.Lng + (end.Lng-start.Lng)*t
-	return Location{Lat: lat, Lng: lng}
+	return data.Location{Lat: lat, Lng: lng}
 }
 
-func distance(loc1, loc2 Location) float64 {
+func distance(loc1, loc2 data.Location) float64 {
 	// Radius of the Earth in kilometers
 	const earthRadius = 6371.0
 
@@ -53,14 +50,14 @@ func distance(loc1, loc2 Location) float64 {
 	return distance
 }
 
-func ParseLocationsFromResponse(jsonData []byte) ([]Location, error) {
+func ParseAndCalculatePath(jsonData []byte) ([]data.Location, error) {
 	var response GoogleMapsResponse
 	err := json.Unmarshal(jsonData, &response)
 	if err != nil {
 		return nil, err
 	}
 
-	var smoothPath []Location
+	var smoothPath []data.Location
 
 	for _, route := range response.Routes {
 		for _, leg := range route.Legs {

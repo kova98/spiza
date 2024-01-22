@@ -7,6 +7,8 @@ import (
 	"syscall"
 
 	"github.com/kova98/spiza/services/simulator/data"
+	"github.com/kova98/spiza/services/simulator/handlers"
+	"github.com/kova98/spiza/services/simulator/util"
 )
 
 func main() {
@@ -18,11 +20,15 @@ func main() {
 		l.Fatal("SPIZA_DB_CONN_STR environment variable empty")
 	}
 	db := data.InitDb(connStr)
-	repo := data.NewOrderRepo(db)
-
+	repo := data.NewRepo(db)
+	courier := &data.Courier{Id: "1", Name: "Test Courier"}
 	b := NewBus(l)
-	b.Client.Subscribe("order/+/courier-assigned", 0, NewCourierAssignedHandler(l, repo))
-	b.Client.Publish("test", 0, false, "Hello World!")
+	traveler := util.NewTraveler(l, b.Client)
+
+	cah := handlers.NewCourierAssignedHandler(l, repo, courier, traveler)
+	b.Client.Subscribe("order/+/courier-assigned", 0, cah.Handle)
+	ouh := handlers.NewOrderUpdatedHandler(l, repo, courier, traveler)
+	b.Client.Subscribe("order/+", 0, ouh.Handle)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
