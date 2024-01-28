@@ -27,9 +27,6 @@
   const chooseRestaurant = (id: number) => () => {
     let res = restaurants.find((restaurant) => restaurant.id === id) as Restaurant;
     $restaurantStore = res;
-    console.log(restaurantStore);
-    console.log($restaurantStore);
-    console.log(res);
   };
 
   function goToRestaurant() {

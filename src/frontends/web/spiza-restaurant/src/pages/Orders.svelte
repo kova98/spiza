@@ -6,21 +6,42 @@
   let orders: Order[] = [];
 
   let socket: WebSocket;
+
+  function setupWebSocket() {
+    const uri = `${import.meta.env.VITE_WS_ROOT}/api/restaurant/${$restaurantStore.id}/order-ws`;
+    socket = new WebSocket(uri);
+
+    socket.onopen = () => {
+      console.log("WebSocket connection opened.");
+    };
+
+    socket.onclose = (event) => {
+      console.log("WebSocket connection closed.", event);
+      // Check if the close was intentional (1000) or due to error/network loss
+      if (event.code !== 1000) {
+        setTimeout(setupWebSocket, 3000);
+      }
+    };
+
+    socket.onmessage = (e) => {
+      let order = JSON.parse(e.data);
+      if (order.id > 0) {
+        orders = [order].concat(orders);
+      }
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      socket.close();
+    };
+  }
+
   onMount(async () => {
     const uri = `${import.meta.env.VITE_HTTP_ROOT}/api/restaurant/${$restaurantStore.id}/order`;
     const response = await fetch(uri);
 
     orders = await response.json();
-    socket = new WebSocket(`${import.meta.env.VITE_WS_ROOT}/api/restaurant/${$restaurantStore.id}/order-ws`);
-    socket.onopen = () => {
-      console.log("Opened");
-    };
-    socket.onmessage = (e) => {
-      let order = JSON.parse(e.data) as Order;
-      if (order.id > 0) {
-        orders = [order].concat(orders);
-      }
-    };
+    setupWebSocket();
   });
 
   let updateOrder = async (orderId: number, action: string) => {
