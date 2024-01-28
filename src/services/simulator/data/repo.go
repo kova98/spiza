@@ -40,7 +40,7 @@ func (r *Repo) GetOrderRestaurantLocationLatLng(orderId int64) (string, error) {
 	var latLng string
 	sql := `SELECT a.lat_lng 
 			FROM orders o 
-			JOIN restaurant r ON o.restaurant_id = r.id
+			JOIN restaurants r ON o.restaurant_id = r.id
 			JOIN addresses a ON r.address_id = a.id
 			WHERE o.id = $1;`
 	if err := r.db.Get(&latLng, sql, orderId); err != nil {

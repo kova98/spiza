@@ -58,7 +58,7 @@ func (h *OrderUpdatedHandler) Handle(client mqtt.Client, mqttMsg mqtt.Message) {
 		return
 	}
 
-	if msg.Status != OrderStatusPickedUp {
+	if msg.Status != OrderStatusReady {
 		return
 	}
 
@@ -114,5 +114,10 @@ func parseOrderIdFromTopic(topic string) (int64, error) {
 		return 0, errors.New("invalid topic: " + topic)
 	}
 
-	return 0, nil
+	id, err := strconv.ParseInt(parts[1], 10, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }

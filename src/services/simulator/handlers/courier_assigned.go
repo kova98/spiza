@@ -44,7 +44,7 @@ func (h *CourierAssignedHandler) Handle(client mqtt.Client, mqttMsg mqtt.Message
 		return
 	}
 
-	loc := "45.800169905837784,15.943209331950337"
+	loc := h.courier.Loc.ToLatLng()
 	path, err := h.traveler.CalculatePath(loc, destLatLng)
 	if err != nil {
 		h.l.Println("Error calculating path:", err)
@@ -52,4 +52,5 @@ func (h *CourierAssignedHandler) Handle(client mqtt.Client, mqttMsg mqtt.Message
 	}
 
 	h.traveler.Travel(msg.OrderId, path)
+	h.courier.Loc = data.LatLngToLocation(destLatLng)
 }
