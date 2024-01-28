@@ -4,6 +4,8 @@ go 1.21.4
 
 require github.com/eclipse/paho.mqtt.golang v1.4.3
 
+require github.com/twpayne/go-polyline v1.1.1 // indirect
+
 require (
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/jmoiron/sqlx v1.3.5

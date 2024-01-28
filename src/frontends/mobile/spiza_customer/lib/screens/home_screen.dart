@@ -48,26 +48,17 @@ class HomeScreen extends StatelessWidget {
                               onPressed: () {},
                             );
                           }),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'What would\nyou like to eat?',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 32,
-                        ),
-                      ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      border: UnderlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      // update
-                    },
-                  ),
+                  // TextField(
+                  //   decoration: const InputDecoration(
+                  //     prefixIcon: Icon(Icons.search),
+                  //     border: UnderlineInputBorder(),
+                  //   ),
+                  //   onChanged: (value) {
+                  //     // update
+                  //   },
+                  // ),
                   const SizedBox(height: 20),
                   const Text(
                     'All Restaurants',
