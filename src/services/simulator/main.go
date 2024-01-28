@@ -19,11 +19,17 @@ func main() {
 	if connStr == "" {
 		l.Fatal("SPIZA_DB_CONN_STR environment variable empty")
 	}
+	googleApiKey := os.Getenv("GOOGLE_API_KEY")
+	if googleApiKey == "" {
+		l.Fatal("GOOGLE_API_KEY environment variable empty")
+	}
+
 	db := data.InitDb(connStr)
 	repo := data.NewRepo(db)
 	b := NewBus(l)
-	traveler := util.NewTraveler(l, b.Client)
-	startingLoc := data.LatLngToLocation("45.800169905837784,15.943209331950337")
+	traveler := util.NewTraveler(l, b.Client, googleApiKey)
+	// TODO: load starting loc from db
+	startingLoc := data.LatLngToLocation("45.801125358549015,15.952160085480502")
 	courier := &data.Courier{Id: "1", Name: "Test Courier", Loc: startingLoc}
 
 	cah := handlers.NewCourierAssignedHandler(l, repo, courier, traveler)

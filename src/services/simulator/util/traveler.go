@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 
@@ -16,12 +15,14 @@ import (
 type Traveler struct {
 	l      *log.Logger
 	client mqtt.Client
+	apiKey string
 }
 
-func NewTraveler(logger *log.Logger, client mqtt.Client) *Traveler {
+func NewTraveler(logger *log.Logger, client mqtt.Client, apiKey string) *Traveler {
 	return &Traveler{
 		l:      logger,
 		client: client,
+		apiKey: apiKey,
 	}
 }
 
@@ -40,10 +41,9 @@ func (t *Traveler) Travel(orderId int64, path []data.Location) {
 }
 
 func (t *Traveler) CalculatePath(startLatLng string, endLatLng string) ([]data.Location, error) {
-	apiKey := os.Getenv("GOOGLE_API_KEY")
 	directionsApi := "https://maps.googleapis.com/maps/api/directions/json?origin=" + startLatLng +
 		"&destination=" + endLatLng +
-		"&key=" + apiKey
+		"&key=" + t.apiKey
 
 	response, err := http.Get(directionsApi)
 	if err != nil {
