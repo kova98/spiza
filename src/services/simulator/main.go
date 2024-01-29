@@ -29,7 +29,7 @@ func main() {
 
 	// TODO: load starting loc from db
 	startingLoc := domain.LatLngToLocation("45.801125358549015,15.952160085480502")
-	courier := &domain.Courier{Id: "1", Name: "Test Courier", Loc: startingLoc}
+	courier := domain.NewCourier(1, "Test Courier", startingLoc, bus, l)
 
 	cah := handlers.NewCourierAssignedHandler(l, db, courier, maps)
 	bus.SubscribeCourierAssigned(cah.Handle)

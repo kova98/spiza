@@ -8,12 +8,23 @@ import (
 )
 
 type Courier struct {
-	Id             string `json:"id"`
-	Name           string `json:"name"`
+	Id             int64
+	Name           string
 	Loc            Location
 	CurrentOrderId int64
 	bus            Bus
 	l              *log.Logger
+}
+
+func NewCourier(id int64, name string, loc Location, bus Bus, l *log.Logger) *Courier {
+	return &Courier{
+		Id:             id,
+		Name:           name,
+		Loc:            loc,
+		CurrentOrderId: 0,
+		bus:            bus,
+		l:              l,
+	}
 }
 
 func (c *Courier) AssignToOrder(orderId int64) {
