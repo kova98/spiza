@@ -1,8 +1,8 @@
-package util
+package adapters
 
 import (
 	"encoding/json"
-	"github.com/kova98/spiza/services/simulator/data"
+	"github.com/kova98/spiza/services/simulator/domain"
 	"github.com/twpayne/go-polyline"
 )
 
@@ -26,20 +26,20 @@ type Polyline struct {
 	Points string `json:"points"`
 }
 
-func ParseAndCalculatePath(jsonData []byte) ([]data.Location, error) {
+func ParseAndCalculatePath(jsonData []byte) ([]domain.Location, error) {
 	var response GeoResponse
 	err := json.Unmarshal(jsonData, &response)
 	if err != nil {
 		return nil, err
 	}
-	var path []data.Location
+	var path []domain.Location
 	for _, route := range response.Routes {
 		for _, leg := range route.Legs {
 			for _, step := range leg.Steps {
 				buf := []byte(step.Polyline.Points)
 				coords, _, _ := polyline.DecodeCoords(buf)
 				for _, coord := range coords {
-					loc := data.Location{Lat: coord[0], Lng: coord[1]}
+					loc := domain.Location{Lat: coord[0], Lng: coord[1]}
 					path = append(path, loc)
 				}
 			}

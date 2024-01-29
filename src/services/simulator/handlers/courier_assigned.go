@@ -2,21 +2,22 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/kova98/spiza/services/simulator/domain"
 	"log"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/kova98/spiza/services/simulator/adapters"
 	"github.com/kova98/spiza/services/simulator/data"
-	"github.com/kova98/spiza/services/simulator/util"
 )
 
 type CourierAssignedHandler struct {
 	l        *log.Logger
-	repo     *data.Repo
-	courier  *data.Courier
-	traveler *util.Traveler
+	repo     data.Repo
+	courier  *domain.Courier
+	traveler *adapters.Traveler
 }
 
-func NewCourierAssignedHandler(logger *log.Logger, repo *data.Repo, c *data.Courier, t *util.Traveler) *CourierAssignedHandler {
+func NewCourierAssignedHandler(logger *log.Logger, repo data.Repo, c *domain.Courier, t *adapters.Traveler) *CourierAssignedHandler {
 	return &CourierAssignedHandler{
 		l:        logger,
 		repo:     repo,
@@ -45,12 +46,12 @@ func (h *CourierAssignedHandler) Handle(client mqtt.Client, mqttMsg mqtt.Message
 	}
 
 	loc := h.courier.Loc.ToLatLng()
-	path, err := h.traveler.CalculatePath(loc, destLatLng)
+	path, err := h.traveler.GetPath(loc, destLatLng)
 	if err != nil {
 		h.l.Println("Error calculating path:", err)
 		return
 	}
 
 	h.traveler.Travel(msg.OrderId, path)
-	h.courier.Loc = data.LatLngToLocation(destLatLng)
+	h.courier.Loc = domain.LatLngToLocation(destLatLng)
 }

@@ -1,7 +1,8 @@
-package util
+package adapters
 
 import (
 	"encoding/json"
+	"github.com/kova98/spiza/services/simulator/domain"
 	"io"
 	"log"
 	"net/http"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/kova98/spiza/services/simulator/data"
 )
 
 type Traveler struct {
@@ -26,7 +26,7 @@ func NewTraveler(logger *log.Logger, client mqtt.Client, apiKey string) *Travele
 	}
 }
 
-func (t *Traveler) Travel(orderId int64, path []data.Location) {
+func (t *Traveler) Travel(orderId int64, path []domain.Location) {
 	locTopic := "order/" + strconv.FormatInt(orderId, 10) + "/courier-location"
 	for _, loc := range path {
 		tempLoc := loc
@@ -40,7 +40,7 @@ func (t *Traveler) Travel(orderId int64, path []data.Location) {
 	}
 }
 
-func (t *Traveler) CalculatePath(startLatLng string, endLatLng string) ([]data.Location, error) {
+func (t *Traveler) GetPath(startLatLng string, endLatLng string) ([]domain.Location, error) {
 	directionsApi := "https://maps.googleapis.com/maps/api/directions/json?origin=" + startLatLng +
 		"&destination=" + endLatLng +
 		"&key=" + t.apiKey

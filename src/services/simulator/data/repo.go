@@ -6,7 +6,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Repo struct {
+type Repo interface {
+	GetOrderDestinationLatLng(orderId int64) (dest string, err error)
+	GetOrderRestaurantLocationLatLng(orderId int64) (loc string, err error)
+}
+
+type DbRepo struct {
 	db *sqlx.DB
 }
 
@@ -20,11 +25,11 @@ type Order struct {
 	DestinationLatLng string    `db:"lat_lng"`
 }
 
-func NewRepo(db *sqlx.DB) *Repo {
-	return &Repo{db}
+func NewRepo(db *sqlx.DB) *DbRepo {
+	return &DbRepo{db}
 }
 
-func (r *Repo) GetOrderDestinationLatLng(orderId int64) (string, error) {
+func (r *DbRepo) GetOrderDestinationLatLng(orderId int64) (string, error) {
 	var latLng string
 	sql := `SELECT a.lat_lng 
 			FROM orders o 
@@ -36,7 +41,7 @@ func (r *Repo) GetOrderDestinationLatLng(orderId int64) (string, error) {
 	return latLng, nil
 }
 
-func (r *Repo) GetOrderRestaurantLocationLatLng(orderId int64) (string, error) {
+func (r *DbRepo) GetOrderRestaurantLocationLatLng(orderId int64) (string, error) {
 	var latLng string
 	sql := `SELECT a.lat_lng 
 			FROM orders o 

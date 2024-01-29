@@ -1,16 +1,9 @@
-package data
+package domain
 
 import (
 	"strconv"
 	"strings"
 )
-
-type Courier struct {
-	Id             string `json:"id"`
-	Name           string `json:"name"`
-	Loc            Location
-	CurrentOrderId int64
-}
 
 type Location struct {
 	Lat float64 `json:"lat"`

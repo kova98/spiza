@@ -1,14 +1,15 @@
 package main
 
 import (
+	"github.com/kova98/spiza/services/simulator/domain"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/kova98/spiza/services/simulator/adapters"
 	"github.com/kova98/spiza/services/simulator/data"
 	"github.com/kova98/spiza/services/simulator/handlers"
-	"github.com/kova98/spiza/services/simulator/util"
 )
 
 func main() {
@@ -27,10 +28,10 @@ func main() {
 	db := data.InitDb(connStr)
 	repo := data.NewRepo(db)
 	b := NewBus(l)
-	traveler := util.NewTraveler(l, b.Client, googleApiKey)
+	traveler := adapters.NewTraveler(l, b.Client, googleApiKey)
 	// TODO: load starting loc from db
-	startingLoc := data.LatLngToLocation("45.801125358549015,15.952160085480502")
-	courier := &data.Courier{Id: "1", Name: "Test Courier", Loc: startingLoc}
+	startingLoc := domain.LatLngToLocation("45.801125358549015,15.952160085480502")
+	courier := &domain.Courier{Id: "1", Name: "Test Courier", Loc: startingLoc}
 
 	cah := handlers.NewCourierAssignedHandler(l, repo, courier, traveler)
 	b.Client.Subscribe("order/+/courier-assigned", 0, cah.Handle)

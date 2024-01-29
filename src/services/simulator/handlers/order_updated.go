@@ -3,13 +3,14 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"github.com/kova98/spiza/services/simulator/domain"
 	"log"
 	"strconv"
 	"strings"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/kova98/spiza/services/simulator/adapters"
 	"github.com/kova98/spiza/services/simulator/data"
-	"github.com/kova98/spiza/services/simulator/util"
 )
 
 const (
@@ -23,12 +24,12 @@ const (
 
 type OrderUpdatedHandler struct {
 	l        *log.Logger
-	repo     *data.Repo
-	courier  *data.Courier
-	traveler *util.Traveler
+	repo     *data.DbRepo
+	courier  *domain.Courier
+	traveler *adapters.Traveler
 }
 
-func NewOrderUpdatedHandler(l *log.Logger, r *data.Repo, c *data.Courier, t *util.Traveler) *OrderUpdatedHandler {
+func NewOrderUpdatedHandler(l *log.Logger, r *data.DbRepo, c *domain.Courier, t *adapters.Traveler) *OrderUpdatedHandler {
 	return &OrderUpdatedHandler{
 		l:        l,
 		repo:     r,
@@ -86,7 +87,7 @@ func (h *OrderUpdatedHandler) Handle(client mqtt.Client, mqttMsg mqtt.Message) {
 		return
 	}
 	start := h.courier.Loc.ToLatLng()
-	path, err := h.traveler.CalculatePath(start, latLng)
+	path, err := h.traveler.GetPath(start, latLng)
 	if err != nil {
 		h.l.Println("Error calculating path:", err)
 		return
