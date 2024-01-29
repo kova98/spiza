@@ -1,17 +1,15 @@
-package data
+package adapters
 
 import (
+	"github.com/kova98/spiza/services/simulator/domain"
+	"log"
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
-type Repo interface {
-	GetOrderDestinationLatLng(orderId int64) (dest string, err error)
-	GetOrderRestaurantLocationLatLng(orderId int64) (loc string, err error)
-}
-
-type DbRepo struct {
+type PostgresDb struct {
 	db *sqlx.DB
 }
 
@@ -25,23 +23,30 @@ type Order struct {
 	DestinationLatLng string    `db:"lat_lng"`
 }
 
-func NewRepo(db *sqlx.DB) *DbRepo {
-	return &DbRepo{db}
+func NewPostgresDb(connStr string) *PostgresDb {
+	db, err := sqlx.Connect("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+	return &PostgresDb{db}
 }
 
-func (r *DbRepo) GetOrderDestinationLatLng(orderId int64) (string, error) {
+func (r *PostgresDb) GetOrderDestinationLatLng(orderId int64) (domain.Location, error) {
 	var latLng string
 	sql := `SELECT a.lat_lng 
 			FROM orders o 
 			JOIN addresses a ON o.destination_id = a.id
 			WHERE o.id = $1;`
 	if err := r.db.Get(&latLng, sql, orderId); err != nil {
-		return "", err
+		return domain.Location{}, err
 	}
-	return latLng, nil
+	return domain.LatLngToLocation(latLng), nil
 }
 
-func (r *DbRepo) GetOrderRestaurantLocationLatLng(orderId int64) (string, error) {
+func (r *PostgresDb) GetOrderRestaurantLocation(orderId int64) (domain.Location, error) {
 	var latLng string
 	sql := `SELECT a.lat_lng 
 			FROM orders o 
@@ -49,7 +54,7 @@ func (r *DbRepo) GetOrderRestaurantLocationLatLng(orderId int64) (string, error)
 			JOIN addresses a ON r.address_id = a.id
 			WHERE o.id = $1;`
 	if err := r.db.Get(&latLng, sql, orderId); err != nil {
-		return "", err
+		return domain.Location{}, err
 	}
-	return latLng, nil
+	return domain.LatLngToLocation(latLng), nil
 }

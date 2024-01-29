@@ -1,57 +1,43 @@
 package handlers
 
 import (
-	"encoding/json"
 	"github.com/kova98/spiza/services/simulator/domain"
 	"log"
-
-	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/kova98/spiza/services/simulator/adapters"
-	"github.com/kova98/spiza/services/simulator/data"
 )
 
 type CourierAssignedHandler struct {
-	l        *log.Logger
-	repo     data.Repo
-	courier  *domain.Courier
-	traveler *adapters.Traveler
+	l       *log.Logger
+	db      domain.Db
+	courier *domain.Courier
+	maps    domain.Map
 }
 
-func NewCourierAssignedHandler(logger *log.Logger, repo data.Repo, c *domain.Courier, t *adapters.Traveler) *CourierAssignedHandler {
+func NewCourierAssignedHandler(logger *log.Logger, db domain.Db, c *domain.Courier, t domain.Map) *CourierAssignedHandler {
 	return &CourierAssignedHandler{
-		l:        logger,
-		repo:     repo,
-		courier:  c,
-		traveler: t,
+		l:       logger,
+		db:      db,
+		courier: c,
+		maps:    t,
 	}
 }
 
-func (h *CourierAssignedHandler) Handle(client mqtt.Client, mqttMsg mqtt.Message) {
-	h.l.Println("Handle MSG order/+/courier-assigned")
+func (h *CourierAssignedHandler) Handle(msg domain.CourierAssigned) {
+	h.l.Println("Handle Courier Assigned")
 
-	var msg data.CourierAssigned
-	err := json.Unmarshal(mqttMsg.Payload(), &msg)
-	if err != nil {
-		h.l.Println("Unmarshal Error:", err)
-		return
-	}
+	h.courier.AssignToOrder(msg.OrderId)
 
-	// TODO: make this thread safe?
-	h.courier.CurrentOrderId = msg.OrderId
-
-	destLatLng, err := h.repo.GetOrderRestaurantLocationLatLng(msg.OrderId)
+	dest, err := h.db.GetOrderRestaurantLocation(msg.OrderId)
 	if err != nil {
 		h.l.Println("Error getting order:", err)
+		//TODO unassign? try again?
 		return
 	}
 
-	loc := h.courier.Loc.ToLatLng()
-	path, err := h.traveler.GetPath(loc, destLatLng)
+	path, err := h.maps.GetPath(h.courier.Loc, dest)
 	if err != nil {
 		h.l.Println("Error calculating path:", err)
 		return
 	}
 
-	h.traveler.Travel(msg.OrderId, path)
-	h.courier.Loc = domain.LatLngToLocation(destLatLng)
+	h.courier.Travel(msg.OrderId, path)
 }
