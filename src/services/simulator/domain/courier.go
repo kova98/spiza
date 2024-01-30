@@ -47,8 +47,7 @@ func (c *Courier) PickUpOrder(id int64) {
 		Status:       OrderStatusPickedUp,
 		DeliveryTime: calculateDeliveryTime(),
 	}
-	msg, _ := json.Marshal(statusMsg)
-	c.bus.Publish("order/"+strconv.FormatInt(id, 10), msg)
+	c.bus.Publish("order/"+strconv.FormatInt(id, 10), statusMsg)
 	c.l.Println("Order" + strconv.FormatInt(id, 10) + " picked up")
 }
 

@@ -12,8 +12,8 @@ type Location struct {
 
 func LatLngToLocation(latlng string) Location {
 	split := strings.Split(latlng, ",")
-	lat, _ := strconv.ParseFloat(split[0], 64)
-	lng, _ := strconv.ParseFloat(split[1], 64)
+	lat, _ := strconv.ParseFloat(strings.TrimSpace(split[0]), 64)
+	lng, _ := strconv.ParseFloat(strings.TrimSpace(split[1]), 64)
 	return Location{Lat: lat, Lng: lng}
 }
 
