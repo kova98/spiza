@@ -19,6 +19,15 @@ func main() {
 		l.Fatal("GOOGLE_API_KEY environment variable empty")
 	}
 
+	db := NewPostgresDb(connStr)
+
+	s, err := db.GetCurrentState()
+	if err != nil {
+		l.Fatal("Unable to initialize state: ", err)
+	}
+
+	l.Println(s)
+
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	signal.Notify(c, syscall.SIGTERM)
