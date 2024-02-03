@@ -16,18 +16,29 @@ func InitDb(connStr string) *sqlx.DB {
 	}
 
 	init := `
+		CREATE TABLE IF NOT EXISTS addresses (
+			id SERIAL PRIMARY KEY,
+			full_address TEXT NOT NULL,
+			lat_lng TEXT NOT NULL
+		);
+
+		CREATE TABLE IF NOT EXISTS couriers (
+			id SERIAL PRIMARY KEY,
+			name TEXT NOT NULL
+		);
+
         CREATE TABLE IF NOT EXISTS restaurants (
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
 			address_id INTEGER REFERENCES addresses(id)
         );
-        
+
         CREATE TABLE IF NOT EXISTS menu_categories (
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
             restaurant_id INTEGER REFERENCES restaurants(id)
         );
-        
+
         CREATE TABLE IF NOT EXISTS items (
             id SERIAL PRIMARY KEY,
             category_id INTEGER REFERENCES menu_categories(id),
@@ -36,14 +47,14 @@ func InitDb(connStr string) *sqlx.DB {
             price NUMERIC NOT NULL DEFAULT 0,
             description TEXT NOT NULL DEFAULT '',
             image TEXT NOT NULL DEFAULT ''
-        );        
-        
+        );
+
 		CREATE TABLE IF NOT EXISTS users (
 			id serial PRIMARY KEY,
 			name TEXT NOT NULL,
 			addresses INTEGER[] NOT NULL DEFAULT '{}'
 		);
-		
+
 		CREATE TABLE IF NOT EXISTS orders (
 			id SERIAL PRIMARY KEY,
 			user_id INTEGER NOT NULL REFERENCES users(id),
@@ -53,17 +64,6 @@ func InitDb(connStr string) *sqlx.DB {
 			status INTEGER NOT NULL DEFAULT 0,
 			items INTEGER[] NOT NULL,
 			date_created timestamp DEFAULT (NOW() AT TIME ZONE 'UTC')
-		);
-
-		CREATE TABLE IF NOT EXISTS addresses (
-			id SERIAL PRIMARY KEY,
-			full_address TEXT NOT NULL,
-			lat_lng TEXT NOT NULL  
-		);
-
-		CREATE TABLE IF NOT EXISTS couriers (
-			id SERIAL PRIMARY KEY,
-			name TEXT NOT NULL
 		);
 	`
 	_, err = db.Exec(init)
