@@ -2,39 +2,56 @@
 <html>
 <head>
     <title>Current State</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
+    <link rel="stylesheet" href="static/style.css">
     <script>
         function initMap() {
-            // Initialize Google Map here
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
+                center: {lat: -34.397, lng: 150.644}
+            });
+
+            var marker = new google.maps.Marker({
+                position: {lat: -34.397, lng: 150.644},
+                map: map,
+                title: 'Hello World!'
+            });
+
         }
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{.GoogleApiKey}}&callback=initMap" async defer></script>
 </head>
 <body>
-<h1>Current State</h1>
-<div id="restaurants">
-    <h2>Restaurants</h2>
-    <ul>
-        {{range .Restaurants}}
-        <li>{{.Name}}</li>
-        {{end}}
-    </ul>
+<body>
+<div id="map-container">
+    <div id="map"></div> <!-- Map now has its own container -->
 </div>
-<div id="couriers">
-    <h2>Couriers</h2>
-    <ul>
-        {{range .Couriers}}
-        <li>{{.Name}}</li>
-        {{end}}
-    </ul>
+<div id="state-container">
+    <h1>Current State</h1>
+    <div id="restaurants">
+        <h2>Restaurants</h2>
+        <ul>
+            {{range .Restaurants}}
+            <li>{{.Name}}</li>
+            {{end}}
+        </ul>
+    </div>
+    <div id="couriers">
+        <h2>Couriers</h2>
+        <ul>
+            {{range .Couriers}}
+            <li>{{.Name}}</li>
+            {{end}}
+        </ul>
+    </div>
+    <div id="orders">
+        <h2>Active Orders</h2>
+        <ul>
+            {{range .ActiveOrders}}
+            <li>Order #{{.Id}} - Status: {{.Status}}</li>
+            {{end}}
+        </ul>
+    </div>
 </div>
-<div id="orders">
-    <h2>Active Orders</h2>
-    <ul>
-        {{range .ActiveOrders}}
-        <li>Order #{{.Id}} - Status: {{.Status}}</li>
-        {{end}}
-    </ul>
-</div>
-<div id="map" style="height: 400px; width: 100%;"></div>
 </body>
+
 </html>

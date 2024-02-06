@@ -28,14 +28,21 @@ func main() {
 		l.Fatal("Unable to initialize state: ", err)
 	}
 
-	tmpl, err := template.ParseFiles("./static/index.html")
-	if err != nil {
-		panic(err)
+	type Display struct {
+		State
+		GoogleApiKey string
 	}
 
+	fs := http.FileServer(http.Dir("./static"))
+	// Serve static files for any request not matching the root path
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		err = tmpl.Execute(w, state)
+		tmpl, err := template.ParseFiles("./static/index.html")
+		if err != nil {
+			panic(err)
+		}
+		err = tmpl.Execute(w, Display{state, googleApiKey})
 		if err != nil {
 			http.Error(w, "Failed to execute template", http.StatusInternalServerError)
 		}
