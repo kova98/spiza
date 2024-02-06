@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -25,6 +26,9 @@ func main() {
 	if err != nil {
 		l.Fatal("Unable to initialize state: ", err)
 	}
+
+	http.Handle("/", http.FileServer(http.Dir("./static")))
+	http.ListenAndServe(":3000", nil)
 
 	l.Println(s)
 
