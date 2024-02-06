@@ -3,8 +3,9 @@ package main
 import "time"
 
 type Restaurant struct {
-	Id   int64
-	Name string
+	Id     int64
+	Name   string
+	LatLng string `db:"lat_lng"`
 }
 
 type Courier struct {

@@ -24,7 +24,10 @@ func NewPostgresDb(connStr string) *PostgresDb {
 func (p PostgresDb) GetCurrentState() (State, error) {
 
 	var state State
-	err := p.Db.Select(&state.Restaurants, "SELECT id, name FROM restaurants")
+	err := p.Db.Select(&state.Restaurants, `
+		SELECT r.id, r.name, a.lat_lng 
+		FROM restaurants r 
+		JOIN public.addresses a on r.address_id = a.id`)
 	if err != nil {
 		return state, err
 	}

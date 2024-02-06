@@ -5,16 +5,21 @@
     <link rel="stylesheet" href="static/style.css">
     <script>
         function initMap() {
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 8,
-                center: {lat: -34.397, lng: 150.644}
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: {lat: 45.8150, lng: 15.9819}
             });
-
-            var marker = new google.maps.Marker({
-                position: {lat: -34.397, lng: 150.644},
+            
+            {{range .Restaurants}}
+            const latLng = "{{.LatLng}}".split(',');
+            const lat = parseFloat(latLng[0]);
+            const lng = parseFloat(latLng[1]);
+            const marker = new google.maps.Marker({
+                position: {lat: lat, lng: lng},
                 map: map,
-                title: 'Hello World!'
+                title: '{{.Name}}'
             });
+            {{end}}
 
         }
     </script>
