@@ -1,1 +1,40 @@
-﻿Hello world!
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Current State</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            // Initialize Google Map here
+        }
+    </script>
+</head>
+<body>
+<h1>Current State</h1>
+<div id="restaurants">
+    <h2>Restaurants</h2>
+    <ul>
+        {{range .Restaurants}}
+        <li>{{.Name}}</li>
+        {{end}}
+    </ul>
+</div>
+<div id="couriers">
+    <h2>Couriers</h2>
+    <ul>
+        {{range .Couriers}}
+        <li>{{.Name}}</li>
+        {{end}}
+    </ul>
+</div>
+<div id="orders">
+    <h2>Active Orders</h2>
+    <ul>
+        {{range .ActiveOrders}}
+        <li>Order #{{.Id}} - Status: {{.Status}}</li>
+        {{end}}
+    </ul>
+</div>
+<div id="map" style="height: 400px; width: 100%;"></div>
+</body>
+</html>

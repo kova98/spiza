@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -22,15 +23,26 @@ func main() {
 
 	db := NewPostgresDb(connStr)
 
-	s, err := db.GetCurrentState()
+	state, err := db.GetCurrentState()
 	if err != nil {
 		l.Fatal("Unable to initialize state: ", err)
 	}
 
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	tmpl, err := template.ParseFiles("./static/index.html")
+	if err != nil {
+		panic(err)
+	}
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		err = tmpl.Execute(w, state)
+		if err != nil {
+			http.Error(w, "Failed to execute template", http.StatusInternalServerError)
+		}
+	})
 	http.ListenAndServe(":3000", nil)
 
-	l.Println(s)
+	l.Println(state)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
