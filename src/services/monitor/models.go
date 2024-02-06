@@ -16,7 +16,7 @@ type Order struct {
 	Id           int64      `db:"id"`
 	RestaurantId int64      `db:"restaurant_id"`
 	CourierId    int64      `db:"courier_id"`
-	Status       int64      `db:"status"`
+	Status       int        `db:"status"`
 	DateCreated  *time.Time `db:"date_created"`
 }
 
@@ -32,3 +32,14 @@ const OrderStatusRejected = 2
 const OrderStatusReady = 3
 const OrderStatusPickedUp = 4
 const OrderStatusDelivered = 5
+
+type CourierAssigned struct {
+	OrderId   int64 `json:"order_id"`
+	CourierId int64 `json:"courier_id"`
+}
+
+type OrderUpdated struct {
+	Id           int64     `json:"id"`
+	Status       int       `json:"status"`
+	DeliveryTime time.Time `json:"delivery_time"`
+}

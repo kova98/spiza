@@ -37,7 +37,7 @@ func (c *Courier) Travel(orderId int64, path []Location) {
 	locTopic := "order/" + strconv.FormatInt(orderId, 10) + "/courier-location"
 	for _, loc := range path {
 		c.bus.Publish(locTopic, loc)
-		time.Sleep(1 * time.Second)
+		time.Sleep(100 * time.Millisecond)
 	}
 	c.Loc = path[len(path)-1]
 }

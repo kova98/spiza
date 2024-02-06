@@ -47,7 +47,7 @@ func TestGetCurrentState(t *testing.T) {
 	assert.Equal(t, 1, len(state.Restaurants))
 	assert.Equal(t, 1, len(state.Couriers))
 	assert.Equal(t, 4, len(state.ActiveOrders))
-	statuses := make([]int64, 6)
+	statuses := make([]int, 6)
 	for _, order := range state.ActiveOrders {
 		statuses = append(statuses, order.Status)
 	}
