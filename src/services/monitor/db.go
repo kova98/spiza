@@ -32,7 +32,7 @@ func (p PostgresDb) GetCurrentState() (State, error) {
 	if err != nil {
 		return state, err
 	}
-	err = p.Db.Select(&state.ActiveOrders, `SELECT id, restaurant_id, courier_id, status, date_created 
+	err = p.Db.Select(&state.ActiveOrders, `SELECT id, restaurant_id, COALESCE(courier_id,0) AS courier_id, status, date_created 
 								   FROM orders 
 								   WHERE status NOT IN ($1, $2)`, OrderStatusDelivered, OrderStatusRejected)
 	if err != nil {
