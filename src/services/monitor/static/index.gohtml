@@ -4,6 +4,22 @@
     <title>Current State</title>
     <link rel="stylesheet" href="static/style.css">
     <script>
+        const OrderStatusCreated = 0
+        const OrderStatusAccepted = 1
+        const OrderStatusRejected = 2
+        const OrderStatusReady = 3
+        const OrderStatusPickedUp = 4
+        const OrderStatusDelivered = 5
+
+        const statuses = {
+            0: 'Created',
+            1: 'Accepted',
+            2: 'Rejected',
+            3: 'Ready',
+            4: 'Picked Up',
+            5: 'Delivered'
+        }
+        
         let mapStyle = [
             {
                 "elementType": "labels",
@@ -95,25 +111,12 @@
                         });
                     }
                     drawCouriers();
+                    drawInfo();
                 });
 
             const socket = new WebSocket('ws://' + window.location.host + '/ws');
 
-            const OrderStatusCreated = 0
-            const OrderStatusAccepted = 1
-            const OrderStatusRejected = 2
-            const OrderStatusReady = 3
-            const OrderStatusPickedUp = 4
-            const OrderStatusDelivered = 5
-            
-            const statuses = {
-                0: 'Created',
-                1: 'Accepted',
-                2: 'Rejected',
-                3: 'Ready',
-                4: 'Picked Up',
-                5: 'Delivered'
-            }
+           
             
             socket.onmessage = function(event) {
                 const msg = JSON.parse(event.data);
@@ -157,7 +160,7 @@
 
         function drawInfo() {
             const restaurantsList = document.getElementById('restaurants-list');
-            restaurantsList.innerHTML = ''; // Clear existing list
+            restaurantsList.innerHTML = ''; 
             state.restaurants.forEach(restaurant => {
                 const li = document.createElement('li');
                 li.textContent = restaurant.name;
@@ -165,18 +168,18 @@
             });
 
             const couriersList = document.getElementById('couriers-list');
-            couriersList.innerHTML = ''; // Clear existing list
+            couriersList.innerHTML = ''; 
             state.couriers.forEach(courier => {
                 const li = document.createElement('li');
-                li.textContent = courier.name; // Assuming each courier object has a name property
+                li.textContent = courier.name; 
                 couriersList.appendChild(li);
             });
 
             const ordersList = document.getElementById('orders-list');
-            ordersList.innerHTML = ''; // Clear existing list
+            ordersList.innerHTML = ''; 
             state.activeOrders.forEach(order => {
                 const li = document.createElement('li');
-                li.textContent = `Order #${order.id} - Status: ${order.status}`; // Adjust according to your order object structure
+                li.textContent = `Order #${order.id} - ${statuses[order.status]}`; 
                 ordersList.appendChild(li);
             });
         }
@@ -192,25 +195,16 @@
     <div id="restaurants">
         <h2>Restaurants</h2>
         <ul id="restaurants-list">
-            {{range .Restaurants}}
-            <li>{{.Name}}</li>
-            {{end}}
         </ul>
     </div>
     <div id="couriers">
         <h2>Couriers</h2>
         <ul id="couriers-list">
-            {{range .Couriers}}
-            <li>{{.Name}}</li>
-            {{end}}
         </ul>
     </div>
     <div id="orders">
         <h2>Active Orders</h2>
         <ul id="orders-list">
-            {{range .ActiveOrders}}
-            <li>Order #{{.Id}} - Status: {{.Status}}</li>
-            {{end}}
         </ul>
     </div>
 </div>
