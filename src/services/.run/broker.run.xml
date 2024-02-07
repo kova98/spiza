@@ -1,0 +1,11 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="broker" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="services" />
+    <working_directory value="$PROJECT_DIR$/broker" />
+    <kind value="FILE" />
+    <package value="github.com/kova98/spiza/services/broker" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/broker/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

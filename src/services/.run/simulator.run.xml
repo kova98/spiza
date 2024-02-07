@@ -1,0 +1,11 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="simulator" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="services" />
+    <working_directory value="$PROJECT_DIR$/simulator" />
+    <kind value="FILE" />
+    <package value="github.com/kova98/spiza/services/simulator" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/simulator/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
