@@ -99,6 +99,22 @@
 
             const socket = new WebSocket('ws://' + window.location.host + '/ws');
 
+            const OrderStatusCreated = 0
+            const OrderStatusAccepted = 1
+            const OrderStatusRejected = 2
+            const OrderStatusReady = 3
+            const OrderStatusPickedUp = 4
+            const OrderStatusDelivered = 5
+            
+            const statuses = {
+                0: 'Created',
+                1: 'Accepted',
+                2: 'Rejected',
+                3: 'Ready',
+                4: 'Picked Up',
+                5: 'Delivered'
+            }
+            
             socket.onmessage = function(event) {
                 const msg = JSON.parse(event.data);
                 console.log(msg);
@@ -121,8 +137,11 @@
                         break;
                     }
                     case 'OrderUpdated': {
-                        const order = state.activeOrders.find(order => order.id === msg.id);
+                        const order = state.activeOrders.find(order => order.id === msg.data.id);
                         order.status = msg.data.status;
+                        if (order.status == OrderStatusRejected || order.status == OrderStatusDelivered) {
+                            state.activeOrders = state.activeOrders.filter(o => o.id !== msg.data.id);
+                        }
                         drawInfo();
                         break;
                     }
