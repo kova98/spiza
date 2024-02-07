@@ -9,8 +9,8 @@ class Address {
 
   Address.fromJson(Map<String, dynamic> json)
       : id = json['id'] ?? 0,
-        fullAddress = json['full_address'],
-        latLng = json['lat_lng'];
+        fullAddress = json['fullAddress'],
+        latLng = json['latLng'];
 
   Address.empty()
       : id = 0,

@@ -14,7 +14,7 @@ class Item {
         description = parsedJson['description'],
         image = parsedJson['image'],
         price = parsedJson['price'],
-        categoryId = parsedJson['category_id'],
+        categoryId = parsedJson['categoryId'],
         amount = parsedJson['amount'] ?? 0,
         order = parsedJson['order'];
 
@@ -25,7 +25,7 @@ class Item {
       'description': description,
       'image': image,
       'price': price,
-      'category_id': categoryId,
+      'categoryId': categoryId,
       'amount': amount,
       'order': order,
     };
