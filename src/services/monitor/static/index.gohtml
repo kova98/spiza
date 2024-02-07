@@ -1,9 +1,36 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Current State</title>
     <link rel="stylesheet" href="static/style.css">
     <script>
+        let mapStyle = [
+            {
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative.land_parcel",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative.neighborhood",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            }
+        ];
+
         let state = {
             restaurants: [],
             couriers: [],
@@ -45,9 +72,11 @@
         }
 
         function initMap() {
+            debugger
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 13,
-                center: {lat: 45.8150, lng: 15.9819}
+                center: {lat: 45.8150, lng: 15.9819},
+                styles: mapStyle
             });
             
             fetch('/state')
@@ -59,7 +88,7 @@
                         const latLng = state.restaurants[i].latLng.split(',');
                         const lat = parseFloat(latLng[0]);
                         const lng = parseFloat(latLng[1]);
-                        const marker = new google.maps.Marker({
+                        const _ = new google.maps.Marker({
                             position: {lat: lat, lng: lng},
                             map: map,
                             title: state.restaurants[i].name
@@ -135,7 +164,6 @@
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{.GoogleApiKey}}&callback=initMap" async defer></script>
 </head>
-<body>
 <body>
 <div id="map-container">
     <div id="map"></div> <!-- Map now has its own container -->
