@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Current State</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script>
+        let state = {
+            restaurants: [],
+            couriers: [],
+            activeOrders: []
+        };
+        let markers = [];
+        let map;
+        
+        function drawCouriers() {
+            for (let i = 0; i < state.couriers.length; i++) {
+                const marker = markers.find(marker => marker.id === courierId);
+                if (marker) {
+                    const split = state.couriers[i].latLng.split(',');
+                    const lat = parseFloat(split[0]);
+                    const lng = parseFloat(split[1]);
+                    marker.marker.setPosition({lat: lat, lng: lng});
+                } else {
+                    const courierId = state.couriers[i].id;
+                    addCourierMarker(courierId);
+                }
+            }
+        }
+        
+        function addCourierMarker(courierId) {
+            const courier = state.couriers.find(courier => courier.id === courierId);
+            if (!courier.latLng) {
+                return;
+            }
+            const split = courier.latLng.split(',');
+            const lat = parseFloat(split[0]);
+            const lng = parseFloat(split[1]);
+            const mark = new google.maps.Marker({
+                position: {lat: lat, lng: lng},
+                map: map,
+                title: courier.name
+            });
+            const marker = { id: courier.id, marker: mark };
+            markers.push(marker);
+        }
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: {lat: 45.8150, lng: 15.9819}
+            });
+            
+            fetch('/state')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    state = data;
+                    for (let i = 0; i < state.restaurants.length; i++) {
+                        const latLng = state.restaurants[i].latLng.split(',');
+                        const lat = parseFloat(latLng[0]);
+                        const lng = parseFloat(latLng[1]);
+                        const marker = new google.maps.Marker({
+                            position: {lat: lat, lng: lng},
+                            map: map,
+                            title: state.restaurants[i].name
+                        });
+                    }
+                    drawCouriers();
+                });
+
+            const socket = new WebSocket('ws://' + window.location.host + '/ws');
+
+            socket.onmessage = function(event) {
+                const msg = JSON.parse(event.data);
+                console.log(msg);
+                switch (msg.type) {
+                    case 'CourierAssigned': {
+                        const order = state.activeOrders.find(o => o.id === msg.data.orderId);
+                        order.courierId = msg.data.courierId;
+                        drawInfo();
+                        break;
+                    }
+                    case 'CourierLocationUpdated': {
+                        const order = state.activeOrders.find(o => o.id === msg.data.orderId);
+                        const courier = state.couriers.find(courier => courier.id === order.courierId);
+                        if (!courier) {
+                            return;
+                        }
+                        courier.latLng = msg.data.lat + ',' + msg.data.lng;
+                        console.log('CourierLocationUpdated', courier);
+                        drawCouriers();
+                        break;
+                    }
+                    case 'OrderUpdated': {
+                        const order = state.activeOrders.find(order => order.id === msg.id);
+                        order.status = msg.data.status;
+                        drawInfo();
+                        break;
+                    }
+                    case 'OrderCreated':  {
+                        state.activeOrders.push(msg.order);
+                        drawInfo();
+                        break;
+                    }
+                       
+                }
+            };
+        }
+
+        function drawInfo() {
+            const restaurantsList = document.getElementById('restaurants-list');
+            restaurantsList.innerHTML = ''; // Clear existing list
+            state.restaurants.forEach(restaurant => {
+                const li = document.createElement('li');
+                li.textContent = restaurant.name;
+                restaurantsList.appendChild(li);
+            });
+
+            const couriersList = document.getElementById('couriers-list');
+            couriersList.innerHTML = ''; // Clear existing list
+            state.couriers.forEach(courier => {
+                const li = document.createElement('li');
+                li.textContent = courier.name; // Assuming each courier object has a name property
+                couriersList.appendChild(li);
+            });
+
+            const ordersList = document.getElementById('orders-list');
+            ordersList.innerHTML = ''; // Clear existing list
+            state.activeOrders.forEach(order => {
+                const li = document.createElement('li');
+                li.textContent = `Order #${order.id} - Status: ${order.status}`; // Adjust according to your order object structure
+                ordersList.appendChild(li);
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{.GoogleApiKey}}&callback=initMap" async defer></script>
+</head>
+<body>
+<body>
+<div id="map-container">
+    <div id="map"></div> <!-- Map now has its own container -->
+</div>
+<div id="state-container">
+    <h1>Current State</h1>
+    <div id="restaurants">
+        <h2>Restaurants</h2>
+        <ul id="restaurants-list">
+            {{range .Restaurants}}
+            <li>{{.Name}}</li>
+            {{end}}
+        </ul>
+    </div>
+    <div id="couriers">
+        <h2>Couriers</h2>
+        <ul id="couriers-list">
+            {{range .Couriers}}
+            <li>{{.Name}}</li>
+            {{end}}
+        </ul>
+    </div>
+    <div id="orders">
+        <h2>Active Orders</h2>
+        <ul id="orders-list">
+            {{range .ActiveOrders}}
+            <li>Order #{{.Id}} - Status: {{.Status}}</li>
+            {{end}}
+        </ul>
+    </div>
+</div>
+</body>
+
+</html>

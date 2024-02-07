@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
@@ -22,11 +23,17 @@ func main() {
 	}
 
 	db := NewPostgresDb(connStr)
-
 	state, err := db.GetCurrentState()
 	if err != nil {
 		l.Fatal("Unable to initialize state: ", err)
 	}
+
+	ws := NewWebsocketAdapter(l, &state)
+	bus := NewMqttBus(l)
+	bus.SubscribeOrderUpdated(ws.HandleOrderUpdated)
+	bus.SubscribeOrderCreated(ws.HandleOrderCreated)
+	bus.SubscribeCourierAssigned(ws.HandleCourierAssigned)
+	bus.SubscribeCourierLocationUpdated(ws.HandleCourierLocationUpdated)
 
 	type Display struct {
 		State
@@ -34,18 +41,29 @@ func main() {
 	}
 
 	fs := http.FileServer(http.Dir("./static"))
-	// Serve static files for any request not matching the root path
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		tmpl, err := template.ParseFiles("./static/index.html")
+		tmpl, err := template.ParseFiles("./static/index.gohtml")
 		if err != nil {
 			panic(err)
 		}
 		err = tmpl.Execute(w, Display{state, googleApiKey})
 		if err != nil {
+			l.Println("Failed to execute template: ", err)
 			http.Error(w, "Failed to execute template", http.StatusInternalServerError)
 		}
+	})
+	http.HandleFunc("/ws", ws.HandleWebsocketConnection)
+	http.HandleFunc("/state", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		state, err = db.GetCurrentState()
+		if err != nil {
+			l.Println("Failed to get state: ", err)
+			http.Error(w, "Failed to get state", http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(state)
 	})
 	http.ListenAndServe(":3000", nil)
 
