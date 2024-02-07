@@ -41,6 +41,7 @@
         
         function drawCouriers() {
             for (let i = 0; i < state.couriers.length; i++) {
+                const courierId = state.couriers[i].id;
                 const marker = markers.find(marker => marker.id === courierId);
                 if (marker) {
                     const split = state.couriers[i].latLng.split(',');
@@ -72,7 +73,6 @@
         }
 
         function initMap() {
-            debugger
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 13,
                 center: {lat: 45.8150, lng: 15.9819},
@@ -127,7 +127,7 @@
                         break;
                     }
                     case 'OrderCreated':  {
-                        state.activeOrders.push(msg.order);
+                        state.activeOrders.push(msg.data);
                         drawInfo();
                         break;
                     }

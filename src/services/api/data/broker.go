@@ -82,6 +82,7 @@ func InitBusClient(l *log.Logger) mqtt.Client {
 	addr := fmt.Sprintf("tcp://%s:%d", broker, port)
 	opts.AddBroker(addr)
 	opts.SetClientID("spiza_api")
+	opts.SetKeepAlive(5)
 	//opts.SetUsername("")
 	//opts.SetPassword("")
 	opts.SetDefaultPublishHandler(NewMessagePubHandler(l))

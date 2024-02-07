@@ -18,9 +18,11 @@ func NewMqttBus(l *log.Logger) *MqttBus {
 	return &MqttBus{l: l, Client: initClient(l)}
 }
 
+const QosAtLeastOnce = 1
+
 func (b *MqttBus) SubscribeOrderUpdated(handle func(msg OrderUpdated)) {
 	topic := "order/+"
-	token := b.Client.Subscribe(topic, 0, func(client mqtt.Client, mqttMsg mqtt.Message) {
+	token := b.Client.Subscribe(topic, QosAtLeastOnce, func(client mqtt.Client, mqttMsg mqtt.Message) {
 		var msg OrderUpdated
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)
 		if err != nil {
@@ -46,7 +48,7 @@ func (b *MqttBus) SubscribeOrderUpdated(handle func(msg OrderUpdated)) {
 
 func (b *MqttBus) SubscribeOrderCreated(handle func(msg Order)) {
 	topic := "order/+/created"
-	token := b.Client.Subscribe(topic, 0, func(client mqtt.Client, mqttMsg mqtt.Message) {
+	token := b.Client.Subscribe(topic, QosAtLeastOnce, func(client mqtt.Client, mqttMsg mqtt.Message) {
 		var msg Order
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)
 		if err != nil {
@@ -64,7 +66,7 @@ func (b *MqttBus) SubscribeOrderCreated(handle func(msg Order)) {
 
 func (b *MqttBus) SubscribeCourierAssigned(handle func(msg CourierAssigned)) {
 	topic := "order/+/courier-assigned"
-	token := b.Client.Subscribe(topic, 0, func(client mqtt.Client, mqttMsg mqtt.Message) {
+	token := b.Client.Subscribe(topic, QosAtLeastOnce, func(client mqtt.Client, mqttMsg mqtt.Message) {
 		var msg CourierAssigned
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)
 		if err != nil {
@@ -83,7 +85,7 @@ func (b *MqttBus) SubscribeCourierAssigned(handle func(msg CourierAssigned)) {
 
 func (b *MqttBus) SubscribeCourierLocationUpdated(handle func(msg CourierLocationUpdated)) {
 	topic := "order/+/courier-location"
-	token := b.Client.Subscribe(topic, 0, func(client mqtt.Client, mqttMsg mqtt.Message) {
+	token := b.Client.Subscribe(topic, QosAtLeastOnce, func(client mqtt.Client, mqttMsg mqtt.Message) {
 		var msg CourierLocationUpdated
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)
 		if err != nil {
@@ -123,10 +125,11 @@ func initClient(l *log.Logger) mqtt.Client {
 	opts := mqtt.NewClientOptions()
 	addr := fmt.Sprintf("tcp://%s:%d", broker, port)
 	opts.AddBroker(addr)
-	opts.SetClientID("simulator")
+	opts.SetClientID("monitor")
 	opts.SetDefaultPublishHandler(NewMessagePubHandler(l))
 	opts.OnConnect = NewConnectHandler(l, addr)
 	opts.OnConnectionLost = NewConnectionLostHandler(l)
+	opts.SetKeepAlive(5)
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())

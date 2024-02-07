@@ -1,0 +1,11 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="monitor" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="services" />
+    <working_directory value="$PROJECT_DIR$/monitor" />
+    <kind value="FILE" />
+    <package value="github.com/kova98/spiza/services/monitor" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/monitor/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

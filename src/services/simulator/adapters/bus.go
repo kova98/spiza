@@ -94,6 +94,7 @@ func initClient(l *log.Logger) mqtt.Client {
 	opts.AddBroker(addr)
 	opts.SetClientID("simulator")
 	opts.SetDefaultPublishHandler(NewMessagePubHandler(l))
+	opts.SetKeepAlive(5)
 	opts.OnConnect = NewConnectHandler(l, addr)
 	opts.OnConnectionLost = NewConnectionLostHandler(l)
 	client := mqtt.NewClient(opts)
