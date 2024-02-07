@@ -27,6 +27,7 @@ func (b *MqttBus) Publish(topic string, msg interface{}) {
 	if token.Error() != nil {
 		b.l.Println("Error publishing message", msgJson, "to topic", topic, ":", token.Error())
 	}
+	b.l.Println("Published to", topic, ":", msg)
 }
 
 func (b *MqttBus) SubscribeCourierAssigned(handle func(msg domain.CourierAssigned)) {
@@ -47,7 +48,7 @@ func (b *MqttBus) SubscribeCourierAssigned(handle func(msg domain.CourierAssigne
 }
 
 func (b *MqttBus) SubscribeOrderUpdated(handle func(msg domain.OrderUpdated)) {
-	topic := "order/+/order-updated"
+	topic := "order/+"
 	token := b.Client.Subscribe(topic, 0, func(client mqtt.Client, mqttMsg mqtt.Message) {
 		var msg domain.OrderUpdated
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)

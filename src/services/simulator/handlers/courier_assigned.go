@@ -28,7 +28,7 @@ func (h *CourierAssignedHandler) Handle(msg domain.CourierAssigned) {
 
 	dest, err := h.db.GetOrderRestaurantLocation(msg.OrderId)
 	if err != nil {
-		h.l.Println("Error getting order:", err)
+		h.l.Println("Error getting order", msg.OrderId, ":", err)
 		//TODO unassign? try again?
 		return
 	}

@@ -63,9 +63,16 @@ func main() {
 			http.Error(w, "Failed to get state", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(state)
+		err := json.NewEncoder(w).Encode(state)
+		if err != nil {
+			l.Println("Failed to encode state: ", err)
+			http.Error(w, "Failed to encode state", http.StatusInternalServerError)
+		}
 	})
-	http.ListenAndServe(":3000", nil)
+	err = http.ListenAndServe(":3000", nil)
+	if err != nil {
+		l.Fatal("Failed to start server: ", err)
+	}
 
 	l.Println(state)
 

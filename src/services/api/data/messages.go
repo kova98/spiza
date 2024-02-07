@@ -4,7 +4,7 @@ import "time"
 
 type OrderStatusUpdated struct {
 	Status       int       `json:"status"`
-	DeliveryTime time.Time `json:"delivery_time"`
+	DeliveryTime time.Time `json:"deliveryTime"`
 }
 
 type CourierLocationUpdated struct {
@@ -13,11 +13,11 @@ type CourierLocationUpdated struct {
 }
 
 type CourierAssigned struct {
-	OrderId   int64 `json:"order_id"`
-	CourierId int64 `json:"courier_id"`
+	OrderId   int64 `json:"orderId"`
+	CourierId int64 `json:"courierId"`
 }
 
 type OrderDelivered struct {
-	OrderId   int64 `json:"order_id"`
-	CourierId int64 `json:"courier_id"`
+	OrderId   int64 `json:"orderId"`
+	CourierId int64 `json:"courierId"`
 }

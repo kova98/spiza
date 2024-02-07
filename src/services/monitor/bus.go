@@ -18,15 +18,6 @@ func NewMqttBus(l *log.Logger) *MqttBus {
 	return &MqttBus{l: l, Client: initClient(l)}
 }
 
-func (b *MqttBus) Publish(topic string, msg interface{}) {
-	msgJson, _ := json.Marshal(msg)
-	token := b.Client.Publish(topic, 0, false, msgJson)
-	_ = token.Done()
-	if token.Error() != nil {
-		b.l.Println("Error publishing message", msgJson, "to topic", topic, ":", token.Error())
-	}
-}
-
 func (b *MqttBus) SubscribeOrderUpdated(handle func(msg OrderUpdated)) {
 	topic := "order/+"
 	token := b.Client.Subscribe(topic, 0, func(client mqtt.Client, mqttMsg mqtt.Message) {
@@ -50,6 +41,7 @@ func (b *MqttBus) SubscribeOrderUpdated(handle func(msg OrderUpdated)) {
 	if token.Error() != nil {
 		b.l.Println("Error subscribing to topic", topic, ":", token.Error())
 	}
+	b.l.Println("Subscribed to topic", topic)
 }
 
 func (b *MqttBus) SubscribeOrderCreated(handle func(msg Order)) {
@@ -67,6 +59,7 @@ func (b *MqttBus) SubscribeOrderCreated(handle func(msg Order)) {
 	if token.Error() != nil {
 		b.l.Println("Error subscribing to topic", topic, ":", token.Error())
 	}
+	b.l.Println("Subscribed to topic", topic)
 }
 
 func (b *MqttBus) SubscribeCourierAssigned(handle func(msg CourierAssigned)) {
@@ -85,6 +78,7 @@ func (b *MqttBus) SubscribeCourierAssigned(handle func(msg CourierAssigned)) {
 	if token.Error() != nil {
 		b.l.Println("Error subscribing to topic", topic, ":", token.Error())
 	}
+	b.l.Println("Subscribed to topic", topic)
 }
 
 func (b *MqttBus) SubscribeCourierLocationUpdated(handle func(msg CourierLocationUpdated)) {
@@ -110,6 +104,7 @@ func (b *MqttBus) SubscribeCourierLocationUpdated(handle func(msg CourierLocatio
 	if token.Error() != nil {
 		b.l.Println("Error subscribing to topic", topic, ":", token.Error())
 	}
+	b.l.Println("Subscribed to topic", topic)
 }
 
 func parseOrderIdFromTopic(topic string) (int64, error) {

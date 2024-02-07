@@ -22,6 +22,6 @@ class Restaurant {
   Restaurant.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        menu = Menu.fromJson(json['menu_categories'] ?? []),
+        menu = Menu.fromJson(json['menuCategories'] ?? []),
         address = Address.fromJson(json['address']);
 }

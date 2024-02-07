@@ -35,14 +35,18 @@ class MqttProvider {
       final payload =
           MqttPublishPayload.bytesToStringAsString(message.payload.message);
       print('Received message: $payload');
-      final json = jsonDecode(payload) as Map<String, dynamic>;
+      final decoded = jsonDecode(payload);
+      if (decoded is! Map<String, dynamic>) {
+        print('Invalid JSON');
+        return;
+      }
       final topic = message.payload.variableHeader!.topicName;
       final subscription = _subscriptions[topic];
       if (subscription == null) {
         print('No subscription for topic $topic');
         return;
       }
-      final parsedMessage = subscription.parser(json);
+      final parsedMessage = subscription.parser(decoded);
       subscription.subject.sink.add(parsedMessage);
     });
   }

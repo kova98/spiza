@@ -16,8 +16,8 @@ import (
 
 type OrderWithItems struct {
 	Id           int64       `json:"id"`
-	UserId       int64       `json:"user_id"`
-	RestaurantId int64       `json:"restaurant_id" `
+	UserId       int64       `json:"userId"`
+	RestaurantId int64       `json:"restaurantId" `
 	Status       int64       `json:"status"`
 	Items        []data.Item `json:"items" `
 }

@@ -34,9 +34,9 @@ class Order {
         items = List<int>.empty();
 
   Map<String, dynamic> toJson() => {
-        'user_id': userId,
-        'restaurant_id': restaurantId,
-        'destination_id': destinationId,
+        'userId': userId,
+        'restaurantId': restaurantId,
+        'destinationId': destinationId,
         'address': addressId,
         'items': items,
       };

@@ -19,7 +19,7 @@ class MenuCategory {
     return MenuCategory(
       id: json['id'],
       name: json['name'],
-      restaurantId: json['restaurant_id'],
+      restaurantId: json['restaurantId'],
       items: items,
     );
   }

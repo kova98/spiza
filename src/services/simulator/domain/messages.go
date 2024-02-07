@@ -3,14 +3,14 @@ package domain
 import "time"
 
 type CourierAssigned struct {
-	OrderId   int64 `json:"order_id"`
-	CourierId int64 `json:"courier_id"`
+	OrderId   int64 `json:"orderId"`
+	CourierId int64 `json:"courierId"`
 }
 
 type OrderUpdated struct {
 	Id           int64     `json:"id"`
 	Status       int       `json:"status"`
-	DeliveryTime time.Time `json:"delivery_time"`
+	DeliveryTime time.Time `json:"deliveryTime"`
 }
 
 const (

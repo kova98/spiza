@@ -27,9 +27,9 @@ type OrderItem struct {
 
 type OrderWithItems struct {
 	Id          int64       `json:"id"`
-	UserId      int64       `json:"user_id" db:"user_id"`
+	UserId      int64       `json:"userId" db:"user_id"`
 	Status      int64       `json:"status"`
-	DateCreated time.Time   `json:"date_created" db:"date_created"`
+	DateCreated time.Time   `json:"dateCreated" db:"date_created"`
 	Items       []OrderItem `json:"items" `
 }
 

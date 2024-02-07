@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"encoding/json"
 	"log"
 	"strconv"
 	"time"
@@ -57,8 +56,7 @@ func (c *Courier) CompleteOrder(id int64, msg OrderUpdated) {
 		Status:       OrderStatusDelivered,
 		DeliveryTime: msg.DeliveryTime,
 	}
-	marshalled, _ := json.Marshal(statusMsg)
-	c.bus.Publish("order/"+strconv.FormatInt(id, 10), marshalled)
+	c.bus.Publish("order/"+strconv.FormatInt(id, 10), statusMsg)
 	c.l.Println("Order" + strconv.FormatInt(id, 10) + " completed")
 }
 

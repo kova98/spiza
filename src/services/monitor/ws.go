@@ -72,7 +72,10 @@ func (ws *WebSocketAdapter) Broadcast(msg Message) {
 		err := client.WriteMessage(websocket.TextMessage, marsh)
 		if err != nil {
 			log.Printf("Error sending message to client: %v", err)
-			client.Close()
+			err = client.Close()
+			if err != nil {
+				log.Printf("Error closing client: %v", err)
+			}
 			delete(ws.clients, client)
 		}
 	}

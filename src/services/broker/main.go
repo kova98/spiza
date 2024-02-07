@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -21,8 +22,16 @@ func main() {
 		done <- true
 	}()
 
+	level := new(slog.LevelVar)
+	l := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: level,
+	}))
+	level.Set(slog.LevelDebug)
 	// Create the new MQTT Server.
-	server := mqtt.New(nil)
+	opt := &mqtt.Options{
+		Logger: l,
+	}
+	server := mqtt.New(opt)
 
 	// Allow all connections.
 	_ = server.AddHook(new(auth.AllowHook), nil)

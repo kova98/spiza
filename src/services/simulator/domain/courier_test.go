@@ -1,7 +1,6 @@
 package domain_test
 
 import (
-	"encoding/json"
 	"github.com/kova98/spiza/services/simulator/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -77,11 +76,10 @@ func TestCompleteOrder(t *testing.T) {
 		Status:       domain.OrderStatusDelivered,
 		DeliveryTime: time.Now().UTC().Add(15 * time.Minute),
 	}
-	BusMock.On("Publish", "order/1", mock.AnythingOfType("[]uint8")).Run(func(args mock.Arguments) {
-		var actual domain.OrderUpdated
-		json.Unmarshal(args.Get(1).([]byte), &actual)
-		assert.Equal(t, domain.OrderStatusDelivered, actual.Status, "The order status should be delivered")
-		assert.Equal(t, msg.DeliveryTime, actual.DeliveryTime, "The delivery time should match the one in the message")
+	BusMock.On("Publish", "order/1", mock.AnythingOfType("OrderUpdated")).Run(func(args mock.Arguments) {
+		var msg = args.Get(1).(domain.OrderUpdated)
+		assert.Equal(t, domain.OrderStatusDelivered, msg.Status, "The order status should be delivered")
+		assert.Equal(t, msg.DeliveryTime, msg.DeliveryTime, "The delivery time should match the one in the message")
 	})
 
 	courier.CompleteOrder(orderId, msg)
