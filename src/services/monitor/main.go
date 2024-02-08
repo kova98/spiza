@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/kova98/spiza/services/monitor/adapters"
+	"github.com/kova98/spiza/services/monitor/domain"
 	"html/template"
 	"log"
 	"net/http"
@@ -22,21 +24,21 @@ func main() {
 		l.Fatal("GOOGLE_API_KEY environment variable empty")
 	}
 
-	db := NewPostgresDb(connStr)
+	db := adapters.NewPostgresDb(connStr)
 	state, err := db.GetCurrentState()
 	if err != nil {
 		l.Fatal("Unable to initialize state: ", err)
 	}
 
-	ws := NewWebsocketAdapter(l, &state)
-	bus := NewMqttBus(l)
+	ws := adapters.NewWebsocketAdapter(l, &state)
+	bus := adapters.NewMqttBus(l)
 	bus.SubscribeOrderUpdated(ws.HandleOrderUpdated)
 	bus.SubscribeOrderCreated(ws.HandleOrderCreated)
 	bus.SubscribeCourierAssigned(ws.HandleCourierAssigned)
 	bus.SubscribeCourierLocationUpdated(ws.HandleCourierLocationUpdated)
 
 	type Display struct {
-		State
+		domain.State
 		GoogleApiKey string
 	}
 

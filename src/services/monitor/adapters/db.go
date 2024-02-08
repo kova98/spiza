@@ -1,7 +1,8 @@
-package main
+package adapters
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/kova98/spiza/services/monitor/domain"
 	_ "github.com/lib/pq"
 	"log"
 )
@@ -21,9 +22,9 @@ func NewPostgresDb(connStr string) *PostgresDb {
 	return &PostgresDb{db}
 }
 
-func (p PostgresDb) GetCurrentState() (State, error) {
+func (p PostgresDb) GetCurrentState() (domain.State, error) {
 
-	var state State
+	var state domain.State
 	err := p.Db.Select(&state.Restaurants, `
 		SELECT r.id, r.name, a.lat_lng 
 		FROM restaurants r 
@@ -37,7 +38,7 @@ func (p PostgresDb) GetCurrentState() (State, error) {
 	}
 	err = p.Db.Select(&state.ActiveOrders, `SELECT id, restaurant_id, COALESCE(courier_id,0) AS courier_id, status, date_created 
 								   FROM orders 
-								   WHERE status NOT IN ($1, $2)`, OrderStatusDelivered, OrderStatusRejected)
+								   WHERE status NOT IN ($1, $2)`, domain.OrderStatusDelivered, domain.OrderStatusRejected)
 	if err != nil {
 		return state, err
 	}

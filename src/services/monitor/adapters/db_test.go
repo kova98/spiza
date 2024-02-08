@@ -1,21 +1,22 @@
-package main_test
+package adapters_test
 
 import (
-	"github.com/kova98/spiza/services/monitor"
+	"github.com/kova98/spiza/services/monitor/adapters"
+	"github.com/kova98/spiza/services/monitor/domain"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"os"
 	"testing"
 )
 
-var pg *main.PostgresDb
+var pg *adapters.PostgresDb
 
 func TestMain(m *testing.M) {
 	connStr := os.Getenv("SPIZA_TEST_DB_CONN_STR")
 	if connStr == "" {
 		log.Fatal("SPIZA_TEST_DB_CONN_STR environment variable empty")
 	}
-	pg = main.NewPostgresDb(connStr)
+	pg = adapters.NewPostgresDb(connStr)
 
 	clearTables()
 	pg.Db.Exec("INSERT INTO users (id, name) VALUES (1, 'Test User')")
@@ -34,12 +35,12 @@ func TestGetCurrentState(t *testing.T) {
 	addRestaurant(t, 1, "Test Restaurant")
 	addCourier(t, 1, "Test Courier")
 	addAddress(t, 1, "0.0,0.0", "Test Address")
-	addOrder(t, 1, 1, main.OrderStatusCreated, "2024-01-01 00:00:00")
-	addOrder(t, 1, 1, main.OrderStatusAccepted, "2024-01-01 00:00:00")
-	addOrder(t, 1, 1, main.OrderStatusRejected, "2024-01-01 00:00:00")
-	addOrder(t, 1, 1, main.OrderStatusReady, "2024-01-01 00:00:00")
-	addOrder(t, 1, 1, main.OrderStatusPickedUp, "2024-01-01 00:00:00")
-	addOrder(t, 1, 1, main.OrderStatusDelivered, "2024-01-01 00:00:00")
+	addOrder(t, 1, 1, domain.OrderStatusCreated, "2024-01-01 00:00:00")
+	addOrder(t, 1, 1, domain.OrderStatusAccepted, "2024-01-01 00:00:00")
+	addOrder(t, 1, 1, domain.OrderStatusRejected, "2024-01-01 00:00:00")
+	addOrder(t, 1, 1, domain.OrderStatusReady, "2024-01-01 00:00:00")
+	addOrder(t, 1, 1, domain.OrderStatusPickedUp, "2024-01-01 00:00:00")
+	addOrder(t, 1, 1, domain.OrderStatusDelivered, "2024-01-01 00:00:00")
 
 	state, err := pg.GetCurrentState()
 
@@ -51,8 +52,8 @@ func TestGetCurrentState(t *testing.T) {
 	for _, order := range state.ActiveOrders {
 		statuses = append(statuses, order.Status)
 	}
-	assert.NotContains(t, statuses, main.OrderStatusDelivered)
-	assert.NotContains(t, statuses, main.OrderStatusRejected)
+	assert.NotContains(t, statuses, domain.OrderStatusDelivered)
+	assert.NotContains(t, statuses, domain.OrderStatusRejected)
 }
 
 func addOrder(t *testing.T, restaurantId int, courierId int, status int, dateCreated string) {

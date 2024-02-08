@@ -1,9 +1,10 @@
-package main
+package adapters
 
 import (
 	"encoding/json"
 	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/kova98/spiza/services/monitor/domain"
 	"log"
 	"strconv"
 	"strings"
@@ -20,10 +21,10 @@ func NewMqttBus(l *log.Logger) *MqttBus {
 
 const QosAtLeastOnce = 1
 
-func (b *MqttBus) SubscribeOrderUpdated(handle func(msg OrderUpdated)) {
+func (b *MqttBus) SubscribeOrderUpdated(handle func(msg domain.OrderUpdated)) {
 	topic := "order/+"
 	token := b.Client.Subscribe(topic, QosAtLeastOnce, func(client mqtt.Client, mqttMsg mqtt.Message) {
-		var msg OrderUpdated
+		var msg domain.OrderUpdated
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)
 		if err != nil {
 			b.l.Println("Unmarshal Error:", err)
@@ -46,10 +47,10 @@ func (b *MqttBus) SubscribeOrderUpdated(handle func(msg OrderUpdated)) {
 	b.l.Println("Subscribed to topic", topic)
 }
 
-func (b *MqttBus) SubscribeOrderCreated(handle func(msg Order)) {
+func (b *MqttBus) SubscribeOrderCreated(handle func(msg domain.Order)) {
 	topic := "order/+/created"
 	token := b.Client.Subscribe(topic, QosAtLeastOnce, func(client mqtt.Client, mqttMsg mqtt.Message) {
-		var msg Order
+		var msg domain.Order
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)
 		if err != nil {
 			b.l.Println("Unmarshal Error:", err)
@@ -64,10 +65,10 @@ func (b *MqttBus) SubscribeOrderCreated(handle func(msg Order)) {
 	b.l.Println("Subscribed to topic", topic)
 }
 
-func (b *MqttBus) SubscribeCourierAssigned(handle func(msg CourierAssigned)) {
+func (b *MqttBus) SubscribeCourierAssigned(handle func(msg domain.CourierAssigned)) {
 	topic := "order/+/courier-assigned"
 	token := b.Client.Subscribe(topic, QosAtLeastOnce, func(client mqtt.Client, mqttMsg mqtt.Message) {
-		var msg CourierAssigned
+		var msg domain.CourierAssigned
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)
 		if err != nil {
 			b.l.Println("Unmarshal Error:", err)
@@ -83,10 +84,10 @@ func (b *MqttBus) SubscribeCourierAssigned(handle func(msg CourierAssigned)) {
 	b.l.Println("Subscribed to topic", topic)
 }
 
-func (b *MqttBus) SubscribeCourierLocationUpdated(handle func(msg CourierLocationUpdated)) {
+func (b *MqttBus) SubscribeCourierLocationUpdated(handle func(msg domain.CourierLocationUpdated)) {
 	topic := "order/+/courier-location"
 	token := b.Client.Subscribe(topic, QosAtLeastOnce, func(client mqtt.Client, mqttMsg mqtt.Message) {
-		var msg CourierLocationUpdated
+		var msg domain.CourierLocationUpdated
 		err := json.Unmarshal(mqttMsg.Payload(), &msg)
 		if err != nil {
 			b.l.Println("Unmarshal Error:", err)

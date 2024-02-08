@@ -1,19 +1,20 @@
-package main
+package adapters
 
 import (
 	"encoding/json"
 	"github.com/gorilla/websocket"
+	"github.com/kova98/spiza/services/monitor/domain"
 	"log"
 	"net/http"
 )
 
 type WebSocketAdapter struct {
 	l       *log.Logger
-	state   *State
+	state   *domain.State
 	clients map[*websocket.Conn]bool
 }
 
-func NewWebsocketAdapter(l *log.Logger, state *State) *WebSocketAdapter {
+func NewWebsocketAdapter(l *log.Logger, state *domain.State) *WebSocketAdapter {
 	var clients = make(map[*websocket.Conn]bool)
 	return &WebSocketAdapter{l, state, clients}
 }
@@ -38,25 +39,25 @@ func (ws *WebSocketAdapter) HandleWebsocketConnection(w http.ResponseWriter, r *
 }
 
 // TODO: move to order handler
-func (ws *WebSocketAdapter) HandleOrderCreated(o Order) {
+func (ws *WebSocketAdapter) HandleOrderCreated(o domain.Order) {
 	ws.l.Println("Handle order created")
 	msg := Message{Type: "OrderCreated", Data: o}
 	ws.Broadcast(msg)
 }
 
-func (ws *WebSocketAdapter) HandleOrderUpdated(ou OrderUpdated) {
+func (ws *WebSocketAdapter) HandleOrderUpdated(ou domain.OrderUpdated) {
 	ws.l.Println("Handle order updated")
 	msg := Message{Type: "OrderUpdated", Data: ou}
 	ws.Broadcast(msg)
 }
 
-func (ws *WebSocketAdapter) HandleCourierAssigned(ca CourierAssigned) {
+func (ws *WebSocketAdapter) HandleCourierAssigned(ca domain.CourierAssigned) {
 	ws.l.Println("Handle courier assigned")
 	msg := Message{Type: "CourierAssigned", Data: ca}
 	ws.Broadcast(msg)
 }
 
-func (ws *WebSocketAdapter) HandleCourierLocationUpdated(clu CourierLocationUpdated) {
+func (ws *WebSocketAdapter) HandleCourierLocationUpdated(clu domain.CourierLocationUpdated) {
 	ws.l.Println("Handle courier location updated")
 	msg := Message{Type: "CourierLocationUpdated", Data: clu}
 	ws.Broadcast(msg)
