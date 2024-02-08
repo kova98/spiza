@@ -19,8 +19,8 @@ interface Restaurant {
 
 interface Order {
   id: number;
-  date_created: string;
-  date_updated: string;
+  dateCreated: string;
+  dateUpdated: string;
   items: Item[];
   status: number;
 }

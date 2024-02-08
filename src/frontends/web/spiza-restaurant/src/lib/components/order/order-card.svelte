@@ -47,7 +47,7 @@
     <Card.Title class="flex flex-row justify-between">
       <div>
         <p class="text-lg leading-none">Order #{order?.id}</p>
-        <p class="text-sm font-normal text-muted-foreground">{formatDate(order?.date_created)}</p>
+        <p class="text-sm font-normal text-muted-foreground">{formatDate(order?.dateCreated)}</p>
       </div>
       {#if order.status != 0}
         <p class="text-sm font-bold">{formatStatus(order?.status)}</p>
