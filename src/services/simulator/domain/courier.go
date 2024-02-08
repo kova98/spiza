@@ -15,6 +15,8 @@ type Courier struct {
 	l              *log.Logger
 }
 
+const StepDurationInMiliseconds = 500
+
 func NewCourier(id int64, name string, loc Location, bus Bus, l *log.Logger) *Courier {
 	return &Courier{
 		Id:             id,
@@ -32,11 +34,10 @@ func (c *Courier) AssignToOrder(orderId int64) {
 }
 
 func (c *Courier) Travel(orderId int64, path []Location) {
-	// TODO: think about what happens if this happens before the courier has arrived at the restaurant
 	locTopic := "order/" + strconv.FormatInt(orderId, 10) + "/courier-location"
 	for _, loc := range path {
 		c.bus.Publish(locTopic, loc)
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(StepDurationInMiliseconds * time.Millisecond)
 	}
 	c.Loc = path[len(path)-1]
 }
