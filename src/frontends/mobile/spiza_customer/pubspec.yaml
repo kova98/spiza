@@ -39,6 +39,7 @@ dependencies:
   mqtt_client: ^10.0.1
   google_maps_flutter: ^2.5.0
   collection: ^1.18.0
+  google_static_maps_controller: ^1.0.0
 
 dev_dependencies:
   flutter_test:

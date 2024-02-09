@@ -45,7 +45,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                       ),
                       child: const Text(
-                        '20-30 min',
+                        '30-40 min',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),

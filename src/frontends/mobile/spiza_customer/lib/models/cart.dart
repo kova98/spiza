@@ -5,6 +5,7 @@ import 'package:spiza_customer/models/order.dart';
 class Cart {
   List<Item> items = List<Item>.empty(growable: true);
   int addressId;
+  String addressName;
   int restaurantId;
   int destinationId;
   String restaurantName;
@@ -24,6 +25,7 @@ class Cart {
     required this.destinationId,
     this.destinationLocation,
     this.deliveryTime,
+    required this.addressName,
   });
 
   Cart copyWith({
@@ -35,6 +37,7 @@ class Cart {
     Location? restaurantLocation,
     Location? destinationLocation,
     num? deliveryTime,
+    String? addressName,
   }) {
     return Cart(
       addressId: addressId ?? this.addressId,
@@ -45,11 +48,13 @@ class Cart {
       destinationLocation: destinationLocation ?? this.destinationLocation,
       items: items ?? this.items,
       deliveryTime: deliveryTime ?? this.deliveryTime,
+      addressName: addressName ?? this.addressName,
     );
   }
 
   Cart.empty()
       : addressId = 0,
+        addressName = '',
         restaurantName = '',
         restaurantId = 0,
         destinationId = 0,

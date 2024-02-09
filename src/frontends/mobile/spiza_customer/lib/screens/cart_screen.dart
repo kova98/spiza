@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:spiza_customer/bloc/cart_provider.dart';
 import 'package:spiza_customer/bloc/order_bloc.dart';
 import 'package:spiza_customer/bloc/order_provider.dart';
 import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/models/item.dart';
 import 'package:spiza_customer/screens/order_screen.dart';
+import 'package:google_static_maps_controller/google_static_maps_controller.dart';
 
 class CartScreen extends StatelessWidget {
-  final menuText = const TextStyle(fontSize: 24);
-
   const CartScreen({super.key});
+  final houseIcon = "https://i.imgur.com/PARCU0w.png";
+  final restaurantIcon = "https://i.imgur.com/1suBNlj.png";
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,87 @@ class CartScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+                  StaticMap(
+                    styles: const [
+                      MapStyle(
+                        element: StyleElement.labels,
+                        feature: StyleFeature.transit,
+                        rules: [StyleRule.visibility(VisibilityRule.off)],
+                      ),
+                      MapStyle(
+                        element: StyleElement.labels,
+                        feature: StyleFeature.all,
+                        rules: [StyleRule.visibility(VisibilityRule.off)],
+                      ),
+                      MapStyle(
+                        element: StyleElement.labels,
+                        feature: StyleFeature.road,
+                        rules: [StyleRule.visibility(VisibilityRule.on)],
+                      ),
+                    ],
+                    googleApiKey: "AIzaSyB7VBHijYya2Wd49MPLBXG_BaQw-1jtU0Y",
+                    width: MediaQuery.of(context).size.width,
+                    height: 300,
+                    scaleToDevicePixelRatio: true,
+                    zoom: 16,
+                    visible: [
+                      GeocodedLocation.latLng(
+                        snapshot.data!.restaurantLocation.lat,
+                        snapshot.data!.restaurantLocation.lng,
+                      ),
+                      GeocodedLocation.latLng(
+                          snapshot.data!.destinationLocation!.lat,
+                          snapshot.data!.destinationLocation!.lng),
+                    ],
+                    markers: <Marker>[
+                      Marker.custom(locations: [
+                        Location(
+                          snapshot.data!.destinationLocation!.lat,
+                          snapshot.data!.destinationLocation!.lng,
+                        ),
+                      ], icon: houseIcon, anchor: MarkerAnchor.center),
+                      Marker.custom(locations: [
+                        Location(
+                          snapshot.data!.restaurantLocation.lat,
+                          snapshot.data!.restaurantLocation.lng,
+                        ),
+                      ], icon: restaurantIcon),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.home,
+                        size: 20,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        snapshot.data!.addressName,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.timer_outlined,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "30-40 min",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: snapshot.data!.items.length,
@@ -43,9 +126,15 @@ class CartScreen extends StatelessWidget {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("${item.amount} x ${item.name}",
-                              style: const TextStyle(fontSize: 24)),
-                          Text("${getPrice(item)}€", style: menuText),
+                          Text("${item.amount}  ${item.name}",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              )),
+                          Text(
+                            "${getPrice(item)}€",
+                            style: const TextStyle(fontSize: 20),
+                          ),
                         ],
                       );
                     },
@@ -55,15 +144,14 @@ class CartScreen extends StatelessWidget {
                     children: [
                       const Text('Total:',
                           style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                       Text("${snapshot.data!.totalPrice}€",
                           style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold))
+                              fontSize: 20, fontWeight: FontWeight.bold))
                     ],
                   ),
-                  const Spacer(),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: ConstrainedBox(
                       constraints: BoxConstraints.tightFor(
                         width: MediaQuery.of(context).size.width - 20,
