@@ -26,7 +26,8 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void initState() {
     _markerIcons.forEach((key, value) {
-      AssetHelper.getBytesFromAsset('assets/$key-icon.png', 64).then((onValue) {
+      AssetHelper.getBytesFromAsset('assets/$key-icon.png', 128)
+          .then((onValue) {
         setState(() {
           _markerIcons[key] = BitmapDescriptor.fromBytes(onValue);
         });
