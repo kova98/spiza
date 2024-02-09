@@ -10,7 +10,7 @@ class RestaurantApiProvider {
     final response = await _client.get(Uri.http(_root, '/api/restaurant'));
 
     if (response.statusCode == 200) {
-      final decoded = json.decode(response.body) as List;
+      final decoded = json.decode(utf8.decode(response.bodyBytes)) as List;
       final restaurants = decoded.map((i) => Restaurant.fromJson(i)).toList();
       return restaurants;
     } else {
@@ -24,7 +24,7 @@ class RestaurantApiProvider {
     );
 
     if (response.statusCode == 200) {
-      final decoded = json.decode(response.body);
+      final decoded = json.decode(utf8.decode(response.bodyBytes));
       final restaurant = Restaurant.fromJson(decoded);
       return restaurant;
     } else {
