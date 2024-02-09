@@ -22,12 +22,31 @@
               : date.toLocaleDateString();
   }
 
+  $: statusColor = function () {
+    switch (order.status) {
+      case 0:
+        return "bg-gray-100";
+      case 1:
+        return "bg-yellow-100";
+      case 2:
+        return "bg-red-100";
+      case 3:
+        return "bg-green-100";
+      case 4:
+        return "bg-gray-100";
+      case 5:
+        return "bg-gray-100";
+      default:
+        return "bg-gray-100";
+    }
+  };
+
   function formatStatus(status: number) {
     switch (status) {
       case 0:
         return "Created";
       case 1:
-        return "Accepted";
+        return "In Progress";
       case 2:
         return "Rejected";
       case 3:
@@ -43,8 +62,8 @@
 </script>
 
 <Card.Root class="w-full">
-  <Card.Header>
-    <Card.Title class="flex flex-row justify-between">
+  <Card.Header class="{statusColor()} border-b border-gray-200 rounded-t-xl">
+    <Card.Title class="flex flex-row justify-between items-center">
       <div>
         <p class="text-lg leading-none">Order #{order?.id}</p>
         <p class="text-sm font-normal text-muted-foreground">{formatDate(order?.dateCreated)}</p>
@@ -55,7 +74,7 @@
     </Card.Title>
   </Card.Header>
   <Card.Content>
-    <div class="flex flex-row justify-between">
+    <div class="flex flex-row justify-between items-end pt-5">
       <div class="flex flex-col gap-1">
         <ul class="text-sm">
           {#each order?.items ?? [] as item}
@@ -63,10 +82,10 @@
           {/each}
         </ul>
       </div>
-      <div class="flex flex-col gap-1">
+      <div class="flex flex-row gap-1">
         {#if order.status == 0}
+          <Button variant="outline" on:click={() => updateOrder(order?.id, "reject")}>Reject</Button>
           <Button variant="default" on:click={() => updateOrder(order?.id, "accept")}>Accept</Button>
-          <Button variant="destructive" on:click={() => updateOrder(order?.id, "reject")}>Reject</Button>
         {/if}
         {#if order.status == 1}
           <Button variant="default" class="mt-auto" on:click={() => updateOrder(order?.id, "ready")}>Ready</Button>

@@ -62,7 +62,6 @@
   };
 </script>
 
-<h1 class="font-bold text-4xl mb-5">Orders</h1>
 <div class="flex flex-col sm:flex-row justify-between gap-3">
   <div class="w-full flex flex-col gap-3 items-center">
     {#each orders ?? [] as order}
