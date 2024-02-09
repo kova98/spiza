@@ -12,7 +12,8 @@ class Cart {
   Location? destinationLocation;
   num? deliveryTime;
 
-  get totalPrice => items.fold<num>(0, (prev, i) => i.price + prev);
+  get totalPrice => items.fold<num>(0, (prev, i) => prev + i.price * i.amount);
+  get totalAmount => items.fold<int>(0, (prev, i) => i.amount + prev);
 
   Cart({
     this.items = const [],

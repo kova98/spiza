@@ -3,6 +3,7 @@ import 'package:spiza_customer/bloc/auth_bloc.dart';
 import 'package:spiza_customer/models/cart.dart';
 import 'package:spiza_customer/models/item.dart';
 import 'package:spiza_customer/models/restaurant.dart';
+import 'package:collection/collection.dart';
 
 class CartBloc {
   final _cart = BehaviorSubject<Cart>.seeded(Cart.empty());
@@ -15,10 +16,18 @@ class CartBloc {
 
   void addToCart(Item item) {
     final currentCart = _cart.value;
-    final updatedCart = currentCart.copyWith(
-      items: List.from(currentCart.items)..add(item),
+    final existingItem = currentCart.items.firstWhereOrNull(
+      (i) => i.id == item.id,
     );
-    _cart.sink.add(updatedCart);
+    if (existingItem != null) {
+      existingItem.amount++;
+      _cart.sink.add(currentCart);
+    } else {
+      final updatedCart = currentCart.copyWith(
+        items: List.from(currentCart.items)..add(item),
+      );
+      _cart.sink.add(updatedCart);
+    }
   }
 
   void setRestaurant(Restaurant restaurant) {

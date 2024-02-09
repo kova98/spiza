@@ -45,7 +45,7 @@ class CartScreen extends StatelessWidget {
                         children: [
                           Text("${item.amount} x ${item.name}",
                               style: const TextStyle(fontSize: 24)),
-                          Text("${item.price}", style: menuText),
+                          Text("${getPrice(item)}€", style: menuText),
                         ],
                       );
                     },
@@ -56,11 +56,12 @@ class CartScreen extends StatelessWidget {
                       const Text('Total:',
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold)),
-                      Text("${snapshot.data!.totalPrice}",
+                      Text("${snapshot.data!.totalPrice}€",
                           style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold))
                     ],
                   ),
+                  const Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: ConstrainedBox(
@@ -80,7 +81,11 @@ class CartScreen extends StatelessWidget {
                             )),
                         child: const Text(
                           'Confirm Order',
-                          style: TextStyle(fontSize: 24, color: Colors.black),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -109,5 +114,9 @@ class CartScreen extends StatelessWidget {
           else
             {}
         });
+  }
+
+  getPrice(Item item) {
+    return item.price * item.amount;
   }
 }

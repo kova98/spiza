@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spiza_customer/bloc/cart_provider.dart';
 import 'package:spiza_customer/models/cart.dart';
+import 'package:spiza_customer/models/item.dart';
 import 'package:spiza_customer/models/restaurant.dart';
 import 'package:spiza_customer/screens/cart_screen.dart';
 
@@ -37,13 +38,21 @@ class OrderButton extends StatelessWidget {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(color: Theme.of(context).primaryColor), backgroundColor: Colors.amber,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    )),
+                  backgroundColor: Colors.amber,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
                 child: Text(
-                  'Order ${snapshot.data!.items.length} for ${snapshot.data!.totalPrice} kn',
-                  style: const TextStyle(fontSize: 24, color: Colors.black),
+                  'Order ${snapshot.data!.totalAmount} for ${snapshot.data!.totalPrice}€',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(color: Colors.black),
+                    ],
+                  ),
                 ),
               ),
             ),

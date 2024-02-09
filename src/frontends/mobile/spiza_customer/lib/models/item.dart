@@ -5,8 +5,8 @@ class Item {
   final String image;
   final int categoryId;
   final num price;
-  final int amount;
   final int order;
+  int amount;
 
   Item.fromJson(Map<String, dynamic> parsedJson)
       : id = parsedJson['id'],
@@ -15,7 +15,7 @@ class Item {
         image = parsedJson['image'],
         price = parsedJson['price'],
         categoryId = parsedJson['categoryId'],
-        amount = parsedJson['amount'] ?? 0,
+        amount = parsedJson['amount'] ?? 1,
         order = parsedJson['order'];
 
   toJson() {
