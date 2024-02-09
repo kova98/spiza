@@ -67,7 +67,7 @@ class RestaurantsList extends StatelessWidget {
                             ],
                           ),
                           const Text(
-                            '5,00 kn',
+                            '0,99€',
                             style: TextStyle(color: Colors.black87),
                           ),
                           const SizedBox(height: 17)

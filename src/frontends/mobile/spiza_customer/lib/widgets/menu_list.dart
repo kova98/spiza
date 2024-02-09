@@ -90,7 +90,7 @@ class MenuList extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      "${item.price} kn",
+                      "${item.price}€",
                     )
                   ],
                 ),

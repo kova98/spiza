@@ -81,7 +81,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                         ),
                         const Text(
-                          '★ 4.5',
+                          '★ 3.5',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -91,7 +91,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                     const SizedBox(height: 5),
                     const Text(
-                      'Delivery 5,00 kn',
+                      'Delivery: 0.99€',
                       style: TextStyle(fontSize: 18, color: Colors.black87),
                     ),
                     const SizedBox(height: 15),
