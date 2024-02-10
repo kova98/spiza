@@ -97,13 +97,17 @@ class MenuList extends StatelessWidget {
               ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: const SizedBox(
-                  width: 150,
-                  child: Image(
-                    image: AssetImage('assets/burger.png'),
+                child: Container(
+                  width: 100,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(item.image),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

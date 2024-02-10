@@ -39,11 +39,13 @@ class RestaurantsList extends StatelessWidget {
                             height: 150.0,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(7)),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(7),
+                              ),
                               image: DecorationImage(
-                                  image: NetworkImage(item.image),
-                                  fit: BoxFit.cover),
+                                image: NetworkImage(item.image),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -57,18 +59,38 @@ class RestaurantsList extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                '★ ' + item.rating.toString(),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.black87,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 3),
+                                  Text(
+                                    item.rating.toString(),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Text(
-                            item.deliveryPrice.toString() + '€',
-                            style: TextStyle(color: Colors.black87),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.delivery_dining_outlined,
+                                color: Colors.black87,
+                                size: 19,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                item.deliveryPrice.toString() + '€',
+                                style: TextStyle(color: Colors.black87),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 17)
                         ],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:spiza_customer/models/restaurant.dart';
 import 'package:http/http.dart' show Client;
 
@@ -12,6 +13,7 @@ class RestaurantApiProvider {
     if (response.statusCode == 200) {
       final decoded = json.decode(utf8.decode(response.bodyBytes)) as List;
       final restaurants = decoded.map((i) => Restaurant.fromJson(i)).toList();
+      restaurants.sortBy((element) => element.deliveryPrice);
       return restaurants;
     } else {
       throw Exception('Failed to fetch restaurants');

@@ -26,8 +26,15 @@ class _MenuScreenState extends State<MenuScreen> {
             children: [
               Stack(
                 children: [
-                  const Image(
-                    image: AssetImage("assets/burger.png"),
+                  Container(
+                    height: 250.0,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(widget.restaurant.image),
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
                   ),
                   Positioned(
                     bottom: 20,
@@ -80,8 +87,8 @@ class _MenuScreenState extends State<MenuScreen> {
                             fontSize: 32,
                           ),
                         ),
-                        const Text(
-                          '★ 3.5',
+                        Text(
+                          widget.restaurant.rating.toString(),
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -99,6 +106,9 @@ class _MenuScreenState extends State<MenuScreen> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 50,
+              )
             ],
           ),
           OrderButton(widget.restaurant),
