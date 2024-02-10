@@ -23,6 +23,8 @@ class _OrderScreenState extends State<OrderScreen> {
     'user': BitmapDescriptor.defaultMarker,
   };
 
+  GoogleMapController? _mapController;
+
   @override
   void initState() {
     _markerIcons.forEach((key, value) {
@@ -46,10 +48,11 @@ class _OrderScreenState extends State<OrderScreen> {
         if (!snapshot.hasData) {
           return const CircularProgressIndicator();
         }
-        final restLoc = toLatLng(snapshot.data!.destinationLocation!);
-        final destLoc = toLatLng(snapshot.data!.restaurantLocation!);
+        final restLoc = toLatLng(snapshot.data!.restaurantLocation!);
+        final destLoc = toLatLng(snapshot.data!.destinationLocation!);
+        _updateMapBounds(snapshot.data!);
         return Scaffold(
-          backgroundColor: Colors.yellow,
+          backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 0,
@@ -78,11 +81,9 @@ class _OrderScreenState extends State<OrderScreen> {
               Expanded(
                 child: GoogleMap(
                   onMapCreated: (GoogleMapController c) {
-                    changeMapStyle(c, "assets/maps_style.json");
-                    c.animateCamera(
-                      CameraUpdate.newLatLngBounds(
-                          _createBounds([restLoc, destLoc]), 30),
-                    );
+                    // changeMapStyle(c, "assets/maps_style.json");
+                    _mapController = c;
+                    _updateMapBounds(snapshot.data!);
                   },
                   myLocationButtonEnabled: true,
                   zoomControlsEnabled: false,
@@ -180,5 +181,20 @@ class _OrderScreenState extends State<OrderScreen> {
       southwest: LatLng(southwestLat, southwestLon),
       northeast: LatLng(northeastLat, northeastLon),
     );
+  }
+
+  void _updateMapBounds(Order order) {
+    if (_mapController == null) return;
+
+    final locs = [
+      toLatLng(order.destinationLocation!),
+      toLatLng(order.restaurantLocation!)
+    ];
+    if (order.courierLocation != null) {
+      locs.add(toLatLng(order.courierLocation!));
+    }
+
+    final bounds = _createBounds(locs);
+    _mapController!.animateCamera(CameraUpdate.newLatLngBounds(bounds, 30));
   }
 }
