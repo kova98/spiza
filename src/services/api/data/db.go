@@ -30,6 +30,9 @@ func InitDb(connStr string) *sqlx.DB {
         CREATE TABLE IF NOT EXISTS restaurants (
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
+            image TEXT NOT NULL DEFAULT '',
+            delivery_price NUMERIC NOT NULL DEFAULT 0,
+            rating NUMERIC NOT NULL DEFAULT 0,
 			address_id INTEGER REFERENCES addresses(id)
         );
 

@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"os"
 
@@ -22,23 +23,8 @@ func (r *RestaurantRepo) GetRestaurants() ([]Restaurant, error) {
 	var restaurants []Restaurant
 	l := log.New(os.Stdout, "data-web", log.LstdFlags)
 
-	rows, err := r.db.Query(`SELECT id, name FROM restaurants`)
+	err := r.db.Select(&restaurants, `SELECT id, name, image, delivery_price, rating FROM restaurants`)
 	if err != nil {
-		l.Println(err)
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var restaurant Restaurant
-		if err := rows.Scan(&restaurant.Id, &restaurant.Name); err != nil {
-			l.Println(err)
-			return nil, err
-		}
-		restaurants = append(restaurants, restaurant)
-	}
-
-	if err = rows.Err(); err != nil {
 		l.Println(err)
 		return nil, err
 	}
@@ -50,11 +36,11 @@ func (r *RestaurantRepo) GetRestaurants() ([]Restaurant, error) {
 	return restaurants, nil
 }
 
-func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
+func (r *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 
 	var restaurant Restaurant
-	restaurantQuery := `SELECT id, name FROM restaurants WHERE id = $1`
-	if err := repo.db.Get(&restaurant, restaurantQuery, id); err != nil {
+	restaurantQuery := `SELECT id, name, image, delivery_price, rating FROM restaurants WHERE id = $1`
+	if err := r.db.Get(&restaurant, restaurantQuery, id); err != nil {
 		return nil, err
 	}
 
@@ -62,7 +48,7 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 	addressQuery := `SELECT a.id, a.full_address, a.lat_lng FROM addresses a 
 					 JOIN restaurants r ON a.id = r.address_id
 					 WHERE r.id = $1`
-	if err := repo.db.Get(&address, addressQuery, id); err != nil && err != sql.ErrNoRows {
+	if err := r.db.Get(&address, addressQuery, id); err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return nil, err
 	}
 	restaurant.Address = address
@@ -73,13 +59,13 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 		JOIN menu_categories mc ON i.category_id = mc.id
 		WHERE mc.restaurant_id = $1`
 	var items []Item
-	if err := repo.db.Select(&items, itemQuery, id); err != nil {
+	if err := r.db.Select(&items, itemQuery, id); err != nil {
 		return nil, err
 	}
 
 	categoryQuery := "SELECT id, name FROM menu_categories WHERE restaurant_id = $1"
 	var categories []MenuCategory
-	if err := repo.db.Select(&categories, categoryQuery, id); err != nil {
+	if err := r.db.Select(&categories, categoryQuery, id); err != nil {
 		return nil, err
 	}
 	for i, category := range categories {
@@ -100,7 +86,7 @@ func (repo *RestaurantRepo) GetRestaurant(id int64) (*Restaurant, error) {
 
 func (r *RestaurantRepo) CreateRestaurant(restaurant *Restaurant) (int64, error) {
 	var restaurantID int64
-	err := r.db.QueryRow("INSERT INTO restaurants (name) VALUES ($1) RETURNING id", restaurant.Name).Scan(&restaurantID)
+	err := r.db.QueryRow("INSERT INTO restaurants (name, image) VALUES ($1) RETURNING id", restaurant.Name, restaurant.Image).Scan(&restaurantID)
 	if err != nil {
 		return 0, err
 	}

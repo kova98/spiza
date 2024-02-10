@@ -38,11 +38,11 @@ class RestaurantsList extends StatelessWidget {
                           Container(
                             height: 150.0,
                             alignment: Alignment.center,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(7)),
+                                  const BorderRadius.all(Radius.circular(7)),
                               image: DecorationImage(
-                                  image: AssetImage('assets/burger.png'),
+                                  image: NetworkImage(item.image),
                                   fit: BoxFit.cover),
                             ),
                           ),
@@ -57,8 +57,8 @@ class RestaurantsList extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const Text(
-                                '★ 4.5',
+                              Text(
+                                '★ ' + item.rating.toString(),
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -66,8 +66,8 @@ class RestaurantsList extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const Text(
-                            '0,99€',
+                          Text(
+                            item.deliveryPrice.toString() + '€',
                             style: TextStyle(color: Colors.black87),
                           ),
                           const SizedBox(height: 17)

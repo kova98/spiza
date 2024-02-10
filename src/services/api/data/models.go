@@ -17,6 +17,9 @@ type Restaurant struct {
 	Name           string         `json:"name"`
 	Address        Address        `json:"address"`
 	MenuCategories []MenuCategory `json:"menuCategories" db:"menu_categories"`
+	Image          string         `json:"image"`
+	DeliveryPrice  float64        `json:"deliveryPrice" db:"delivery_price"`
+	Rating         float64        `json:"rating"`
 }
 
 type MenuCategory struct {
