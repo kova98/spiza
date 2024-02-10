@@ -62,66 +62,98 @@ class _OrderScreenState extends State<OrderScreen> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          body: Column(
+          body: Stack(
             children: [
-              Container(
-                  alignment: Alignment.center,
-                  height: 60,
-                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: 3,
-                        blurRadius: 3,
-                        offset: const Offset(0, 1))
-                  ]),
-                  child: Text(
-                    snapshot.data!.status.description,
-                    style: const TextStyle(fontSize: 20),
-                  )),
-              Expanded(
-                child: GoogleMap(
-                  onMapCreated: (GoogleMapController c) {
-                    // changeMapStyle(c, "assets/maps_style.json");
-                    _mapController = c;
-                    _updateMapBounds(snapshot.data!);
-                  },
-                  myLocationButtonEnabled: true,
-                  zoomControlsEnabled: false,
-                  initialCameraPosition: CameraPosition(
-                    target: _getCentralPoint(restLoc, destLoc),
-                    zoom: 16,
-                  ),
-                  markers: _getMarkers(context, snapshot.data!),
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                color: Colors.white,
-                height: 100,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        snapshot.data!.getTime(),
-                        style: const TextStyle(
-                            fontSize: 50, fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text(
-                        'Estimated delivery time',
-                        style: TextStyle(fontSize: 20, color: Colors.black54),
-                      ),
-                    )
-                  ],
-                ),
+              map(snapshot, restLoc, destLoc, context),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  statusBar(snapshot),
+                  deliveryTimeBar(snapshot),
+                ],
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget map(AsyncSnapshot<Order> snapshot, LatLng restLoc, LatLng destLoc,
+      BuildContext context) {
+    return GoogleMap(
+      onMapCreated: (GoogleMapController c) {
+        changeMapStyle(c, "assets/maps_style.json");
+        _mapController = c;
+        _updateMapBounds(snapshot.data!);
+      },
+      myLocationButtonEnabled: true,
+      zoomControlsEnabled: false,
+      initialCameraPosition: CameraPosition(
+        target: _getCentralPoint(restLoc, destLoc),
+        zoom: 16,
+      ),
+      markers: _getMarkers(context, snapshot.data!),
+    );
+  }
+
+  Widget deliveryTimeBar(AsyncSnapshot<Order> snapshot) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
+      alignment: Alignment.center,
+      height: 80,
+      child: snapshot.data!.deliveryTime != null
+          ? Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    snapshot.data!.getTime(),
+                    style: const TextStyle(
+                        fontSize: 40, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                const Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'Estimated delivery time',
+                      textAlign: TextAlign.end,
+                      style: TextStyle(fontSize: 20, color: Colors.black54),
+                    ),
+                  ),
+                )
+              ],
+            )
+          : const Text(
+              'Waiting for confirmation...',
+              textAlign: TextAlign.end,
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+    );
+  }
+
+  Widget statusBar(AsyncSnapshot<Order> snapshot) {
+    return Container(
+      alignment: Alignment.center,
+      height: 60,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Text(
+        snapshot.data!.status.description,
+        style: const TextStyle(fontSize: 20),
+      ),
     );
   }
 

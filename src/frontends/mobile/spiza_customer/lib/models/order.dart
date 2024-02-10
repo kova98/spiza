@@ -75,7 +75,7 @@ class Order {
     } else {
       final utcTime = DateTime.parse(deliveryTime ?? '').toUtc();
       final localTime = utcTime.toLocal();
-      return '${localTime.hour}:${localTime.minute}';
+      return '${localTime.hour}:${localTime.minute.toString().padLeft(2, '0')}';
     }
   }
 }
