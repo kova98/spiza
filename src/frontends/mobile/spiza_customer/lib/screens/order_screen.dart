@@ -28,7 +28,8 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void initState() {
     _markerIcons.forEach((key, value) {
-      AssetHelper.getBytesFromAsset('assets/$key-icon.png', 128)
+      final size = key == 'courier' ? 100 : 128;
+      AssetHelper.getBytesFromAsset('assets/$key-icon.png', size)
           .then((onValue) {
         setState(() {
           _markerIcons[key] = BitmapDescriptor.fromBytes(onValue);
@@ -165,17 +166,18 @@ class _OrderScreenState extends State<OrderScreen> {
           position: toLatLng(order.restaurantLocation!),
           icon: _markerIcons['restaurant']!,
         ),
-      if (order.courierLocation != null)
-        Marker(
-          markerId: const MarkerId('courier'),
-          position: toLatLng(order.courierLocation!),
-          icon: _markerIcons['courier']!,
-        ),
       if (order.destinationLocation != null)
         Marker(
           markerId: const MarkerId('user'),
           position: toLatLng(order.destinationLocation!),
           icon: _markerIcons['user']!,
+        ),
+      if (order.courierLocation != null)
+        Marker(
+          markerId: const MarkerId('courier'),
+          position: toLatLng(order.courierLocation!),
+          anchor: const Offset(0.5, 0.5),
+          icon: _markerIcons['courier']!,
         ),
     };
   }
